@@ -28,7 +28,9 @@
         "passed_checks": 21
       },
       "recorded_token_reduction_percent": 57.4973,
-      "interrupted": false
+      "interrupted": false,
+      "recorded_active_time_reduction_percent": 17.4598,
+      "source_snapshot_scope": "Local development provenance, not a Git ref in this independently published repository."
     },
     {
       "host": "Grok CLI 1.0.41",
@@ -60,7 +62,9 @@
       },
       "recorded_token_reduction_percent": 77.0853,
       "interrupted": true,
-      "interruption_note": "Native hit an artificial 40-turn test cap and was resumed in the same session. All resumed usage is included; the 106.560-second recovery gap is excluded from active time. This is not an uninterrupted causal savings estimate."
+      "interruption_note": "Native hit an artificial 40-turn test cap and was resumed in the same session. All resumed usage is included; the 106.560-second recovery gap is excluded from active time. This is not an uninterrupted causal savings estimate.",
+      "recorded_active_time_reduction_percent": 41.4639,
+      "source_snapshot_scope": "Local development provenance, not a Git ref in this independently published repository."
     }
   ],
   "limitations": [
