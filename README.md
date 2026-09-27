@@ -50,31 +50,37 @@ Grok 4.7 / high 完成三个固定源码任务：两个轻量部署项目，以�
 
 面向普通 Windows 用户的菜单、项目发现与部署入口，请看原版 [RepoWayfinder](https://github.com/qybl658/RepoWayfinder)。本仓库提供面向 AI Agent 的独立 MCP 接口。
 
-## 接入 Grok
+## 自动接入
 
-需要已有 Python 3.11+、Git 和 Grok CLI。PowerShell 中进入本目录：
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe configure_grok.py
-grok
-```
-
-首次由 Grok 显示目录信任提示，确认本目录后使用。注册只写项目 `.grok/config.toml` 的 `repo_wayfinder`，不修改全局配置、不读取或保存账号凭据。同名服务拒绝覆盖，其他配置保留，修改前生成备份。移除这一段 MCP 配置即可解除接入；任务输出另行保留或清理。
-
-在别的工作目录使用：
+Windows 已有 Python 3.11+ 和 Git 时，在仓库目录运行：
 
 ```powershell
-.\.venv\Scripts\python.exe configure_grok.py --directory D:\my-work --workspace D:\my-work\repo-jobs
-grok --cwd D:\my-work
+.\setup.cmd
 ```
 
-配置记录工具和 Python 的绝对路径，移动后需要重新注册。Grok 工具超时设为 75 秒，单次等待最多 50 秒，耗时任务由后台作业继续。
+入口会准备项目自己的 Python 环境，检测受支持的已安装客户端。**检测到多个时，先由你多选，再配置所选项**；也可以在命令行显式指定客户端。支持 Grok、DSH、Claude Code、Claude Desktop、Codex、Cursor、Gemini CLI、OpenCode、VS Code 和 Windsurf。已有相同配置保持不变，同名配置指向别处则提示冲突；修改前备份，不改登录、模型、目录信任或工具审批设置。安装完重新打开客户端会话；Cursor 如未加载新工具，重启客户端。
 
-可以直接对 Grok 说：
+已有项目环境时可直接运行，或先查看将修改的位置：
+
+```powershell
+.\.venv\Scripts\python.exe configure_clients.py --dry-run
+.\.venv\Scripts\python.exe configure_clients.py
+```
+
+只接入 Grok，或仅为某个项目配置：
+
+```powershell
+.\.venv\Scripts\python.exe configure_clients.py --clients grok
+.\.venv\Scripts\python.exe configure_clients.py --scope project --directory D:\my-work
+```
+
+配置使用本地绝对路径；保留此仓库目录，移动后需要重新配置。首次项目目录信任仍由客户端处理。[检测规则、配置位置与移除方式](docs/AUTO_SETUP.md)。
+
+接入后可直接对 Agent 说：
 
 > 用 repo_wayfinder 从指定 GitHub 提交安装这个 CLI，实际生成需要的文件。提供明确计划和输出检查，用 rw_run 执行。未完成时用 rw_status 等待；失败才读必要日志。最后给文件路径和验证结果。
+
+原有 `configure_grok.py --directory D:\my-work --workspace D:\my-work\repo-jobs` 仍可使用，只配置 Grok 的项目级入口。
 
 ## 工具
 
