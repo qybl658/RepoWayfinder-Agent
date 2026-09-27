@@ -1,0 +1,365 @@
+{
+  "complete": true,
+  "source_commit": "ff57205cc52794578eb97cbf38315c299b2444f4",
+  "source_commit_note": "Frozen local benchmark source commit; not a public Git ref.",
+  "target_revisions": {
+    "bottle-quote": "b0a0a1014f7a7e6f6b7c193886a0913f46ee3ee6",
+    "http-server-static": "af0ac3e4b9bd5fff55337aee32bf37f6116c7b4f",
+    "flaskr-state": "2c1b30d0503cfb064f1cb252e6614a06915a362a"
+  },
+  "task_prompt_paths": {
+    "bottle-quote": "benchmarks/tasks/bottle_quote_zh.txt",
+    "http-server-static": "benchmarks/tasks/http_server_static_zh.txt",
+    "flaskr-state": "benchmarks/tasks/flaskr_state_zh.txt"
+  },
+  "model": "grok-4.7",
+  "reasoning_effort": "high",
+  "order": "bottle-quote, http-server-static, flaskr-state; tool then native within each case",
+  "timing_scope": "Outer runner active wall time from invocation to exit, including Grok process startup/exit and small local summary handling; independent verification, development and orchestration time are separate.",
+  "caps": {
+    "max_turns": 0,
+    "timeout_seconds": 0
+  },
+  "cases": {
+    "bottle-quote": {
+      "tool": {
+        "mode": "tool",
+        "grok_finished": true,
+        "source_unchanged": true,
+        "model": "grok-4.7",
+        "reasoning_effort": "high",
+        "source_commit": "ff57205cc52794578eb97cbf38315c299b2444f4",
+        "outer_total_seconds": 467.391,
+        "process_wall_seconds": 467.188,
+        "num_turns": 20,
+        "assistant_messages": 20,
+        "tool_use_blocks": 34,
+        "actual_tool_names": {
+          "grep": 9,
+          "read_file": 9,
+          "run_terminal_command": 5,
+          "search_replace": 6,
+          "search_tool": 1,
+          "use_tool": 1,
+          "write": 3
+        },
+        "actual_mcp_calls": {
+          "repo_wayfinder__rw_run": 1
+        },
+        "other_mcp_calls": 0,
+        "advertised_init_tool_count": 19,
+        "usage": {
+          "fields": {
+            "input_tokens": 292945,
+            "output_tokens": 29081,
+            "cache_read_input_tokens": 567168,
+            "cache_creation_input_tokens": 0
+          },
+          "sum_four_fields": 889194,
+          "reported_cost_usd": 0.3549464
+        },
+        "independent_verification": {
+          "passed": true,
+          "passed_checks": 27,
+          "total_checks": 27
+        },
+        "base_packages_unchanged": true,
+        "observed_temp_helper_file_edit_count": 1,
+        "result_subtype": "success",
+        "trace_reference": "bottle-quote-tool-run/trace.jsonl",
+        "verification_reference": "bottle-quote-tool-run/independent-verification.json",
+        "audit_reference": "bottle-quote-tool-run/command-audit.json"
+      },
+      "native": {
+        "mode": "native",
+        "grok_finished": true,
+        "source_unchanged": true,
+        "model": "grok-4.7",
+        "reasoning_effort": "high",
+        "source_commit": "ff57205cc52794578eb97cbf38315c299b2444f4",
+        "outer_total_seconds": 750.609,
+        "process_wall_seconds": 750.407,
+        "num_turns": 40,
+        "assistant_messages": 40,
+        "tool_use_blocks": 57,
+        "actual_tool_names": {
+          "grep": 11,
+          "list_dir": 3,
+          "read_file": 24,
+          "run_terminal_command": 12,
+          "search_replace": 4,
+          "write": 3
+        },
+        "actual_mcp_calls": {},
+        "other_mcp_calls": 0,
+        "advertised_init_tool_count": 19,
+        "usage": {
+          "fields": {
+            "input_tokens": 178049,
+            "output_tokens": 46120,
+            "cache_read_input_tokens": 2055168,
+            "cache_creation_input_tokens": 0
+          },
+          "sum_four_fields": 2279337,
+          "reported_cost_usd": 0.56453668
+        },
+        "independent_verification": {
+          "passed": true,
+          "passed_checks": 27,
+          "total_checks": 27
+        },
+        "base_packages_unchanged": true,
+        "observed_temp_helper_file_edit_count": 1,
+        "result_subtype": "success",
+        "trace_reference": "bottle-quote-native-run/trace.jsonl",
+        "verification_reference": "bottle-quote-native-run/independent-verification.json",
+        "audit_reference": "bottle-quote-native-run/command-audit.json"
+      },
+      "comparison": {
+        "tool_time_reduction_percent_native_baseline": 37.73,
+        "active_seconds_saved_native_minus_tool": 283.218,
+        "tool_four_field_token_reduction_percent_native_baseline": 60.99
+      },
+      "target": {
+        "repository": "https://github.com/bottlepy/bottle",
+        "revision": "b0a0a1014f7a7e6f6b7c193886a0913f46ee3ee6",
+        "prompt": "benchmarks/tasks/bottle_quote_zh.txt"
+      }
+    },
+    "http-server-static": {
+      "tool": {
+        "mode": "tool",
+        "grok_finished": true,
+        "source_unchanged": true,
+        "model": "grok-4.7",
+        "reasoning_effort": "high",
+        "source_commit": "ff57205cc52794578eb97cbf38315c299b2444f4",
+        "outer_total_seconds": 443.157,
+        "process_wall_seconds": 442.985,
+        "num_turns": 22,
+        "assistant_messages": 22,
+        "tool_use_blocks": 39,
+        "actual_tool_names": {
+          "grep": 7,
+          "list_dir": 2,
+          "read_file": 13,
+          "run_terminal_command": 6,
+          "search_tool": 2,
+          "use_tool": 1,
+          "write": 8
+        },
+        "actual_mcp_calls": {
+          "repo_wayfinder__rw_run": 1
+        },
+        "other_mcp_calls": 0,
+        "advertised_init_tool_count": 19,
+        "usage": {
+          "fields": {
+            "input_tokens": 94758,
+            "output_tokens": 30219,
+            "cache_read_input_tokens": 1034752,
+            "cache_creation_input_tokens": 0
+          },
+          "sum_four_fields": 1159729,
+          "reported_cost_usd": 0.30199004
+        },
+        "independent_verification": {
+          "passed": true,
+          "passed_checks": 25,
+          "total_checks": 25
+        },
+        "base_packages_unchanged": true,
+        "observed_temp_helper_file_edit_count": 0,
+        "result_subtype": "success",
+        "trace_reference": "http-server-static-tool-run/trace.jsonl",
+        "verification_reference": "http-server-static-tool-run/independent-verification.json",
+        "audit_reference": "http-server-static-tool-run/command-audit.json"
+      },
+      "native": {
+        "mode": "native",
+        "grok_finished": true,
+        "source_unchanged": true,
+        "model": "grok-4.7",
+        "reasoning_effort": "high",
+        "source_commit": "ff57205cc52794578eb97cbf38315c299b2444f4",
+        "outer_total_seconds": 590.796,
+        "process_wall_seconds": 590.609,
+        "num_turns": 24,
+        "assistant_messages": 24,
+        "tool_use_blocks": 44,
+        "actual_tool_names": {
+          "grep": 5,
+          "list_dir": 4,
+          "read_file": 19,
+          "run_terminal_command": 10,
+          "search_replace": 6
+        },
+        "actual_mcp_calls": {},
+        "other_mcp_calls": 0,
+        "advertised_init_tool_count": 19,
+        "usage": {
+          "fields": {
+            "input_tokens": 307591,
+            "output_tokens": 39015,
+            "cache_read_input_tokens": 946688,
+            "cache_creation_input_tokens": 0
+          },
+          "sum_four_fields": 1293294,
+          "reported_cost_usd": 0.44968944
+        },
+        "independent_verification": {
+          "passed": true,
+          "passed_checks": 25,
+          "total_checks": 25
+        },
+        "base_packages_unchanged": true,
+        "observed_temp_helper_file_edit_count": 1,
+        "result_subtype": "success",
+        "trace_reference": "http-server-static-native-run/trace.jsonl",
+        "verification_reference": "http-server-static-native-run/independent-verification.json",
+        "audit_reference": "http-server-static-native-run/command-audit.json"
+      },
+      "comparison": {
+        "tool_time_reduction_percent_native_baseline": 24.99,
+        "active_seconds_saved_native_minus_tool": 147.639,
+        "tool_four_field_token_reduction_percent_native_baseline": 10.33
+      },
+      "target": {
+        "repository": "https://github.com/http-party/http-server",
+        "revision": "af0ac3e4b9bd5fff55337aee32bf37f6116c7b4f",
+        "prompt": "benchmarks/tasks/http_server_static_zh.txt"
+      }
+    },
+    "flaskr-state": {
+      "tool": {
+        "mode": "tool",
+        "grok_finished": true,
+        "source_unchanged": true,
+        "model": "grok-4.7",
+        "reasoning_effort": "high",
+        "source_commit": "ff57205cc52794578eb97cbf38315c299b2444f4",
+        "outer_total_seconds": 926.782,
+        "process_wall_seconds": 926.594,
+        "num_turns": 31,
+        "assistant_messages": 31,
+        "tool_use_blocks": 50,
+        "actual_tool_names": {
+          "grep": 6,
+          "list_dir": 3,
+          "read_file": 16,
+          "run_terminal_command": 11,
+          "search_replace": 7,
+          "search_tool": 1,
+          "use_tool": 1,
+          "write": 5
+        },
+        "actual_mcp_calls": {
+          "repo_wayfinder__rw_run": 1
+        },
+        "other_mcp_calls": 0,
+        "advertised_init_tool_count": 19,
+        "usage": {
+          "fields": {
+            "input_tokens": 292430,
+            "output_tokens": 58444,
+            "cache_read_input_tokens": 1616512,
+            "cache_creation_input_tokens": 0
+          },
+          "sum_four_fields": 1967386,
+          "reported_cost_usd": 0.5928852
+        },
+        "independent_verification": {
+          "passed": true,
+          "passed_checks": 30,
+          "total_checks": 30
+        },
+        "base_packages_unchanged": true,
+        "observed_temp_helper_file_edit_count": 1,
+        "result_subtype": "success",
+        "trace_reference": "flaskr-state-tool-run/trace.jsonl",
+        "verification_reference": "flaskr-state-tool-run/independent-verification.json",
+        "audit_reference": "flaskr-state-tool-run/command-audit.json"
+      },
+      "native": {
+        "mode": "native",
+        "grok_finished": true,
+        "source_unchanged": true,
+        "model": "grok-4.7",
+        "reasoning_effort": "high",
+        "source_commit": "ff57205cc52794578eb97cbf38315c299b2444f4",
+        "outer_total_seconds": 973.89,
+        "process_wall_seconds": 973.687,
+        "num_turns": 27,
+        "assistant_messages": 27,
+        "tool_use_blocks": 53,
+        "actual_tool_names": {
+          "grep": 5,
+          "list_dir": 3,
+          "read_file": 24,
+          "run_terminal_command": 10,
+          "search_replace": 11
+        },
+        "actual_mcp_calls": {},
+        "other_mcp_calls": 0,
+        "advertised_init_tool_count": 19,
+        "usage": {
+          "fields": {
+            "input_tokens": 207724,
+            "output_tokens": 64633,
+            "cache_read_input_tokens": 1693824,
+            "cache_creation_input_tokens": 0
+          },
+          "sum_four_fields": 1966181,
+          "reported_cost_usd": 0.56105372
+        },
+        "independent_verification": {
+          "passed": true,
+          "passed_checks": 30,
+          "total_checks": 30
+        },
+        "base_packages_unchanged": true,
+        "observed_temp_helper_file_edit_count": 1,
+        "result_subtype": "success",
+        "trace_reference": "flaskr-state-native-run/trace.jsonl",
+        "verification_reference": "flaskr-state-native-run/independent-verification.json",
+        "audit_reference": "flaskr-state-native-run/command-audit.json"
+      },
+      "comparison": {
+        "tool_time_reduction_percent_native_baseline": 4.84,
+        "active_seconds_saved_native_minus_tool": 47.108,
+        "tool_four_field_token_reduction_percent_native_baseline": -0.06
+      },
+      "target": {
+        "repository": "https://github.com/pallets/flask",
+        "revision": "2c1b30d0503cfb064f1cb252e6614a06915a362a",
+        "prompt": "benchmarks/tasks/flaskr_state_zh.txt"
+      }
+    }
+  },
+  "interpretation": [
+    "One sample per arm and fixed tool-first order; cache/order effects are not controlled.",
+    "Four-field token sum adds input, output, cache-read and cache-creation. Cache-read tokens are not equivalent to fresh input cost.",
+    "reported_cost_usd is a CLI estimate, not a bill or subscription quota.",
+    "Init catalogs are advertised metadata; actual MCP calls and inspect configs determine observed behavior.",
+    "Some observed file-tool edits targeted host Temp helper scripts; the user waived this ordinary location deviation for this comparison. This count does not cover shell-created files.",
+    "Raw traces, task workspaces and private machine evidence are retained locally and are not part of the public summary.",
+    "Clean base-package snapshots do not prove filesystem confinement."
+  ],
+  "source_snapshot_scope": "Local development provenance, not a Git ref in this independently published repository; initial public export is 0b67187a507f8b56d8de1b00b366465508addf14, with host paths made portable.",
+  "grok_cli_version": "1.0.41",
+  "raw_evidence_scope": "trace_reference, verification_reference and audit_reference identify locally retained evidence; raw traces and host state are not published.",
+  "verification_adjustments": [
+    {
+      "case": "bottle-quote",
+      "issue": "Windows child process retained temporary server log after 27 assertions passed",
+      "change": "Stop only the verifier-started process tree before log cleanup",
+      "model_rerun": false
+    },
+    {
+      "case": "flaskr-state",
+      "issue": "Verifier SQLite snapshot connection remained open after 30 assertions passed",
+      "change": "Explicitly close the read-only connection before temporary directory cleanup",
+      "model_rerun": false
+    }
+  ]
+}

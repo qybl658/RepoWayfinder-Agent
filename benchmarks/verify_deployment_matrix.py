@@ -6,7 +6,7 @@ The verifier starts only the supplied launcher and terminates only its own PID.
 """
 
 import argparse
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from html.parser import HTMLParser
 from http.cookiejar import CookieJar
 import json
@@ -151,12 +151,20 @@ def server(argv, port, cwd):
                 yield Client(port)
             finally:
                 if process.poll() is None:
-                    process.terminate()
-                    try:
+                    if __import__('os').name == 'nt':
+                        # Windows venv python.exe may delegate to a child base
+                        # interpreter. Stop that exact process tree before the
+                        # TemporaryDirectory removes the inherited log handle.
+                        subprocess.run(['taskkill', '/PID', str(process.pid), '/T', '/F'],
+                                       capture_output=True, timeout=10)
                         process.wait(timeout=4)
-                    except subprocess.TimeoutExpired:
-                        process.kill()
-                        process.wait(timeout=4)
+                    else:
+                        process.terminate()
+                        try:
+                            process.wait(timeout=4)
+                        except subprocess.TimeoutExpired:
+                            process.kill()
+                            process.wait(timeout=4)
 
 
 def json_response(client, path):
@@ -266,7 +274,7 @@ def static_checks(r):
 
 
 def database_snapshot(path):
-    with sqlite3.connect(path.as_uri() + '?mode=ro', uri=True, timeout=3) as db:
+    with closing(sqlite3.connect(path.as_uri() + '?mode=ro', uri=True, timeout=3)) as db:
         users = db.execute('SELECT id, username, password FROM user ORDER BY id').fetchall()
         posts = db.execute('SELECT id, author_id, title, body FROM post ORDER BY id').fetchall()
     return users, posts
