@@ -1,0 +1,14 @@
+交付一个可重启的本地静态“实验资料站”，实际用 HTTP 读取网页和下载数据。
+仓库：https://github.com/http-party/http-server
+固定源码提交：af0ac3e4b9bd5fff55337aee32bf37f6116c7b4f（14.1.1）。克隆并检出此提交，不修改任何原有已跟踪文件。在源码根目录只安装本地 npm 生产依赖；可用 npm install --omit=dev --ignore-scripts --no-audit --no-fund --package-lock=false。不要全局安装，不需要 Python 虚拟环境。
+
+所有任务输入和交付物置于源码根目录 bench-delivery：
+- site/index.html：UTF-8 页面，标题“实验资料站”，显示 STATIC-LAB-2026；具有可点开的本地 guide.html、downloads/data.csv 链接，并引用本地 style.css。
+- site/guide.html：中文操作说明，说明如何打开首页并下载 CSV。
+- site/style.css：页面实际引用的本地样式。
+- site/downloads/data.csv：严格 UTF-8 字节，内容精确为 name,count 后换行、甲,2 后换行、乙,5 后换行；每行用 LF，不加 BOM。
+- serve.cjs：接受 --port 整数，仅监听 127.0.0.1，以 site 为根目录，cache=-1；必须 require 本次检出的 lib/http-server 并调用其 createServer，不能自行另写静态服务器。
+
+用现有 Node 实际启动 serve.cjs，HTTP 请求首页、指南、样式、CSV 和不存在的路径，记录状态与关键内容后停止你启动的服务；将简短真实结果写入 bench-delivery/smoke.log，另以 bench-delivery/README.md 说明从源码根目录安装依赖、启动及停止。验收方会另选空闲端口实际启动、检查文件和 404、停服并重启复核；只出现网页文件或只得到 HTTP 200 不算完成。
+
+本机已有 Node 22.23.1、npm 10.9.8 和 Git。只在本次源码目录安装依赖，不读凭据或无关用户文件，不调用其他模型，不发布或开放公网。与对照组一样可使用原生终端及文件工具；如可用 RepoWayfinder，也可用它完成固定源码、依赖和执行步骤。完整日志留本地，只回报短结果和证据路径。

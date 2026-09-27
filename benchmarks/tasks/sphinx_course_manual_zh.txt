@@ -1,0 +1,22 @@
+完成一个新的本地文档交付任务：为学生制作可搜索的“课程实验手册”。
+仓库：https://github.com/sphinx-doc/sphinx
+固定提交：847ad0c991e21db9daa02fec09acbd456f353300（v8.2.3）。在本次工作目录克隆源码，在该源码目录自己的 Python 虚拟环境内，从此提交源码安装 Sphinx，不以 PyPI Sphinx 替代，不安装 docs/test/lint extras。
+在源码目录内新建 course-delivery，所有任务输入和交付物放这里，不能改原仓库已跟踪文件。
+
+用 Sphinx 自带 alabaster 主题和 reStructuredText 生成 HTML，项目名“课程实验手册”，language=en，正文为中文，源文件放 course-delivery/source：
+1. index.rst：标题“课程实验手册”，正文有 COURSE-HOME-2026；toctree 按顺序纳入 procedure、faq；正文通过 :ref: 链接标签 collect-data，显示本地 assets/course.svg。
+2. procedure.rst：标题“实验流程”；小节 Collect 带标签 collect-data，正文“先检查样本，再记录实验。”；通过 :ref: 链接标签 csv-encoding。
+3. faq.rst：标题“实验问答”；小节 Encoding 带标签 csv-encoding，正文“CSV 文件统一使用 UTF-8。”；正文独立一行英文句子“The searchable reference is initialcatalog.”；通过 :doc: 返回 index。
+4. course.svg 是有效 SVG，至少有一个矩形和文字“采样 → 实验 → 归档”，不用外部图片或第三方主题。
+
+实际执行两次 Sphinx CLI HTML 构建，均带 -W，不能屏蔽警告：
+- 初次构建到 course-delivery/site；检查页面、跨页引用、图片及搜索索引，将完整 site 复制到 course-delivery/site-initial 保留初版。
+- 在 site 中新建 obsolete.txt，内容 obsolete。把 FAQ 源文件唯一的 initialcatalog 改成 revisedcatalog，再从干净输出目录完整重建 site。只清理本次生成的 site，保留 site-initial。
+- 最终 FAQ 显示 revisedcatalog 且不再显示 initialcatalog；初版相反；obsolete.txt 不存在。
+- 搜索必须有实际索引效果：初版用 initialcatalog 能查到 FAQ，最终用 revisedcatalog 能查到 FAQ，最终旧关键词不能查到 FAQ。允许 Sphinx 正常分词和词干化，不要求 searchindex.js 中保留关键词原始拼写。不得直接修改生成的 HTML 或搜索索引伪造结果。
+- 最终 site 打包为 course-delivery/site.zip，ZIP 根直接是 index.html、procedure.html、faq.html、_static/ 等。文件集合和每个文件内容与最终 site 完全相同，不含源码、虚拟环境、旧快照。
+- 两次真实构建输出保存为 course-delivery/build-initial.log 和 build-final.log，检查全部要求后简要报告。
+
+只做本地源码安装、构建、打包，不启动常驻服务，不发布，不做系统/全局安装；不读凭据和无关私有文件，不改工具实现，不调用其他模型。任务写入限定本次工作目录，不清理任何已有用户目录。
+Windows；已有 Python 3.11: C:/Users/<USER>/AppData/Local/Programs/Python/Python311/python.exe，Git 和 PowerShell 已安装。
+允许合理合并步骤。完整安装日志和产物保存在本地，不要把源码、HTML 全文或长日志输出到模型上下文。最终给出交付路径、源码提交与检查结论。

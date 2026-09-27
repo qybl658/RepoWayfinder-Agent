@@ -1,0 +1,44 @@
+# Local credentials and settings
+.env
+.env.*
+!.env.example
+.reposcout.env
+.reposcout.env.backup-*
+.reposcout-settings.json
+.reposcout-history.json
+.reposcout-owned-targets.json
+.reposcout-prerequisites.json
+.reposcout-install-state.json
+
+# Local runtimes, caches, and generated output
+.reposcout-venv/
+.reposcout-python/
+.reposcout-git/
+.reposcout-tools/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.cache/
+reports/
+AI Agent/
+run.md
+deployment_result.json
+*.log
+RepoWayfinder-release-*.zip
+.release-check-work/
+
+# Private collaboration artifacts
+coordination/
+handoffs/
+test-assignments/
+test-results/
+
+Projects/
+.reposcout-owned-projects.json
+
+# Agent-only runtime and machine-local Grok registration
+.agent-data/
+.grok/config.toml
+.grok/config.toml.backup-*
+.agent-test-data/

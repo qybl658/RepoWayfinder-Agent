@@ -1,0 +1,11 @@
+交付可重启的本地 Flaskr 博客，实际完成注册、登录、发帖、权限拒绝及 SQLite 重启持久化。
+仓库：https://github.com/pallets/flask
+固定源码提交：2c1b30d0503cfb064f1cb252e6614a06915a362a（3.1.2）。克隆并检出此提交，不修改任何原有已跟踪文件。在源码根目录建立 .venv，使用现有 Python 3.11.9 先从本仓库源码 pip install .，再在同一虚拟环境 pip install --no-deps -e examples/tutorial。复用仓库原有 examples/tutorial/flaskr，不改其已跟踪代码。
+
+所有任务输入和交付物置于源码根目录 bench-delivery。编写 bench-delivery/app.py，接受 --port 整数和 --database PATH；仅监听 127.0.0.1，无 debug/reloader。用原 Flaskr create_app 配置指定数据库及固定的仅本地合成 SECRET_KEY。数据库文件不存在时初始化 schema；文件已存在时绝不能重新初始化或清空。数据库父目录可由本任务创建。提供 bench-delivery/README.md，写明从根目录用 .venv 启动、停止和指定数据库的方法。
+
+用真实 HTTP 和 Cookie 会话在 bench-delivery/demo.sqlite 上完成以下操作：注册用户名 alice 与 bob；alice 登录、创建标题“实验记录”的帖子，再改为标题“实验记录（修订）”、正文“CSV 使用 UTF-8。”；bob 登录后尝试编辑 alice 的帖子须得到 HTTP 403；未登录请求 /create 须跳转登录；注销并停止服务，重启后原帖和用户仍在，alice 可再次登录看见修订内容。不得以 Flask test_client 或直接写数据库代替上述操作。把简短真实 HTTP smoke 记录存到 bench-delivery/smoke.log，不要写入实际密码。
+
+验收方会在另一个临时数据库和随机本地端口独立重复用户流程及重启持久化，并检查 demo.sqlite；你的 smoke 记录不能代替验收。只安装成功、只返回首页或只生成 SQLite 文件均不算完成。
+
+仅用本机现有 Git、C:/Users/<USER>/AppData/Local/Programs/Python/Python311/python.exe（3.11.9）。不全局安装，不读凭据或无关用户文件，不调用其他模型，不发布或开放公网。与对照组一样可使用原生终端及文件工具；如可用 RepoWayfinder，也可用它完成固定源码、环境和执行步骤。完整日志留本地，只回报短结果和证据路径。

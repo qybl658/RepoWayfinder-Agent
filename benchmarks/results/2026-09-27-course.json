@@ -1,0 +1,73 @@
+{
+  "date": "2026-09-27",
+  "task": "Sphinx Chinese course manual: source installation, two warning-strict builds, cross-page links, SVG, changed search results, initial snapshot, exact site ZIP",
+  "repository": "sphinx-doc/sphinx",
+  "revision": "847ad0c991e21db9daa02fec09acbd456f353300",
+  "python": "3.11.9",
+  "independent_checks": 21,
+  "samples_per_arm": 1,
+  "pairs": [
+    {
+      "host": "DSH Desktop 0.9.2 / Harness 0.1.5-rc.2",
+      "model": "deepseek-official/deepseek-flash",
+      "reasoning": "SDK default",
+      "source_snapshot": "f2911528bdbf2d78e03762db60b6e60d1cebe027",
+      "usage_measure": "SDK totalTokens",
+      "native": {
+        "tokens": 733537,
+        "seconds": 161.159,
+        "responses": 25,
+        "tool_calls": 35,
+        "passed_checks": 21
+      },
+      "companion": {
+        "tokens": 311773,
+        "seconds": 133.021,
+        "responses": 13,
+        "tool_calls": 19,
+        "passed_checks": 21
+      },
+      "recorded_token_reduction_percent": 57.4973,
+      "interrupted": false
+    },
+    {
+      "host": "Grok CLI 1.0.41",
+      "model": "grok-4.7",
+      "reasoning": "high",
+      "source_snapshot": "acbd0f3586563ebce19bcafca364043687246af8",
+      "usage_measure": "uncached input + cache read + cache creation + output",
+      "native": {
+        "tokens": 2857855,
+        "seconds": 898.876,
+        "responses": 44,
+        "tool_calls": 62,
+        "passed_checks": 21,
+        "uncached_input": 204467,
+        "cache_read": 2599040,
+        "cache_creation": 0,
+        "output": 54348
+      },
+      "companion": {
+        "tokens": 654870,
+        "seconds": 526.167,
+        "responses": 15,
+        "tool_calls": 27,
+        "passed_checks": 21,
+        "uncached_input": 108930,
+        "cache_read": 512896,
+        "cache_creation": 0,
+        "output": 33044
+      },
+      "recorded_token_reduction_percent": 77.0853,
+      "interrupted": true,
+      "interruption_note": "Native hit an artificial 40-turn test cap and was resumed in the same session. All resumed usage is included; the 106.560-second recovery gap is excluded from active time. This is not an uninterrupted causal savings estimate."
+    }
+  ],
+  "limitations": [
+    "One task and one formal pair per host; no stable/generalized savings claim.",
+    "Cached tokens are included; token reduction is not billing or subscription-quota reduction.",
+    "Shared machine caches and run order were not randomized.",
+    "No cross-model ranking: host usage definitions and execution differ.",
+    "Raw local traces are not published; these are curated measurements and reproducible task contracts."
+  ]
+}

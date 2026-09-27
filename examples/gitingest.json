@@ -1,0 +1,9 @@
+{
+  "repository": "coderamp-labs/gitingest",
+  "revision": "4e259a02fe72115bee538271622f1234a81c8e1a",
+  "commands": ["python -m pip install .", "python -m gitingest src/gitingest -o digest.txt"],
+  "checks": [
+    {"type": "file_contains", "path": "digest.txt", "expected": "entrypoint.py"},
+    {"type": "file_contains", "path": "digest.txt", "expected": "async def ingest_async("}
+  ]
+}

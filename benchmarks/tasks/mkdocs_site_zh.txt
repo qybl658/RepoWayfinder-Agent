@@ -1,0 +1,21 @@
+完成一个真实的开源文档站构建与更新任务，直接交付可检查的静态产物。
+仓库：https://github.com/mkdocs/mkdocs
+固定提交：bb7e8b62185b11d9f59bb7f50b13c15134f62f8a（1.6.1）。从该提交源码安装 MkDocs 到本次项目自己的 Python 虚拟环境，不用 PyPI 的 MkDocs 替代源码安装。
+在你获取的源码目录内新建 benchmark-delivery，所有交付物放在这里，不修改仓库原有的已跟踪文件。
+
+制作一个名为“学生实验手册”的三页中文文档站，使用 MkDocs 自带 mkdocs 主题及 search 插件，启用目录式 URL。配置与 Markdown 源文件放在 benchmark-delivery/project 下。
+1. 首页 docs/index.md：标题“学生实验手册”，正文含 LAB-HOME-2026；有指向 guide.md#prepare 的链接以及本地图片 assets/workflow.svg。
+2. 指南 docs/guide.md：标题“实验指南”，二级标题 Prepare（生成 prepare 锚点），正文含“先备份数据，再开始实验。”，有指向 faq.md#encoding 的链接。
+3. 问答 docs/faq.md：标题“常见问题”，二级标题 Encoding（生成 encoding 锚点），正文含“中文文件统一使用 UTF-8。”和版本标记 LAB-FAQ-V1，有返回首页的链接。
+导航依次为 首页、实验指南、常见问题。本地 workflow.svg 是有效 SVG，至少含一个矩形和文字“准备 → 执行 → 检查”。不要引用外部图片或增加主题依赖。
+
+实际运行 MkDocs CLI 完成两次 strict 构建：
+- 第一次输出到 benchmark-delivery/site，确认三个页面、链接、图片和搜索索引，复制完整 site 到 benchmark-delivery/site-initial 保留 V1 快照。
+- 在 site 内创建 obsolete.txt（内容 obsolete），把 FAQ 源文件中的 LAB-FAQ-V1 改为 LAB-FAQ-V2，再用 CLI strict clean 构建同一个 site 目录。
+- 最终 site/faq/index.html 和 search/search_index.json 含 V2、不含 V1；初始快照保留 V1；obsolete.txt 已被 clean 构建清除。不要直接修改生成的 HTML 或搜索索引来冒充构建。
+- 把最终站点打包为 benchmark-delivery/site.zip，ZIP 根目录直接是 index.html、guide/、faq/、assets/ 等站点文件；与最终 site 内容完全一致，不打包源码、虚拟环境、旧快照。
+- 把两次真实 CLI 构建的输出保存在 benchmark-delivery/build-initial.log 与 build-final.log，最后检查交付要求。
+
+只做本地安装、构建和打包。不发布网站、不启动常驻服务器、不进行系统或全局安装；不读凭据或其他私有文件、不修改工具实现、不调用别的模型。所有写入限定在本次工作目录。
+Windows，现有 Python 3.11: C:/Users/<USER>/AppData/Local/Programs/Python/Python311/python.exe；Git 和 PowerShell 已安装。
+不要把源码、HTML 全文或安装日志贴回模型，只读取解决问题需要的短片段。允许合并合理步骤。最终简要返回源码路径、固定提交、交付目录和实际验收结果，不要只报告安装成功。

@@ -1,0 +1,12 @@
+交付一个可重启的本地实验用品报价服务，实际启动并通过 HTTP 验证业务结果。
+仓库：https://github.com/bottlepy/bottle
+固定源码提交：b0a0a1014f7a7e6f6b7c193886a0913f46ee3ee6（0.13.4）。克隆并检出此提交，不修改任何原有已跟踪文件。在源码根目录建立 .venv，使用现有 Python 3.11.9 从本仓库源码执行 pip install .，不装 extras，不以 PyPI 的 Bottle 替代。
+
+所有任务输入和交付物置于源码根目录的 bench-delivery。编写 bench-delivery/app.py，可用作长期运行的启动入口：以 --port 整数指定端口，仅绑定 127.0.0.1，不开 debug/reloader。服务至少提供：
+- GET /health：JSON 的 status 为 ok、project 为 bottle-quote。
+- GET /quote?sku=notebook&count=3：JSON 至少含 sku=notebook、name=实验笔记本、count=3、unit_cents=1250、total_cents=3750。sku=pen 对应 name=中性笔、unit_cents=250；金额按整数分计算。
+- count 只能是 1 到 100 的十进制整数；缺失、非整数、超界均返回 HTTP 400，JSON 含非空 error。未知 sku 返回 HTTP 404，JSON 含非空 error。
+
+用本次安装的 Bottle 实际启动服务，请求成功、错误和中文路径，随后停止你启动的服务。留下 bench-delivery/README.md 说明从本源码根目录使用 .venv 和 --port 启动、停止的方法，并把简短的真实 HTTP smoke 记录存到 bench-delivery/smoke.log。验收方会另选空闲端口启动 app.py、检查以上响应、停止并重启再检查；只安装成功或只返回 /health 均不算完成。
+
+仅用本机现有 Git、C:/Users/<USER>/AppData/Local/Programs/Python/Python311/python.exe（3.11.9）。不全局安装，不读凭据或无关用户文件，不调用其他模型，不发布或开放公网。与对照组一样可使用原生终端及文件工具；如可用 RepoWayfinder，也可用它完成固定源码、环境和执行步骤。完整日志留本地，只回报短结果和证据路径；不要把源码或长日志贴回对话。

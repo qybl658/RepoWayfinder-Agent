@@ -1,0 +1,21 @@
+完成一个新的公开开源文档构建任务，交付可检查的研究项目交接手册。
+仓库：https://github.com/sphinx-doc/sphinx
+固定提交：847ad0c991e21db9daa02fec09acbd456f353300（v8.2.3）。在项目自己的 Python 虚拟环境，从该提交源码安装 Sphinx，不用 PyPI 的 Sphinx 代替源码安装，不安装 docs/test/lint extras。
+在该源码目录内新建 benchmark-delivery，交付物均放在这里，不改仓库原有的已跟踪文件。文档源文件放 benchmark-delivery/project，下方为全部内容要求。
+
+用 Sphinx 自带的 alabaster 主题生成 HTML 站点，项目名“研究项目交接手册”，language 设置为 en（正文保持中文），使用 reStructuredText。必须有三页：
+1. index.rst 标题“研究项目交接手册”，正文含 HANDOVER-HOME-2026；toctree 依次纳入 workflow、faq；正文有通过 :ref: 指向 prepare-step 的链接，并显示本地 assets/handover.svg。
+2. workflow.rst 标题“交接流程”，小节 Prepare 带明确标签 prepare-step，正文“先核对数据，再运行分析。”，通过 :ref: 链接 encoding-note。
+3. faq.rst 标题“交接问答”，小节 Encoding 带明确标签 encoding-note，正文“中文资料统一保存为 UTF-8。”，以及唯一版本词 releaseoldmarker，并通过 :doc: 返回 index。
+4. 本地 handover.svg 是有效 SVG，至少含一个矩形和文字“资料 → 分析 → 复核”，不引入外部图片或额外主题插件。
+
+实际执行 Sphinx CLI 两次带 -W 的 HTML 构建（警告必须导致失败，不能屏蔽警告）：
+- 第一次构建至 benchmark-delivery/site，确认三页、图片、跨页引用及 searchindex.js，复制完整 site 到 benchmark-delivery/site-initial 作为初始快照。
+- 在 site 放入 obsolete.txt（内容 obsolete）；把 FAQ 源文档中的 releaseoldmarker 改为 releasenewmarker，再从干净的输出目录完整重建同一个 site（只允许清理本次生成的 site，保留 site-initial）。
+- 最终 faq.html 与 searchindex.js 含 releasenewmarker、不含 releaseoldmarker；site-initial 保留 releaseoldmarker；obsolete.txt 被清除。禁止直接修改 HTML/searchindex.js 冒充构建。
+- 最终站点打包为 benchmark-delivery/site.zip。ZIP 根直接是 index.html、workflow.html、faq.html、_static/ 等站点文件；文件集合和内容与最终 site 完全一致，不包含源码、虚拟环境、旧快照。
+- 两次真实 CLI 构建输出分别保存 benchmark-delivery/build-initial.log 和 build-final.log，最后检查以上要求。
+
+只做本地源码安装、构建、打包。不启动常驻服务、不发布、不进行系统/全局安装；不读凭据和无关私有文件、不改工具实现、不调用其他模型。任务写入限定本次工作目录，不清理任何已有用户目录。
+Windows；已有 Python 3.11: C:/Users/<USER>/AppData/Local/Programs/Python/Python311/python.exe，Git 和 PowerShell 已安装。
+允许合理合并步骤。不要把源码、HTML 全文或长安装日志贴回模型，只取诊断必需短片段；最后简短返回源码路径、固定提交、交付目录与真实验收结果，不要只报告安装成功。
