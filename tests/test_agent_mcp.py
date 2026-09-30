@@ -40,6 +40,8 @@ class MCPTransportTests(unittest.TestCase):
             original = script.read_bytes()
             arguments = {'directory': str(task), 'run': {'argv': ['python', 'task.py']},
                 'unchanged': ['数据.csv', '结果.json'], 'checks': [
+                    {'type': 'csv_row_count', 'path': '数据.csv', 'expected': 2},
+                    {'type': 'csv_value_counts', 'path': '数据.csv', 'column': 'name', 'expected': {'甲': 1, '乙': 1}},
                     {'type': 'csv_sum', 'path': '数据.csv', 'column': 'amount', 'expected': '0.30'},
                     {'type': 'json_value', 'path': '结果.json', 'pointer': '/说明', 'expected': '中文😀'}]}
             command = [sys.executable, str(project / 'agent.py'), '--workspace', str(root / 'workspace')]

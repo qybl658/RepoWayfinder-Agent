@@ -120,6 +120,42 @@ class ArtifactChecksTests(unittest.TestCase):
             with self.subTest(supplied=supplied), self.assertRaises(ValueError):
                 checks.validate_checks(supplied)
 
+    def test_real_count_misuses_return_local_repairs_without_guessing(self):
+        self.put('rows.csv', 'id,note\nA,__private_alpha__\nA,__private_beta__\nB,other\n')
+        rows = [{'id':'A','note':'__private_alpha__'}, {'id':'A','note':'__private_beta__'}]
+        misuses = [
+            ({'id':'filtered','type':'csv_counts','path':'rows.csv','where':{'id':'A'},'expected':2},
+             ['check[1]', 'id=filtered', 'type=csv_value_counts', 'field column', 'csv_row_count', 'omit column']),
+            ({'type':'csv_count','path':'rows.csv','column':'id','where':{'id':'A'},'expected':2},
+             ['check[1]', 'id=check-1', 'type=csv_row_count', 'field column', 'allowed:', 'omit column']),
+            ({'type':'csv_rows','path':'rows.csv','column':'id','where':{'id':'A'},'expected':rows},
+             ['check[1]', 'type=csv_rows', 'field column', 'allowed:', 'omit column']),
+        ]
+        for supplied, fragments in misuses:
+            with self.subTest(kind=supplied['type']):
+                with self.assertRaises(ValueError) as error:
+                    checks.validate_checks([supplied])
+                message = str(error.exception)
+                for fragment in fragments:
+                    self.assertIn(fragment, message)
+                self.assertNotIn('__private_alpha__', message)
+                self.assertNotIn('__private_beta__', message)
+        correct = [
+            {'type':'csv_row_count','path':'rows.csv','where':{'id':'A'},'expected':2},
+            {'type':'csv_value_counts','path':'rows.csv','column':'id','expected':{'A':2,'B':1}},
+            {'type':'csv_rows','path':'rows.csv','where':{'id':'A'},'expected':rows},
+        ]
+        self.assertTrue(all(item['passed'] for item in checks.evaluate_checks(self.root, correct)))
+        legacy = [dict(correct[0],type='csv_count'),dict(correct[1],type='csv_counts')]
+        self.assertEqual([c['type'] for c in checks.validate_checks(legacy)],['csv_row_count','csv_value_counts'])
+        self.assertTrue(all(item['passed'] for item in checks.evaluate_checks(self.root,legacy)))
+        self.assertEqual(legacy[0]['type'],'csv_count')
+        with self.assertRaises(ValueError) as error:
+            checks.validate_checks([dict(correct[0],unexpected='do-not-echo-this-value')])
+        self.assertIn('field unexpected',str(error.exception))
+        self.assertIn('allowed:',str(error.exception))
+        self.assertNotIn('do-not-echo-this-value',str(error.exception))
+
     def test_large_results_are_compact_and_content_limit_is_enforced(self):
         value = {'x': 'private-' * 1000}
         self.put('v.json', json.dumps(value))

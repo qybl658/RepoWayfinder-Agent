@@ -15,8 +15,9 @@ MAX_CSV_ROWS = 50_000
 MAX_CSV_CELLS = 250_000
 MAX_CHECKS = 128
 MAX_EXPECTED_BYTES = 64 * 1024
-KINDS = {'file_exists', 'file_contains', 'json_value', 'csv_count',
-         'csv_sum', 'csv_counts', 'csv_rows'}
+ALIASES = {'csv_count': 'csv_row_count', 'csv_counts': 'csv_value_counts'}
+KINDS = {'file_exists', 'file_contains', 'json_value', 'csv_row_count',
+         'csv_sum', 'csv_value_counts', 'csv_rows'}
 
 
 def json_pointer(value, pointer=''):
@@ -68,64 +69,98 @@ def _json_size(value):
         raise ValueError('Expected value exceeds 64 KiB')
 
 
+def _error_context(index, check):
+    name = check.get('id', f'check-{index + 1}') if isinstance(check, dict) else 'invalid'
+    name = name[:100] if isinstance(name, str) else 'invalid'
+    kind = check.get('type', 'missing') if isinstance(check, dict) else 'invalid'
+    kind = kind[:100] if isinstance(kind, str) else 'invalid'
+    return f'check[{index + 1}] id={name} type={kind}'
+
+
 def validate_checks(checks):
-    """Validate and normalize an explicit nonempty assertion list."""
+    """Normalize legacy CSV aliases; reject ambiguity with actionable errors."""
     if not isinstance(checks, list) or not 1 <= len(checks) <= MAX_CHECKS:
         raise ValueError(f'checks requires 1 to {MAX_CHECKS} assertions')
     normalized, ids = [], set()
     for index, supplied in enumerate(checks):
-        if not isinstance(supplied, dict) or supplied.get('type') not in KINDS:
-            raise ValueError('Unknown artifact check type')
-        kind = supplied['type']
+        check = dict(supplied) if isinstance(supplied, dict) else {}
+        if isinstance(check.get('type'), str):
+            check['type'] = ALIASES.get(check['type'], check['type'])
+        check.setdefault('id', f'check-{index + 1}')
+        context = _error_context(index, check)
+        def fail(field, fix):
+            raise ValueError(f'{context}: field {field}: {fix}')
+        if not isinstance(supplied, dict) or not isinstance(check.get('type'), str) or check['type'] not in KINDS:
+            fail('type', 'choose one of ' + ', '.join(sorted(KINDS)))
+        kind = check['type']
         allowed = {'id', 'type', 'path', 'expected'}
         if kind == 'json_value':
             allowed.add('pointer')
         if kind.startswith('csv_'):
             allowed.add('where')
-        if kind in {'csv_sum', 'csv_counts'}:
+        if kind in {'csv_sum', 'csv_value_counts'}:
             allowed.add('column')
-        if set(supplied) - allowed:
-            raise ValueError('Unknown artifact check field')
-        check = dict(supplied)
-        check.setdefault('id', f'check-{index + 1}')
+        unknown = set(check) - allowed
+        if unknown:
+            fields = ', '.join(sorted(str(name) for name in unknown))
+            fix = 'remove unknown fields; allowed: ' + ', '.join(sorted(allowed))
+            if 'column' in unknown and kind in {'csv_row_count', 'csv_rows'}:
+                fix += f'; omit column for {kind}; where filters complete rows'
+            fail(fields, fix)
         if not isinstance(check['id'], str) or not 1 <= len(check['id']) <= 100 or check['id'] in ids:
-            raise ValueError('Check IDs must be unique nonempty strings up to 100 characters')
+            fail('id', 'provide a unique nonempty string up to 100 characters')
         ids.add(check['id'])
         if not isinstance(check.get('path'), str) or len(check['path']) > 1000:
-            raise ValueError('Check path must be a relative path up to 1000 characters')
-        scoped_file(Path.cwd() / 'artifact-validation-root', check['path'])
+            fail('path', 'provide a relative artifact path up to 1000 characters')
+        try:
+            scoped_file(Path.cwd() / 'artifact-validation-root', check['path'])
+        except ValueError:
+            fail('path', 'use a relative path inside the task directory, outside credentials and Git metadata')
         if kind == 'file_exists':
             if 'expected' in check and check['expected'] is not True:
-                raise ValueError('file_exists expected must be true')
+                fail('expected', 'omit expected or set it to true')
             check['expected'] = True
         elif 'expected' not in check:
-            raise ValueError('Check requires expected')
-        _json_size(check['expected'])
+            fail('expected', 'supply the task-specific expected result')
+        try:
+            _json_size(check['expected'])
+        except ValueError as exc:
+            fail('expected', str(exc) + '; supply bounded finite JSON data')
         if kind == 'file_contains' and (not isinstance(check['expected'], str) or not check['expected']):
-            raise ValueError('file_contains requires nonempty text')
+            fail('expected', 'provide nonempty text to find')
         if kind == 'json_value':
             check.setdefault('pointer', '')
-            # Validate syntax without requiring a particular input structure.
             pointer = check['pointer']
             if not isinstance(pointer, str) or len(pointer) > 1000 or (pointer and not pointer.startswith('/')) or re.search(r'~(?:[^01]|$)', pointer):
-                raise ValueError('Invalid JSON pointer')
+                fail('pointer', 'use an empty root pointer or /-prefixed RFC 6901 pointer with ~0 and ~1 escapes')
         if kind.startswith('csv_'):
             where = check.get('where', {})
             if not isinstance(where, dict) or any(not isinstance(k, str) or not k or not isinstance(v, str) for k, v in where.items()):
-                raise ValueError('CSV where requires exact string column/value pairs')
-            _json_size(where)
+                fail('where', 'provide an object of exact string column/value filters')
+            try:
+                _json_size(where)
+            except ValueError as exc:
+                fail('where', str(exc) + '; supply bounded string filters')
             check['where'] = dict(where)
-        if kind in {'csv_sum', 'csv_counts'} and (not isinstance(check.get('column'), str) or not check['column'] or len(check['column']) > 1000):
-            raise ValueError('CSV check requires a column')
+        if kind in {'csv_sum', 'csv_value_counts'} and (not isinstance(check.get('column'), str) or not check['column'] or len(check['column']) > 1000):
+            fix = 'supply a nonempty CSV column name up to 1000 characters'
+            if kind == 'csv_value_counts' and type(check['expected']) is int:
+                fix += '; for the row count after where filters, use csv_row_count with integer expected and omit column'
+            elif kind == 'csv_value_counts':
+                fix += '; expected must be an object mapping column values to counts'
+            fail('column', fix)
         expected = check['expected']
-        if kind == 'csv_count' and (type(expected) is not int or expected < 0):
-            raise ValueError('csv_count expected must be a nonnegative integer')
+        if kind == 'csv_row_count' and (type(expected) is not int or expected < 0):
+            fail('expected', 'provide a nonnegative integer row count after where filters')
         if kind == 'csv_sum':
-            check['expected'] = str(_decimal(expected))
-        if kind == 'csv_counts' and (not isinstance(expected, dict) or any(not isinstance(k, str) or type(v) is not int or v < 0 for k, v in expected.items())):
-            raise ValueError('csv_counts requires string keys and nonnegative integer counts')
+            try:
+                check['expected'] = str(_decimal(expected))
+            except ValueError:
+                fail('expected', 'provide a finite decimal number or decimal string')
+        if kind == 'csv_value_counts' and (not isinstance(expected, dict) or any(not isinstance(k, str) or type(v) is not int or v < 0 for k, v in expected.items())):
+            fail('expected', 'provide an object mapping column values to nonnegative integer counts; for filtered row count use csv_row_count and omit column')
         if kind == 'csv_rows' and (not isinstance(expected, list) or any(not isinstance(r, dict) or any(not isinstance(k, str) or not k or not isinstance(v, str) for k, v in r.items()) for r in expected)):
-            raise ValueError('csv_rows requires an ordered list of complete string dictionaries')
+            fail('expected', 'provide an ordered list of complete rows with string column/value pairs')
         normalized.append(check)
     return normalized
 
@@ -242,7 +277,7 @@ def equal_values(actual, expected):
 def evaluate_checks(directory, checks):
     """Evaluate only caller-specified assertions; return bounded result summaries."""
     results, cache, budget = [], {}, [MAX_TOTAL_READ_BYTES]
-    for check in validate_checks(checks):
+    for index, check in enumerate(validate_checks(checks)):
         kind, name, expected = check['type'], check['path'], check['expected']
         item = {'id': check['id'], 'type': kind, 'path': name, 'passed': False,
                 'actual': None, 'expected': _compact(expected)}
@@ -267,9 +302,11 @@ def evaluate_checks(directory, checks):
                 header, rows = cache['csv', cache_path]
                 required = set(check['where']) | ({check['column']} if 'column' in check else set())
                 if not required <= set(header):
-                    raise ValueError('CSV check references a missing column')
+                    missing = required - set(header)
+                    raise ValueError('field column/where: missing CSV columns ' + ', '.join(sorted(missing))
+                                     + '; use existing header names')
                 selected = [r for r in rows if all(r[k] == v for k, v in check['where'].items())]
-                if kind == 'csv_count':
+                if kind == 'csv_row_count':
                     actual = len(selected)
                 elif kind == 'csv_sum':
                     numbers = [_decimal(r[check['column']]) for r in selected]
@@ -281,14 +318,14 @@ def evaluate_checks(directory, checks):
                     item['passed'] = actual == _decimal(expected)
                     results.append(item)
                     continue
-                elif kind == 'csv_counts':
+                elif kind == 'csv_value_counts':
                     actual = {}
                     for row in selected:
                         key = row[check['column']]
                         actual[key] = actual.get(key, 0) + 1
                 else:
                     if any(set(row) != set(header) for row in expected):
-                        raise ValueError('csv_rows expected must contain every CSV column exactly')
+                        raise ValueError('field expected: include every CSV column exactly in each complete row')
                     mismatches = sum(a != e for a, e in zip(selected, expected))
                     item['actual'] = {'rows': len(selected), 'mismatched_rows': mismatches,
                                       'extra_rows': max(0, len(selected) - len(expected)),
@@ -303,12 +340,20 @@ def evaluate_checks(directory, checks):
                 item['reason'] = 'Artifact assertion differs from expected'
         except (OSError, UnicodeError, ValueError, TypeError, KeyError, IndexError, RecursionError) as exc:
             if isinstance(exc, OSError):
-                item['reason'] = 'Artifact is missing or unreadable'
+                reason = 'field path: artifact missing or unreadable; produce the artifact or correct its relative path'
             elif isinstance(exc, (KeyError, IndexError)):
-                item['reason'] = 'JSON pointer target is absent'
+                reason = 'field pointer: target absent; use an existing object key or array index'
             elif isinstance(exc, UnicodeError):
-                item['reason'] = 'Artifact is not valid UTF-8'
+                reason = 'field path: artifact is not UTF-8; write a valid UTF-8 artifact'
             else:
-                item['reason'] = str(exc)[:200] or 'Invalid artifact structure'
+                reason = str(exc) or 'Invalid artifact structure'
+                if not reason.startswith('field '):
+                    if kind == 'csv_sum':
+                        reason = 'field column: ' + reason + '; use finite decimal entries in the selected column'
+                    elif kind == 'json_value':
+                        reason = 'field path/pointer: ' + reason + '; provide finite JSON and a valid pointer target'
+                    else:
+                        reason = 'field path: ' + reason + '; provide a valid artifact within the supported format and limits'
+            item['reason'] = _error_context(index, check) + ': ' + reason[:200]
         results.append(item)
     return results

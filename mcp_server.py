@@ -23,9 +23,11 @@ SUPPORTED_PROTOCOLS = {"2024-11-05", "2025-03-26", LATEST_PROTOCOL}
 SERVER_INFO = {"name": "repowayfinder-agent", "version": "0.5.0"}
 SERVER_INSTRUCTIONS = (
     "RepoWayfinder batches deterministic work without calling another model. "
-    "For batches of CSV/JSON/file assertions or local HTTP lifecycle checks, discover rw_verify: "
-    "supply the task's expected results; the tool handles parsing, explicit reruns, requests, "
-    "restarts and owned-process cleanup. Prefer it to writing another checker for covered assertions. "
+    "Before writing a one-off checker for CSV/JSON/files or local HTTP lifecycle checks, discover rw_verify "
+    "and batch the assertions it covers in one call. "
+    "Supply the task's expected results; the tool handles parsing, explicit reruns, requests, "
+    "restarts and owned-process cleanup. Reuse still-valid test results; add checks for uncovered risks "
+    "or changed code/data. An additional rw_verify call is unnecessary when equivalent assertions already passed. "
     "Use rw_run for repository acquisition/environment jobs. "
     "Keep native tools for business code and work outside these contracts. "
     "Passing supplied assertions proves only those assertions."
@@ -96,13 +98,14 @@ _JSON_VALUE = {"type": ["string", "number", "boolean", "null", "object", "array"
 _VERIFY_CHECK = _object({
     "id": _string(minLength=1, maxLength=100),
     "type": {"type": "string", "enum": ["file_exists", "file_contains", "json_value",
-        "csv_count", "csv_sum", "csv_counts", "csv_rows"]},
+        "csv_row_count", "csv_sum", "csv_value_counts", "csv_rows"],
+        "description": "csv_row_count counts rows after optional where: expected integer, no column. csv_value_counts groups one column: column required, expected object mapping values to integer counts. csv_sum: column required, expected decimal number/string. csv_rows: expected complete ordered array of string-valued row objects, no column. json_value: expected JSON value at pointer. file_contains: expected nonempty text. file_exists: expected omitted or true."},
     "path": _string(minLength=1, maxLength=MAX_FILE_PATH_CHARS),
     "expected": _JSON_VALUE,
-    "pointer": _string(),
-    "column": _string(minLength=1),
+    "pointer": _string(description="json_value only: RFC 6901 pointer; empty selects the whole JSON value."),
+    "column": _string(minLength=1, description="Required only for csv_sum and csv_value_counts. Omit for csv_row_count, csv_rows and non-CSV checks."),
     "where": {"type": "object", "additionalProperties": {"type": "string"},
-              "description": "Optional exact CSV column/value filters; all must match."},
+              "description": "CSV only: exact column/value filters; all must match. Use csv_row_count to count matching rows."},
 }, ("type", "path"))
 _VERIFY_COMMAND = _object({
     "argv": {"type": "array", "minItems": 1, "maxItems": 128,

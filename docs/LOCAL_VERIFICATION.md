@@ -12,7 +12,7 @@
 {
   "directory": "D:/work/example",
   "checks": [
-    {"type": "csv_count", "path": "results/items.csv", "expected": 3},
+    {"type": "csv_row_count", "path": "results/items.csv", "expected": 3},
     {"type": "csv_sum", "path": "results/items.csv", "column": "amount", "expected": "12.30"},
     {"type": "json_value", "path": "results/summary.json", "pointer": "/rows", "expected": 3}
   ]
@@ -24,10 +24,10 @@
 | `file_exists` | `path`，要求普通文件存在 |
 | `file_contains` | `path`、非空 `expected` 文本 |
 | `json_value` | `path`、可选 RFC 6901 `pointer`、`expected` JSON 值；保留类型区别 |
-| `csv_count` | `path`、`expected` 行数 |
+| `csv_row_count` | `path`、`expected` 整数行数；可加 `where`，不传 `column` |
 | `csv_sum` | `path`、`column`、`expected` 精确十进制和，可用字符串避免浮点歧义 |
-| `csv_counts` | `path`、`column`、`expected` 值到数量的映射 |
-| `csv_rows` | `path`、`expected` 完整字符串行数组，检查内容及顺序 |
+| `csv_value_counts` | `path`、必填 `column`、`expected` 值到整数数量的映射 |
+| `csv_rows` | `path`、`expected` 完整字符串行数组，检查内容及顺序；不传 `column` |
 
 CSV 检查可以增加 `where`，按给定列的字符串值全部精确匹配后检查。检查可带可读 `id`。CSV 兼容 UTF-8 BOM 和引号内换行；缺失/重复表头、错误字段数、非法数值会明确失败。每批读取最多 20 MiB，单个 CSV 最多 5 万行、25 万单元格；超限保留原产物并报告，不采样后冒充全量通过。同一批检查复用解析结果；不同调用重新读取文件。
 
