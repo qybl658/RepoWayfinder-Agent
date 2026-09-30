@@ -1,0 +1,21 @@
+{
+  "kind": "local-source-acquisition-prototype",
+  "assertions": {
+    "first_target_failure_retained": true,
+    "recovered_output_verified": true,
+    "independent_output_value": true,
+    "source_revision_preserved": true,
+    "one_acquisition": true,
+    "same_job_and_checkout": true,
+    "same_python_environment": true,
+    "both_attempts_retained": true,
+    "original_source_unchanged": true,
+    "no_artifacts_written_to_original": true
+  },
+  "passed": true,
+  "acquisitions": 1,
+  "model_calls": 0,
+  "network_acquisition": false,
+  "boundary": "Synthetic repository; serial in-process worker and acquisition adapter only. Production API remains GitHub-only. No MCP, async dispatch, arbitrary URL, private repository or nested Agent acceptance.",
+  "candidate_commit": "f2288ea6270c51945b8c10484a2633879cb0aa08"
+}

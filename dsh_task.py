@@ -227,7 +227,7 @@ def run(args: argparse.Namespace) -> dict:
     status = None
     error = None
     stdout_closed = False
-    deadline = started + args.timeout
+    deadline = started + args.timeout if args.timeout > 0 else float('inf')
     _send(process, 'initialize', {'cwd': str(directory), 'provider': provider,
                                   'model': model, **({'reasoningEffort': reasoning} if reasoning else {})}, 1)
     try:
@@ -343,13 +343,13 @@ def main() -> int:
     parser.add_argument('--tool-mode', choices=['companion', 'tool-only'], default='companion')
     parser.add_argument('--permissions', dest='permission_mode',
                         choices=['read-only', 'workspace-write', 'danger-full-access'], default='workspace-write')
-    parser.add_argument('--timeout', type=int, default=900)
-    parser.add_argument('--max-model-calls', type=int, default=20)
+    parser.add_argument('--timeout', type=int, default=0, help='0 disables the wall-time limit')
+    parser.add_argument('--max-model-calls', type=int, default=0, help='0 disables the model response limit')
     args = parser.parse_args()
-    if args.timeout < 30:
-        parser.error('--timeout must be at least 30 seconds')
-    if args.max_model_calls < 1:
-        parser.error('--max-model-calls must be positive')
+    if args.timeout < 0 or 0 < args.timeout < 30:
+        parser.error('--timeout must be 0 (unlimited) or at least 30 seconds')
+    if args.max_model_calls < 0:
+        parser.error('--max-model-calls must be nonnegative')
     try:
         summary = run(args)
     except (OSError, ValueError) as exc:

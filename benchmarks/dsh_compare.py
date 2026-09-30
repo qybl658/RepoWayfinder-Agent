@@ -48,7 +48,8 @@ def main():
     p.add_argument('--model', required=True)
     p.add_argument('--reasoning-effort')
     p.add_argument('--tool-mode', choices=['companion', 'tool-only'], default='companion')
-    p.add_argument('--max-model-calls', type=int, default=40, help='0 disables the model response limit')
+    p.add_argument('--max-model-calls', type=int, default=0, help='0 disables the model response limit')
+    p.add_argument('--timeout', type=int, default=0, help='0 disables the wall-time limit')
     p.add_argument('--permissions', choices=['read-only', 'workspace-write', 'danger-full-access'],
                    help='Explicit permission mode for either group; full access requires authorization')
     p.add_argument('--native-permissions', choices=['workspace-write', 'danger-full-access'],
@@ -58,7 +59,8 @@ def main():
     if any(args.directory.iterdir()):
         p.error('Comparison directory must be empty; do not reuse earlier outputs')
     args.model_settings = None
-    args.timeout = 900
+    if args.timeout < 0 or 0 < args.timeout < 30:
+        p.error('--timeout must be 0 (unlimited) or at least 30 seconds')
     if args.max_model_calls < 0:
         p.error('--max-model-calls must be nonnegative')
     args.permission_mode = args.permissions or args.native_permissions
