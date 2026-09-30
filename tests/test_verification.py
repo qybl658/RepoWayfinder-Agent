@@ -21,7 +21,7 @@ SERVER = r'''
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs
-import json, sys, time
+import base64, json, sys, time
 class Handler(BaseHTTPRequestHandler):
     def reply(self, status, body=b'', headers=()):
         self.send_response(status)
@@ -56,7 +56,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         raw=self.rfile.read(int(self.headers.get('Content-Length','0')))
         if self.path=='/raw-type':
-            return self.reply(200,json.dumps({'content_type':self.headers.get('Content-Type'),'bytes':len(raw)}).encode())
+            return self.reply(200,json.dumps({'content_type':self.headers.get('Content-Type'),'bytes':len(raw),
+                                             'body_base64':base64.b64encode(raw).decode('ascii')}).encode())
         if self.path=='/items':
             if self.headers.get('Content-Type','').split(';',1)[0]!='application/json':
                 return self.reply(415,b'{"error":"JSON required"}')
@@ -244,14 +245,24 @@ class VerificationTests(unittest.TestCase):
         steps=[{'method':'POST','path':'/items','status':400,
                 'body_base64':base64.b64encode(body).decode('ascii'),
                 'content_type':'application/json'} for body in (b'{',b'{"text":"\xff"}',b'')]
+        steps += [{'method':'POST','path':'/items','status':400,'body_text':'{','content_type':'application/json'},
+                  {'method':'POST','path':'/items','status':400,'body_bytes':list(b'{"text":"\xff"}'),
+                   'content_type':'application/json'}]
         steps += [{'path':'/items','status':200,'json_pointer':'','expected':{'items':[]}},
                   {'method':'POST','path':'/items','status':201,'json':{'text':'有效记录'},
                    'json_pointer':'/id','expected':1},
                   {'path':'/items','status':200,'json_pointer':'',
                    'expected':{'items':[{'id':1,'text':'有效记录'}]}},
-                  {'path':'/health','status':200,'json_pointer':'/ok','expected':True},
-                  {'method':'POST','path':'/raw-type','status':200,'body_base64':'',
-                   'json_pointer':'','expected':{'content_type':'application/octet-stream','bytes':0}}]
+                  {'path':'/health','status':200,'json_pointer':'/ok','expected':True}]
+        # Compare the exact bytes received by a real server, including UTF-8
+        # multibyte text, empty raw bodies and an invalid UTF-8 byte sequence.
+        for body in (b'{', '汉🙂'.encode('utf-8'), b'', b'\xff'):
+            representations=[{'body_base64':base64.b64encode(body).decode('ascii')}, {'body_bytes':list(body)}]
+            if body != b'\xff': representations.append({'body_text':body.decode('utf-8')})
+            for representation in representations:
+                steps.append({'method':'POST','path':'/raw-type','status':200,**representation,
+                              'json_pointer':'','expected':{'content_type':'application/octet-stream',
+                              'bytes':len(body),'body_base64':base64.b64encode(body).decode('ascii')}})
         result=self.verify(service=self.service(steps))
         self.assertTrue(result['passed'],result)
         self.assertEqual(json.loads((self.root/'items.json').read_text(encoding='utf-8')),
@@ -265,12 +276,33 @@ class VerificationTests(unittest.TestCase):
                {'body_base64':'','content_type':'application/json\r\nX-Injected: yes'},
                {'body_base64':'','content_type':'非ASCII'},
                {'body_base64':'','content_type':'x'*201},
-               {'content_type':'application/json','json':{}}]
+               {'content_type':'application/json','json':{}},
+               {'body_text':None}, {'body_text':[]}, {'body_text':123}, {'body_text':'\ud800'},
+               {'body_bytes':None}, {'body_bytes':'255'}, {'body_bytes':[True]}, {'body_bytes':[1.0]},
+               {'body_bytes':[-1]}, {'body_bytes':[256]}, {'body_bytes':['1']},
+               {'body_text':'{','body_bytes':[123]}, {'body_text':'{','body_base64':'ew=='},
+               {'body_bytes':[123],'body_base64':'ew=='}, {'body_text':'','json':{}},
+               {'body_bytes':[],'form':{}}, {'body_text':'','method':'GET'},
+               {'body_text':'','method':'HEAD'}, {'body_bytes':[],'method':'GET'},
+               {'body_bytes':[],'method':'HEAD'}, {'body_text':'','content_type':'application/json\r\nX: yes'},
+               {'body_bytes':[],'content_type':'x'*201}]
         with patch('owned_process.spawn_owned') as spawn:
             for case in cases:
                 step={'method':'POST','path':'/items','status':400,**case}
                 with self.subTest(case=case), self.assertRaises(ValueError):
                     self.verify(service=self.service([step]))
+            spawn.assert_not_called()
+        self.assertFalse((self.root/'.repowayfinder-checks').exists())
+
+    def test_raw_text_and_bytes_declaration_limits_precede_effects(self):
+        specs=[self.service([{'method':'POST','path':'/items','status':400,**body}])
+               for body in ({'body_text':'汉'*512}, {'body_bytes':[255]*512},
+                            {'body_base64':base64.b64encode(b'x'*1024).decode('ascii')})]
+        with patch.object(verification,'MAX_BODY',1024), patch('owned_process.spawn_owned') as spawn:
+            for spec in specs:
+                with self.subTest(field=next(k for k in spec['requests'][0] if k.startswith('body_'))):
+                    with self.assertRaisesRegex(ValueError,'declaration exceeds'):
+                        self.verify(service=spec)
             spawn.assert_not_called()
         self.assertFalse((self.root/'.repowayfinder-checks').exists())
 

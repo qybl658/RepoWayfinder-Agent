@@ -44,8 +44,14 @@ class MCPTransportTests(unittest.TestCase):
                      'body_base64': 'ew==', 'content_type': 'application/json',
                      'json_pointer': '', 'expected': {'hex': '7b', 'type': 'application/json'}},
                     {'method': 'POST', 'path': '/', 'status': 200,
-                     'body_base64': '/w==', 'content_type': 'application/json',
+                     'body_bytes': [255], 'content_type': 'application/json',
                      'json_pointer': '', 'expected': {'hex': 'ff', 'type': 'application/json'}},
+                    {'method': 'POST', 'path': '/', 'status': 200,
+                     'body_text': '{', 'content_type': 'application/json',
+                     'json_pointer': '', 'expected': {'hex': '7b', 'type': 'application/json'}},
+                    {'method': 'POST', 'path': '/', 'status': 200,
+                     'body_text': '汉', 'content_type': 'text/plain',
+                     'json_pointer': '', 'expected': {'hex': 'e6b189', 'type': 'text/plain'}},
                     {'path': '/', 'status': 200, 'contains': 'ready'},
                 ]}}
             wire = request('tools/call', {'name': 'rw_verify', 'arguments': arguments})

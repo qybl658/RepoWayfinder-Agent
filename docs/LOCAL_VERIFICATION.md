@@ -63,7 +63,7 @@ CSV 检查可以增加 `where`，按给定列的字符串值全部精确匹配�
 
 省略 `port` 时分配 loopback 端口，替换 argv 中的 `{port}`。请求只到该本地服务，不跟随跳转到其他地址；按 `actor` 分开 Cookie 会话，支持显式 JSON 或表单请求。HTTP 断言可以独立使用，不需要凑一个无关文件检查。服务结束后会清理本次拥有的进程；重启保留目录中的数据。
 
-错误请求可以放在同一次服务验证中：`body_base64` 发送指定的原始字节，`content_type` 仅用于该模式，默认 `application/octet-stream`。例如 `{"method":"POST","path":"/items","status":400,"body_base64":"ew==","content_type":"application/json"}` 发送不完整 JSON `{`；`/w==` 发送非法 UTF-8 字节 `0xff`。原始请求体不会经过 JSON 序列化修复。它与 `json`、`form` 互斥，GET/HEAD 不允许请求体；编码、类型和大小在启动服务前验证。无需为这类错误案例另写一套 HTTP 客户端和启动/停服代码。
+错误请求可以放在同一次服务验证中：`body_text` 直接发送原始 UTF-8 文本，`body_bytes` 直接发送 0–255 的字节数组；已有 Base64 数据也可用 `body_base64`。无需先生成编码脚本。例如 `{"method":"POST","path":"/items","status":400,"body_text":"{","content_type":"application/json"}` 发送不完整 JSON；`body_bytes: [255]` 发送非法 UTF-8。`content_type` 仅用于这三种原始请求体，默认 `application/octet-stream`。原始请求体不会经过 JSON 序列化修复。所有请求体模式与 `json`、`form` 互斥，GET/HEAD 不允许请求体；编码、类型和大小在启动服务前验证。无需为这类错误案例另写一套 HTTP 客户端和启动/停服代码。
 
 这不是浏览器或通用业务测试框架。DOM、CSRF、动态 ID 提取及未覆盖的业务逻辑继续使用适合的原生工具。服务检查 URL 在返回后不再代表持续运行的服务。
 

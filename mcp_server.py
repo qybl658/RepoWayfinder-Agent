@@ -27,7 +27,8 @@ SERVER_INSTRUCTIONS = (
     "Keep native tools for business code, existing environments and compact task-specific checks. "
     "Use rw_verify when one batch replaces repeated parsing/runs or local HTTP start/request/restart/cleanup code. "
     "Do not translate a compact native check into an equally long assertion manifest just to use the tool. "
-    "HTTP error cases can use body_base64 with content_type to send raw bytes in the same owned service batch. "
+    "HTTP error cases can use body_text or body_bytes directly with content_type in the same owned service batch; "
+    "body_base64 is also supported when already encoded. "
     "Supply the task's expected results and necessary failure cases. Reuse still-valid test results; "
     "add checks for uncovered risks or changed code/data, without repeating equivalent passing assertions. "
     "Full logs stay local; read more only when the compact result is insufficient. "
@@ -123,10 +124,15 @@ _VERIFY_REQUEST = {
     "expected": _JSON_VALUE,
     "json": _JSON_VALUE,
     "form": {"type": "object", "additionalProperties": {"type": "string"}},
+    "body_text": _string(maxLength=20 * 1024 * 1024,
+                         description="Raw UTF-8 body, sent without JSON serialization. Use directly for malformed JSON or empty text; no encoding helper needed. Exclusive with other body modes; GET/HEAD cannot have bodies."),
+    "body_bytes": {"type": "array", "maxItems": 20 * 1024 * 1024,
+                   "items": {"type": "integer", "minimum": 0, "maximum": 255},
+                   "description": "Exact raw byte values, e.g. [255] for invalid UTF-8. No Base64 conversion needed. Exclusive with other body modes; GET/HEAD cannot have bodies."},
     "body_base64": _string(maxLength=20 * 1024 * 1024,
-                           description="Exact raw request bytes in standard Base64, including malformed JSON or invalid UTF-8. Exclusive with json/form; GET/HEAD cannot have bodies. Empty string sends an empty body."),
+                           description="Exact raw request bytes already in padded standard Base64. Prefer body_text/body_bytes for unencoded input. Exclusive with other body modes; GET/HEAD cannot have bodies. Empty string sends an empty body."),
     "content_type": _string(minLength=1, maxLength=200,
-                            description="Only with body_base64. Defaults to application/octet-stream; use application/json for malformed JSON tests. ASCII without control characters."),
+                            description="Only with body_text, body_bytes or body_base64. Defaults to application/octet-stream; use application/json for malformed JSON tests. ASCII without control characters."),
     "actor": _string(minLength=1, maxLength=120),
 }
 _VERIFY_SERVICE = _object({

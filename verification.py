@@ -106,13 +106,14 @@ def _expect(value, where):
 
 def _payload(step):
     """Encode one declared body without files, I/O or implicit HTTP effects."""
-    modes = [name for name in ('json', 'form', 'body_base64') if name in step]
+    raw_modes = ('body_base64', 'body_text', 'body_bytes')
+    modes = [name for name in ('json', 'form', *raw_modes) if name in step]
     if len(modes) > 1:
-        raise ValueError('HTTP json, form and body_base64 are mutually exclusive')
+        raise ValueError('HTTP json, form, body_base64, body_text and body_bytes are mutually exclusive')
     if modes and step.get('method', 'GET') in {'GET', 'HEAD'}:
         raise ValueError('GET/HEAD requests cannot have a body')
-    if 'content_type' in step and 'body_base64' not in step:
-        raise ValueError('content_type is only available with body_base64')
+    if 'content_type' in step and not any(name in step for name in raw_modes):
+        raise ValueError('content_type is only available with a raw body')
     data, headers = None, {}
     if 'json' in step:
         data = json.dumps(step['json'], ensure_ascii=False, allow_nan=False).encode('utf-8')
@@ -135,6 +136,21 @@ def _payload(step):
             raise ValueError('body_base64 must be valid padded standard Base64') from None
         if base64.b64encode(data).decode('ascii') != value:
             raise ValueError('body_base64 must be canonical padded standard Base64')
+    elif 'body_text' in step:
+        if not isinstance(step['body_text'], str):
+            raise ValueError('body_text must be text')
+        try:
+            data = step['body_text'].encode('utf-8')
+        except UnicodeEncodeError:
+            raise ValueError('body_text contains invalid Unicode') from None
+    elif 'body_bytes' in step:
+        value = step['body_bytes']
+        if not isinstance(value, list) or any(type(item) is not int or not 0 <= item <= 255 for item in value):
+            raise ValueError('body_bytes must be an array of integers between 0 and 255')
+        if len(value) > MAX_BODY:
+            raise ValueError('HTTP request payload exceeds 20 MiB')
+        data = bytes(value)
+    if any(name in step for name in raw_modes):
         content_type = step.get('content_type', 'application/octet-stream')
         if (not isinstance(content_type, str) or not 1 <= len(content_type) <= 200
             or any(not 32 <= ord(char) < 127 for char in content_type)):
@@ -218,7 +234,7 @@ def _validate(directory, checks, run, unchanged, service, evidence_directory):
                 _fields(item, {'restart'}, {'restart'}, 'restart')
                 continue
             _fields(item, {'method', 'path', 'status', 'contains', 'json_pointer', 'expected',
-                           'json', 'form', 'body_base64', 'content_type', 'actor'},
+                           'json', 'form', 'body_base64', 'body_text', 'body_bytes', 'content_type', 'actor'},
                     {'path', 'status'}, 'request')
             if item.get('method', 'GET') not in {'GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'}:
                 raise ValueError('Unsupported HTTP method')
