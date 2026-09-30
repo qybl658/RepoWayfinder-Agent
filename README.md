@@ -6,11 +6,13 @@
 
 当前定位是 **Windows 上有限时长的 CLI / 仓库运行任务**，适合 Grok 等支持本地 MCP 的 Agent。外部代码以当前用户权限运行，规则检查不是操作系统沙箱。
 
+需要获取固定源码、准备环境、保留执行证据或恢复失败作业时使用本工具。已有合适环境的简单读改和命令可直接用原生工具；不要为了使用本工具而重新克隆、安装或增加作业。原生续接时，每次终端调用都显式切到返回的 `project_path`，Python 使用返回的 `result.python_runtime.executable`，不要假定上一次调用的工作目录会保留。
+
 ## 用实测看增效
 
 ### 课程手册生成
 
-同一个课程手册任务，由模型分别使用原生工具、原生工具 + RepoWayfinder 完成；两组都独立验收通过 21/21。
+2026-09-27 的首组记录：同一个课程手册任务，由模型分别使用原生工具、原生工具 + RepoWayfinder 完成；两组都独立验收通过 21/21。下方同时保留 9 月 30 日重复实验中的弱收益和反例。
 
 | 模型 / 宿主 | 原生 token | 加本工具 token | 本次记录减少 |
 | --- | ---: | ---: | ---: |
@@ -47,6 +49,25 @@ Grok 4.7 / high 完成三个固定源码任务：两个轻量部署项目，以�
 每组仅一个样本，固定工具组先跑；缓存与顺序影响未控制。token 合计包含缓存读取，不等于费用节省。时间覆盖模型运行器启动至退出，独立验收、开发及主控时间另计。Flaskr 的 token 未减少，不能据此宣传复杂任务普遍增效。
 
 [三方向数据](benchmarks/results/2026-09-27-deployment-matrix.json) · [任务、验收与问题说明](docs/DEPLOYMENT_COMPARISON.md)
+
+### DSH 重复实验：收益并不稳定
+
+2026-09-30，DeepSeek Flash / DSH 对以上四个任务各跑两组配对，交替先后顺序，共 16 次；业务验收全部通过。下表合并每个任务的两组原始成本，包含范围审计有争议或不通过的样本，不能把它们称为完全合规条件下的节省。
+
+| 任务 | 工具组时间变化 | 工具组 token 变化 | 保守目录范围审计 |
+| --- | ---: | ---: | --- |
+| Sphinx 课程手册 | 少 6.71% | 少 24.01% | 2/4 通过；无完整可比配对 |
+| Bottle 报价 API | 少 30.14% | 少 59.10% | 2/4 通过；无完整可比配对 |
+| http-server 静态站 | **多 26.37%** | **多 9.30%** | 4/4 通过 |
+| Flaskr 登录与持久化 | **多 6.93%** | 少 6.10% | 3/4 通过；一个可比配对 |
+
+范围审计共 11/16 通过：课程两次明确违反“全部任务写入留在工作目录”，另三次为辅助日志/验证数据位于系统临时目录，按任务范围作保守不通过处理。后者与明确违约分列，不代表交付物缺失或已发生数据损坏。Flaskr 唯一完全可比配对时间少 3.24%、token 少 29.30%；这是事后审计子集，不应挑选它替代完整结果。
+
+工具组每个任务平均模型响应更少，但更少轮次没有稳定转化为更快、更省。DSH 加载了更多工具定义，且静态站第一次工具组的工具等待明显增加；尚未通过消融实验分离各自影响。已有环境和简单任务不应仅为使用工具而重复准备。两组都使用 SDK 实际生效的 high 思考设置；跨模型的 high 不是统一计算预算。
+
+[全部配对、失败与机制边界](docs/DSH_REPEATED_COMPARISON.md) · [逐次分项数据](benchmarks/results/2026-09-30-dsh-repeats.json)
+
+[机制复审](docs/EFFICIENCY_MECHANISMS.md)拆分了轮次、输入上下文与输出，改进优先压总token并尽量缩短时间；本地 HTTP 探测替代只证明了局部时间收益。另一次 [Grok 日常规则对照](docs/GROK_DAILY_EFFICIENCY.md)出现负收益：两组业务通过，扩展规则组却更慢、更费，已撤回长段指导并窄修具体调用问题；通用性能改善仍未证。性能数据用于选择适用任务和改进流程，不构成固定比例的承诺。
 
 面向普通 Windows 用户的菜单、项目发现与部署入口，请看原版 [RepoWayfinder](https://github.com/qybl658/RepoWayfinder)。本仓库提供面向 AI Agent 的独立 MCP 接口。
 
@@ -168,13 +189,17 @@ Agent 的显式命令不再按旧版工具名白名单拒绝：程序统一从�
 
 任务运行配置、SDK 原始事件和紧凑用量摘要保存在输出目录。模型来源写入摘要；没有报告的用量或费用保持未知。接入方式和实际验证范围见下方记录。不要将输出目录或密钥提交 Git。
 
+默认不限制模型响应轮次或任务总时间；如有明确预算，可传 `--max-model-calls N` 或 `--timeout 秒数`，0 表示不限制。中断后的后台作业须核对状态和已有副作用。
+
 ## 复现实测
 
-课程手册与部署矩阵的固定任务、验收器和脱敏摘要位于 `benchmarks/`。完整统计口径见 [Grok 对照](docs/GROK_COMPARISON.md)、[DSH 对照](docs/DSH_COMPARISON.md) 和 [部署对照](docs/DEPLOYMENT_COMPARISON.md)，历史接入范围见 [客户端验证](docs/CLIENT_VALIDATION.md)。所有结果都是指定环境下的单组样本，保留失败、恢复和弱收益，不能外推为普遍节省。
+课程手册与部署矩阵的固定任务、验收器和脱敏摘要位于 `benchmarks/`。完整统计口径见 [Grok 对照](docs/GROK_COMPARISON.md)、[DSH 历史对照](docs/DSH_COMPARISON.md)、[DSH 两组重复对照](docs/DSH_REPEATED_COMPARISON.md) 和 [部署对照](docs/DEPLOYMENT_COMPARISON.md)，历史接入范围见 [客户端验证](docs/CLIENT_VALIDATION.md)。Grok 各任务只有一组，DSH 新批次各两组，保留失败、恢复和弱收益，不能外推为普遍节省。
 
 本仓库保留 Agent / MCP 入口、10 类客户端自动接入、执行与恢复核心、有效测试和复现证据。`main.py` 是被 Agent worker 导入的共享执行核心；直接运行会提示使用 Agent 入口。`wsl_status_utils.ps1` 是运行条件检测 helper。虚拟环境归档恢复脚本由核心按需生成，不依赖旧菜单。任务配置由显式 files / edits 和宿主原生工具处理，恢复使用 `rw_replan` / `rw_resume`。
 
 原小白菜单、语言/API 配置、安装卸载及双套快捷入口属于独立的 [RepoWayfinder](https://github.com/qybl658/RepoWayfinder) 产品。这里不生成指向这些入口的报告脚本。
+
+本地来源已做有限的[执行与恢复原型](docs/LOCAL_SOURCE_EXPERIMENT.md)：一次本地合成 Git 获取，失败后复用同一作业和环境，10 项检查通过。生产接口仍只接受 GitHub；未开放任意本地路径、任意 URL 或嵌套 Agent。
 
 ```powershell
 python -m unittest discover -s tests -p 'test_agent_*.py'

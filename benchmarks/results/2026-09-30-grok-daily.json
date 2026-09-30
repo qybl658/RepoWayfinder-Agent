@@ -1,0 +1,432 @@
+{
+  "date": "2026-09-30",
+  "host": "Grok CLI 1.0.41",
+  "model": "grok-4.7",
+  "reasoning_effort": "high",
+  "source_snapshot": "feca87d3fcd8b119b0e28d68853d3760e2bf6b47",
+  "source_snapshot_scope": "Local implementation provenance, not a public repository ref.",
+  "contrast": "Previous versus updated persistent home rules; both Bottle arms use the standard runner guide and identical task-scoped native/MCP permission configuration.",
+  "rule_changes": [
+    "Identify unresolved behavior before broad source inspection; reuse unchanged context.",
+    "Batch independent work; keep large source/data/logs local and return relevant evidence.",
+    "Use explicit checkout cwd and task-local scripts for complex quoting; recover the first causal divergence locally.",
+    "Use foreground waits for short commands; supervise genuinely persistent or concurrent work with completion/failure events.",
+    "Retain user-selected primary model/reasoning and complete result/error/recovery verification."
+  ],
+  "rule_loading_verified_at_ordinary_cli_start": true,
+  "ordinary_tools_or_permission_configuration_changed": false,
+  "private_host_rules_published": false,
+  "raw_traces_published": false,
+  "samples_per_arm": 1,
+  "order": [
+    "previous_rules",
+    "updated_rules"
+  ],
+  "previous_rules": {
+    "case": "bottle_quote_zh",
+    "grok_finished": true,
+    "independently_verified": true,
+    "passed_checks": 27,
+    "total_checks": 27,
+    "wall_seconds": 402.094,
+    "attempt_seconds": 402.156,
+    "reported_api_seconds": 374.47,
+    "rounds": 20,
+    "tool_calls": 25,
+    "tools": {
+      "search_tool": 1,
+      "repo_wayfinder__rw_run": 1,
+      "run_terminal_command": 4,
+      "grep": 6,
+      "read_file": 8,
+      "write": 3,
+      "search_replace": 1,
+      "list_dir": 1
+    },
+    "usage": {
+      "input_tokens": 76724,
+      "output_tokens": 26453,
+      "cache_read_input_tokens": 733056,
+      "cache_creation_input_tokens": 0,
+      "server_tool_use": {
+        "web_search_requests": 0
+      }
+    },
+    "usage_sum_including_cache": 836233,
+    "exact_duplicate_calls": 0,
+    "source_unchanged": true,
+    "observed_intervals": {
+      "first_complete_assistant_received_seconds": 10.547,
+      "tool_request_to_result_union_seconds": 49.424,
+      "last_tool_result_to_next_complete_assistant_sum_seconds": 341.389,
+      "unmatched_tool_ids": 0,
+      "scope": "Intervals between local complete-line receipts; CLI buffering/orchestration/network/generation included. Not direct reasoning or tool execution durations."
+    },
+    "tool_catalog": [
+      "run_terminal_command",
+      "read_file",
+      "search_replace",
+      "list_dir",
+      "grep",
+      "todo_write",
+      "monitor",
+      "search_tool",
+      "use_tool",
+      "workflow",
+      "enter_plan_mode",
+      "exit_plan_mode",
+      "ask_user_question",
+      "send_feedback",
+      "image_gen",
+      "image_edit",
+      "image_to_video",
+      "reference_to_video",
+      "write",
+      "repo_wayfinder__rw_search",
+      "repo_wayfinder__rw_prepare",
+      "repo_wayfinder__rw_run",
+      "repo_wayfinder__rw_execute",
+      "repo_wayfinder__rw_replan",
+      "repo_wayfinder__rw_status",
+      "repo_wayfinder__rw_resume",
+      "repo_wayfinder__rw_logs",
+      "repo_wayfinder__rw_cancel"
+    ]
+  },
+  "updated_rules": {
+    "case": "bottle_quote_zh",
+    "grok_finished": true,
+    "independently_verified": true,
+    "passed_checks": 27,
+    "total_checks": 27,
+    "wall_seconds": 536.469,
+    "attempt_seconds": 536.532,
+    "reported_api_seconds": 502.165,
+    "rounds": 27,
+    "tool_calls": 35,
+    "tools": {
+      "search_tool": 1,
+      "repo_wayfinder__rw_run": 1,
+      "run_terminal_command": 10,
+      "grep": 7,
+      "read_file": 9,
+      "write": 3,
+      "search_replace": 4
+    },
+    "usage": {
+      "input_tokens": 121420,
+      "output_tokens": 33261,
+      "cache_read_input_tokens": 1103360,
+      "cache_creation_input_tokens": 0,
+      "server_tool_use": {
+        "web_search_requests": 0
+      }
+    },
+    "usage_sum_including_cache": 1258041,
+    "exact_duplicate_calls": 0,
+    "source_unchanged": true,
+    "observed_intervals": {
+      "first_complete_assistant_received_seconds": 15.454,
+      "tool_request_to_result_union_seconds": 78.093,
+      "last_tool_result_to_next_complete_assistant_sum_seconds": 440.219,
+      "unmatched_tool_ids": 0,
+      "scope": "Intervals between local complete-line receipts; CLI buffering/orchestration/network/generation included. Not direct reasoning or tool execution durations."
+    },
+    "tool_catalog": [
+      "run_terminal_command",
+      "read_file",
+      "search_replace",
+      "list_dir",
+      "grep",
+      "todo_write",
+      "monitor",
+      "search_tool",
+      "use_tool",
+      "workflow",
+      "enter_plan_mode",
+      "exit_plan_mode",
+      "ask_user_question",
+      "send_feedback",
+      "image_gen",
+      "image_edit",
+      "image_to_video",
+      "reference_to_video",
+      "write"
+    ]
+  },
+  "ordinary_cli_task": {
+    "case": "ordinary_csv_audit",
+    "grok_finished": true,
+    "independently_verified": true,
+    "passed_checks": 15,
+    "total_checks": 15,
+    "wall_seconds": 564.938,
+    "attempt_seconds": null,
+    "reported_api_seconds": 558.175,
+    "rounds": 11,
+    "tool_calls": 14,
+    "tools": {
+      "list_dir": 1,
+      "read_file": 6,
+      "run_terminal_command": 4,
+      "search_replace": 3
+    },
+    "usage": {
+      "input_tokens": 109830,
+      "output_tokens": 40729,
+      "cache_read_input_tokens": 424832,
+      "cache_creation_input_tokens": 0,
+      "server_tool_use": {
+        "web_search_requests": 0
+      }
+    },
+    "usage_sum_including_cache": 575391,
+    "exact_duplicate_calls": 0,
+    "source_unchanged": null,
+    "observed_intervals": {
+      "first_complete_assistant_received_seconds": 9.313,
+      "tool_request_to_result_union_seconds": 31.641,
+      "last_tool_result_to_next_complete_assistant_sum_seconds": 522.124,
+      "unmatched_tool_ids": 0,
+      "scope": "Intervals between local complete-line receipts; CLI buffering/orchestration/network/generation included. Not direct reasoning or tool execution durations."
+    },
+    "tool_catalog": [
+      "run_terminal_command",
+      "read_file",
+      "search_replace",
+      "list_dir",
+      "grep",
+      "kill_command_or_subagent",
+      "todo_write",
+      "get_command_or_subagent_output",
+      "spawn_subagent",
+      "scheduler_create",
+      "scheduler_delete",
+      "scheduler_list",
+      "monitor",
+      "search_tool",
+      "use_tool",
+      "workflow",
+      "enter_plan_mode",
+      "exit_plan_mode",
+      "ask_user_question",
+      "send_feedback",
+      "web_search",
+      "web_fetch",
+      "image_gen",
+      "image_edit",
+      "image_to_video",
+      "reference_to_video",
+      "write"
+    ]
+  },
+  "observed_changes": {
+    "wall_reduction_percent": -33.4188,
+    "recorded_usage_reduction_percent": -50.4414
+  },
+  "limitations": [
+    "One fixed-order pair; shared package/network caches and server-side conditions not controlled.",
+    "Personalized existing host rules are private; external users cannot reproduce those exact instructions.",
+    "Ordinary CSV audit is a transfer/quality check, not an independent before/after performance comparison.",
+    "Token fields are cumulative CLI usage including cache, not invoice or subscription usage.",
+    "Received-line intervals and API total do not separate model reasoning, network, service-side queuing or actual tool execution.",
+    "Final narrow rules differ from the expanded rules tested in this pair; final changes have loading evidence but no model performance validation.",
+    "Directory scope findings remain visible despite all business checks passing.",
+    "The experimental repository-specific profile was abandoned and removed; this is not a benchmark filtering deliverable.",
+    "Latest token-priority rules reduce static startup context; no new model calls validate resulting total task token or elapsed-time benefit. Historical negative comparison remains unchanged."
+  ],
+  "dsh_effective_reasoning_correction": "Existing DSH course traces report effective high via request/header; requested null means no explicit override. Cross-model high labels are not equivalent compute budgets.",
+  "status": "Performance improvement not established; one matched pair worsened.",
+  "experimental_rule_context_estimate_tokens": 370,
+  "final_rule_revision": {
+    "experimental_bytes": 15205,
+    "final_bytes": 13411,
+    "original_bytes": 13724,
+    "final_added_tokens_estimate": -78,
+    "status": "Quality > total token > time owner loaded at ordinary and fresh entry; migration-only reference excluded. Context reduction measured; no new model performance experiment.",
+    "loading": [
+      {
+        "entry": "ordinary workspace",
+        "loaded": true,
+        "size_bytes": 13411,
+        "approx_tokens": 3352,
+        "migration_reference_loaded": false
+      },
+      {
+        "entry": "fresh task workspace",
+        "loaded": true,
+        "size_bytes": 13411,
+        "approx_tokens": 3352,
+        "migration_reference_loaded": false
+      }
+    ],
+    "matches_tested_new_rules": false,
+    "changes": [
+      "Prioritize total primary/delegate/handoff/rework tokens ahead of elapsed time after preserving quality; aim to reduce both.",
+      "Condensed broad exploration/recovery guidance rather than retaining the expanded paragraph.",
+      "Moved per-terminal checkout/Python executable and task-helper paths to the existing runtime table.",
+      "Windows system command output uses bytes rather than assuming UTF-8.",
+      "HTTP service acceptance uses timed real HTTP requests and owned PID checks; Test-NetConnection remains for network diagnosis.",
+      "Preserved selected model/reasoning, approval policy, all ordinary tools and full quality/recovery requirements.",
+      "Move migration-only prose and legacy runtime name crosswalks to an on-demand docs reference outside automatically loaded rules; preserve all operational tool interfaces and knowledge."
+    ],
+    "previous_final_bytes": 14589,
+    "priority": "Quality first; total token before time, aim to reduce both.",
+    "migration_reference_bytes": 1718,
+    "reference_auto_loaded": false,
+    "migration_only_cells_relocated": 11,
+    "final_cli_estimate_tokens": 3352
+  },
+  "startup_observation": {
+    "startup_completed_marker_seconds": 0.589,
+    "mcp_connected_marker_seconds": [
+      0.802,
+      2.149,
+      2.157
+    ],
+    "mcp_init_completed_marker_seconds": 2.168,
+    "telemetry_send_failure_warnings": 81,
+    "identified_mcp_connection_failure": false,
+    "scope": "Local stderr event markers, not internal phase durations; telemetry sends failed, but causal blocking time is not known. No daily MCP capability was disabled."
+  },
+  "frozen_capture_observation": [
+    {
+      "run": "bottle-old-rules-run",
+      "wall_minus_final_result_received_seconds": 0.734,
+      "cli_reported_duration_seconds": 399.311,
+      "limitation": "Frozen PIPE runner did not record parent process exit separately. Small final-result-to-return gap is not a direct exit measurement."
+    },
+    {
+      "run": "bottle-new-rules-run",
+      "wall_minus_final_result_received_seconds": 2.703,
+      "cli_reported_duration_seconds": 533.509,
+      "limitation": "Frozen PIPE runner did not record parent process exit separately. Small final-result-to-return gap is not a direct exit measurement."
+    },
+    {
+      "run": "daily-task-run",
+      "wall_minus_final_result_received_seconds": 1.86,
+      "cli_reported_duration_seconds": 562.771,
+      "limitation": "Frozen PIPE runner did not record parent process exit separately. Small final-result-to-return gap is not a direct exit measurement."
+    }
+  ],
+  "driver_fix": {
+    "behavior": "CLI stdout writes directly to the raw file. A bounded file observer records line times only during CLI lifetime; surviving descendants retain stdout without delaying runner return.",
+    "timing_precision": "50 ms polling while CLI lives; late descendant raw output retained but not timed.",
+    "unknown_structure_tolerated": true,
+    "focused_tests_passed": 6,
+    "fake_before_seconds": 1.281,
+    "fake_after_seconds": 0.063,
+    "fake_child_survived_and_late_output_retained": true,
+    "model_performance_claim": false,
+    "repository_profile_shipped": false,
+    "interruption_behavior": "Kill and wait for the owned CLI only; match subprocess.run without killing background process trees."
+  },
+  "attempts": [
+    {
+      "case": "Bottle previous persistent rules",
+      "model_runs": 1,
+      "completed": true,
+      "independent_checks": "27/27"
+    },
+    {
+      "case": "Bottle expanded persistent rules",
+      "model_runs": 1,
+      "completed": true,
+      "independent_checks": "27/27",
+      "recovery_evidence": [
+        "Missing native checkout cwd caused git/interpreter failure; corrected in next call.",
+        "UTF-8 decoding of localized taskkill output failed; changed capture to bytes, reran affected verification."
+      ]
+    },
+    {
+      "case": "Ordinary CSV, expanded persistent rules",
+      "model_runs": 1,
+      "completed": true,
+      "independent_checks": "15/15"
+    }
+  ],
+  "directory_scope": {
+    "audit": "Explicit trace tool arguments and terminal command text; not a full filesystem/network scan.",
+    "bottle_previous_rules": {
+      "business_passed": true,
+      "auxiliary_temp_paths": true,
+      "trace_lines": [
+        24,
+        26,
+        38
+      ],
+      "interpretation": "Required inputs/deliverables stayed in bench-delivery; model smoke helper was placed in system Temp then removed. Bottle wording lacked an all-writes sentence; disclose interpretive auxiliary-file deviation."
+    },
+    "bottle_expanded_rules": {
+      "business_passed": true,
+      "auxiliary_temp_paths": true,
+      "trace_lines": [
+        32,
+        36,
+        38,
+        40,
+        42,
+        46,
+        48,
+        52
+      ],
+      "interpretation": "Model helper scripts and redirected bind-test stdout/stderr in system Temp; costs and deviations retained."
+    },
+    "ordinary_csv": {
+      "business_passed": true,
+      "auxiliary_temp_paths": true,
+      "trace_lines": [
+        16,
+        18,
+        20
+      ],
+      "interpretation": "Verifier in system Temp created BOM/single-record temporary inputs/output directories then removed them. Prompt locates deliverables in current task/results but has no all-writes restriction; disclose auxiliary paths rather than claiming violation of an absent requirement."
+    },
+    "credential_or_global_install_writes_found_in_command_audit": false,
+    "cache_distinction": "Normal CLI/git/pip cache/runtime writes are separate from model-chosen test helpers/logs."
+  },
+  "current_priority": "Quality first; total token ahead of time, aim to reduce both substantially without sacrificing the user result.",
+  "persistent_context_versions": [
+    {
+      "version": "original",
+      "bytes": 13724,
+      "approx_tokens": 3431
+    },
+    {
+      "version": "tested_expanded",
+      "bytes": 15205,
+      "approx_tokens": 3801
+    },
+    {
+      "version": "previous_final",
+      "bytes": 14589,
+      "approx_tokens": 3647
+    },
+    {
+      "version": "current_token_priority",
+      "bytes": 13411,
+      "approx_tokens": 3352
+    }
+  ],
+  "persistent_context_reduction": {
+    "vs_previous_final_bytes": 1178,
+    "vs_previous_final_cli_estimate_tokens": 295,
+    "vs_previous_final_cli_estimate_percent": 8.089,
+    "vs_original_bytes": 313,
+    "vs_original_cli_estimate_tokens": 79,
+    "vs_original_cli_estimate_percent": 2.303,
+    "scope": "Static automatically loaded rule context only; CLI approxTokens are estimates, not actual per-request usage or a task speed measurement."
+  },
+  "migration_reference": {
+    "location_kind": "On-demand document outside rules directories",
+    "auto_load_excluded_by_ordinary_and_fresh_inspect": true,
+    "knowledge_preserved": true,
+    "relocated_prose_paragraphs": 3,
+    "relocated_legacy_name_crosswalk_cells": 11
+  },
+  "protocol_snapshot": {
+    "allowlist_entries": 100,
+    "grok_rules_included": false,
+    "grok_private_rule_and_reference_backups": "Task-local only; not publicly exported."
+  }
+}

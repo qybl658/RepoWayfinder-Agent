@@ -1,0 +1,29 @@
+{
+  "comparator_commit": "ff57205cc52794578eb97cbf38315c299b2444f4",
+  "base_commit": "9633dca38a25af08437f36d8dae04e1827294ba3",
+  "tested_commit": "1cbeb7f09c10a7988b51de514e42f14e5b6e77c6",
+  "core_unchanged_to_base": true,
+  "tasks_unchanged_to_base": true,
+  "core_files": [
+    "agent.py",
+    "agent_runtime.py",
+    "agent_service.py",
+    "mcp_server.py",
+    "main.py",
+    "project_config.py",
+    "integration_targets.py",
+    "mainline_recovery.py",
+    "dsh_task.py"
+  ],
+  "task_files": [
+    "benchmarks/tasks/sphinx_course_manual_zh.txt",
+    "benchmarks/tasks/bottle_quote_zh.txt",
+    "benchmarks/tasks/http_server_static_zh.txt",
+    "benchmarks/tasks/flaskr_state_zh.txt"
+  ],
+  "verifier_changes": "Windows subprocess/log ownership and SQLite close fixes; business assertions unchanged.",
+  "tested_candidate_patch_files": [
+    "benchmarks/dsh_compare.py",
+    "dsh_task.py"
+  ]
+}

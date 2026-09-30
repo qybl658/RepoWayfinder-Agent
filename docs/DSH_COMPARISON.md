@@ -1,10 +1,14 @@
 # DSH 对照：当前结果与完整历史
 
-最新正式对照为 0.5 companion 候选 `f2911528bdbf2d78e03762db60b6e60d1cebe027`：相同课程手册任务，两组均通过独立 21 项产物检查、实际 Python 3.11.9 核验和限定范围的命令审计。本次工具组少用 17.5% 时间、57.5% SDK totalTokens。只有一组成对样本，不能承诺稳定加速或同等比例省钱。此前负面结果全部保留。
+最新结果见 [2026-09-30 四任务重复对照](DSH_REPEATED_COMPARISON.md)：新增 16 次运行，收益不稳定，静态站合计更慢且 token 更多。本页保留 2026-09-27 的课程单组对照及更早失败。
+
+课程对照使用 0.5 companion 候选 `f2911528bdbf2d78e03762db60b6e60d1cebe027`：相同课程手册任务，两组均通过独立 21 项产物检查、实际 Python 3.11.9 核验和限定范围的命令审计。该组工具组少用 17.5% 时间、57.5% SDK totalTokens。只有一组成对样本，不能承诺稳定加速或同等比例省钱。此前负面结果全部保留。
 
 **本页新结果全部来自 DSH，模型为 deepseek-official/deepseek-flash。不是 Grok；入口是 DSH 自带 Harness SDK，不是桌面界面操作。**
 
 ## 0.5：工具配合原生能力
+
+2026-09-30 补充核实：两组原始 SDK trace 第 14 行（event seq 10）的 `/params/event/data/header/config/reasoningEffort` 均为 `high`，`adapterDefaults.reasoningEffort=true`。摘要中的 null 只是调用方未覆盖默认，不表示关闭思考或低档位；跨模型相同的 high 名称也不代表相同推理计算量。
 
 之前的工具组关闭原生 PowerShell，任务编写和恢复被迫经过专用 files/checks/replan 接口，多次重传大段内容。这轮保留固定源码、环境准备、有限命令执行和恢复证据，让原生工具完成文档编写、文件转换与检查。这个方向来自失败记录；下述试验检验整个方案，不把变化单独归因于某一个提示或接口。
 

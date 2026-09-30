@@ -1,0 +1,17 @@
+{
+  "old_frozen": {
+    "cli_parent_exit_code": 0,
+    "capture_return_seconds": 1.281,
+    "wait_after_parent_near_exit_seconds": 1.234,
+    "late_child_raw_preserved": true
+  },
+  "fixed_dev": {
+    "cli_parent_exit_code": 0,
+    "capture_return_seconds": 0.063,
+    "wait_after_parent_near_exit_seconds": 0.0,
+    "late_child_raw_preserved": true
+  },
+  "focused_tests": 6,
+  "scope": "Local fake parent exits leaving live descendant stdout inherited. Not a model speed result.",
+  "interruption_owned_cli_killed_and_waited": true
+}

@@ -7,6 +7,7 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
 import time
 import uuid
 
@@ -69,6 +70,14 @@ def command_for(args, directory, submitted_prompt):
     return command
 
 
+def message_blocks(event):
+    message = event.get('message')
+    if not isinstance(message, dict):
+        return []
+    content = message.get('content')
+    return [block for block in content if isinstance(block, dict)] if isinstance(content, list) else []
+
+
 def summarize(trace):
     result, calls = None, 0
     for line in trace.read_text(encoding='utf-8', errors='replace').splitlines():
@@ -76,10 +85,12 @@ def summarize(trace):
             event = json.loads(line)
         except ValueError:
             continue
+        if not isinstance(event, dict):
+            continue
         if event.get('type') == 'result':
             result = event
         if event.get('type') == 'assistant':
-            calls += sum(item.get('type') == 'tool_use' for item in event.get('message', {}).get('content', []))
+            calls += sum(item.get('type') == 'tool_use' for item in message_blocks(event))
     return result, calls
 
 
@@ -90,14 +101,97 @@ def round_metrics(trace):
             event = json.loads(line)
         except ValueError:
             continue
+        if not isinstance(event, dict):
+            continue
         if event.get('type') != 'assistant':
             continue
-        message = event.get('message', {})
-        calls = [block for block in message.get('content', []) if block.get('type') == 'tool_use']
+        message = event.get('message')
+        message = message if isinstance(message, dict) else {}
+        calls = [block for block in message_blocks(event) if block.get('type') == 'tool_use']
+        arguments = [block.get('input') if isinstance(block.get('input'), dict) else {} for block in calls]
         rounds.append({'round': len(rounds) + 1, 'usage': message.get('usage'),
-                       'tools': [block.get('input', {}).get('tool_name', block.get('name')) for block in calls],
-                       'argument_characters': sum(len(json.dumps(block.get('input', {}))) for block in calls)})
+                       'tools': [arg.get('tool_name', block.get('name')) for block, arg in zip(calls, arguments)],
+                       'argument_characters': sum(len(json.dumps(arg)) for arg in arguments)})
     return rounds
+
+
+def capture_process(command, directory, env, trace, stderr, timing, started, timeout=0):
+    """Observe a raw file while the CLI lives; inherited handles cannot delay exit."""
+    errors = []
+    stopped = threading.Event()
+    final_offset = [None]
+    with trace.open('wb') as stdout, stderr.open('wb') as error_stream, timing.open('w', encoding='utf-8') as clock_stream:
+        process = subprocess.Popen(command, cwd=directory, env=env, stdin=subprocess.DEVNULL,
+                                   stdout=stdout, stderr=error_stream)
+
+        def receive():
+            try:
+                source = trace.open('rb')
+                number, pending = 0, b''
+                def record_line(raw):
+                    nonlocal number
+                    number += 1
+                    record = {'line': number, 'received_elapsed_seconds': round(received, 6),
+                              'received_at': datetime.now(timezone.utc).isoformat()}
+                    try:
+                        event = json.loads(raw)
+                        record['type'] = event.get('type', 'unknown') if isinstance(event, dict) else 'unknown'
+                        blocks = message_blocks(event) if isinstance(event, dict) else []
+                        record['tool_use_ids'] = [b['id'] for b in blocks if b.get('type') == 'tool_use' and 'id' in b]
+                        record['tool_result_ids'] = [b['tool_use_id'] for b in blocks if b.get('type') == 'tool_result' and 'tool_use_id' in b]
+                    except (ValueError, KeyError, TypeError):
+                        record['type'] = 'unparsed'
+                    clock_stream.write(json.dumps(record) + '\n')
+                    clock_stream.flush()
+                with source:
+                    while True:
+                        limit = final_offset[0]
+                        count = 65536 if limit is None else max(0, min(65536, limit-source.tell()))
+                        chunk = source.read(count)
+                        received = time.monotonic() - started
+                        pending += chunk
+                        while b'\n' in pending:
+                            raw, pending = pending.split(b'\n', 1)
+                            record_line(raw + b'\n')
+                        if chunk:
+                            continue
+                        if stopped.is_set():
+                            if pending:
+                                record_line(pending)
+                            break
+                        stopped.wait(.05)
+            except Exception as exc:
+                errors.append(exc)
+                # A sidecar I/O error does not stop the CLI or its background
+                # jobs: the OS still writes the authoritative raw trace.
+
+        reader = threading.Thread(target=receive, name='grok-trace-receiver')
+        reader.start()
+        timed_out = False
+        try:
+            process.wait(timeout=timeout or None)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            process.kill()
+            process.wait()
+        except BaseException:
+            # Match subprocess.run's interruption behavior for this owned CLI,
+            # without killing the separately owned background process tree.
+            process.kill()
+            process.wait()
+            raise
+        finally:
+            exited = time.monotonic() - started
+            final_offset[0] = trace.stat().st_size
+            stopped.set()
+            reader.join()
+        timing.with_name('process-lifecycle.json').write_text(json.dumps({
+            'cli_wait_returned_elapsed_seconds': round(exited, 6),
+            'observer_finished_elapsed_seconds': round(time.monotonic() - started, 6),
+            'scope': 'CLI wait returned, independent of descendant stdout handle lifetime; raw file may receive later descendant output.'}), encoding='utf-8')
+        if errors:
+            raise OSError(f'Trace capture failed: {errors[0]}') from errors[0]
+        return process.returncode, timed_out
 
 
 def run(args, guide=None):
@@ -125,14 +219,12 @@ def run(args, guide=None):
     started_at = datetime.now(timezone.utc).isoformat()
     started = time.monotonic()
     timed_out, returncode = False, None
-    with trace.open('wb') as stdout, (output / 'stderr.log').open('wb') as stderr:
-        try:
-            process = subprocess.run(command, cwd=directory, env=env, stdin=subprocess.DEVNULL,
-                                     stdout=stdout, stderr=stderr, timeout=getattr(args, 'timeout', 0) or None)
-            returncode = process.returncode
-        except subprocess.TimeoutExpired:
-            timed_out = True
-        except OSError as exc:
+    timing = output / 'event-timing.jsonl'
+    try:
+        returncode, timed_out = capture_process(command, directory, env, trace, output / 'stderr.log',
+                                               timing, started, getattr(args, 'timeout', 0))
+    except OSError as exc:
+        with (output / 'stderr.log').open('ab') as stderr:
             stderr.write(str(exc).encode('utf-8'))
     result, calls = summarize(trace)
     usage = (result or {}).get('usage')
@@ -154,6 +246,8 @@ def run(args, guide=None):
                'answer': (result or {}).get('result', ''), 'trace_path': str(trace),
                'summary_path': str(output / 'summary.json'),
                'stderr_path': str(output / 'stderr.log'), 'submitted_prompt_path': str(submitted_prompt),
+               'event_timing_path': str(timing),
+               'event_timing_scope': 'Local observation of written stdout lines while the CLI runs (50 ms sampling). Includes CLI buffering, orchestration, network and generation; not direct reasoning/tool durations. Late descendant raw output is preserved without delaying CLI exit.',
                'note': 'Grok-reported usage is not subscription quota or an invoice. Verify task artifacts. Background jobs can outlive this conversation.'}
     (output / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding='utf-8')
     return summary

@@ -11,6 +11,10 @@
       "host": "DSH Desktop 0.9.2 / Harness 0.1.5-rc.2",
       "model": "deepseek-official/deepseek-flash",
       "reasoning": "SDK default",
+      "requested_reasoning_effort": null,
+      "effective_reasoning_effort": "high",
+      "reasoning_verified_on": "2026-09-30",
+      "reasoning_evidence": "Both original formal traces: line 14, event seq 10, /params/event/data/header/config/reasoningEffort=high; adapterDefaults.reasoningEffort=true. Same label across providers does not establish equal reasoning compute.",
       "source_snapshot": "f2911528bdbf2d78e03762db60b6e60d1cebe027",
       "usage_measure": "SDK totalTokens",
       "native": {

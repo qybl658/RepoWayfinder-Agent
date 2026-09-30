@@ -1,0 +1,1920 @@
+{
+  "title": "DSH matched repeated repository delivery comparison",
+  "date": "2026-09-30",
+  "base_source_commit": "9633dca38a25af08437f36d8dae04e1827294ba3",
+  "tested_source_commit": "1cbeb7f09c10a7988b51de514e42f14e5b6e77c6",
+  "comparator_source_commit": "ff57205cc52794578eb97cbf38315c299b2444f4",
+  "comparability": "Execution core and exact task texts unchanged; verifier resource-close fixes preserved. Only timeout capability patched.",
+  "model": "deepseek-official/deepseek-flash",
+  "requested_reasoning_effort": null,
+  "effective_reasoning_efforts": [
+    "high"
+  ],
+  "reasoning_source": "SDK adapter default observed in request/header; CLI null means no explicit override, not no/high-less reasoning.",
+  "permission_mode": "danger-full-access / never",
+  "planned_attempts": 16,
+  "completed_attempts": 16,
+  "verified_attempts": 16,
+  "verification_scope": "business artifact assertions; see separate scope fields",
+  "business_verified_attempts": 16,
+  "strict_scope_compliant_attempts": 11,
+  "explicit_scope_violation_attempts": 2,
+  "interpretive_scope_failure_attempts": 3,
+  "scope_audit_criterion": "Conservative task artifact scope: explicitly authored verification data/logs must stay under the designated task workspace; course separately has an explicit all-writes rule.",
+  "scope_audit_limitations": "This is a focused trace audit, not exhaustive filesystem surveillance. Findings do not establish credential disclosure, global dependency changes or damage to pre-existing data.",
+  "repeat_design": "Each of four unchanged tasks has two matched pairs: tool-native then native-tool; fresh work/jobs and SDK homes for every attempt, sequential execution and independent acceptance.",
+  "model_response_limit": null,
+  "wall_time_limit": null,
+  "token_scope": "SDK usage only. totalTokens includes uncached input, cached reads, and output; reasoningTokens is an output component, not extra. Cache fields are shown independently; not billed cost.",
+  "timing_scope": "External harness process including SDK startup/shutdown; verification separately. Request interval includes provider, network and streaming, not pure inference.",
+  "base_environment_audit_scope": "Existing Python 3.11.9 distribution inventory before/after each attempt and whole batch; does not claim exhaustive filesystem or global npm inventory surveillance.",
+  "failures_retained": true,
+  "runs": [
+    {
+      "id": "sphinx_course_manual_zh-pair1-tool",
+      "task": "sphinx_course_manual_zh",
+      "pair": 1,
+      "mode": "tool",
+      "external_seconds": 188.688,
+      "verification_seconds": 0.422,
+      "wall_seconds": 188.5,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 21,
+      "checks_total": 21,
+      "usage": {
+        "inputTokens": 16483,
+        "outputTokens": 24936,
+        "totalTokens": 522187,
+        "cacheReadTokens": 480768,
+        "reasoningTokens": 15678
+      },
+      "model_calls": 19,
+      "tool_counts": {
+        "mcp__repo_wayfinder__rw_run": 1,
+        "pwsh": 9,
+        "write": 8,
+        "edit": 4
+      },
+      "tool_elapsed_seconds": {
+        "mcp__repo_wayfinder__rw_run": 45.762,
+        "pwsh": 11.663,
+        "write": 0.145,
+        "edit": 0.094
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": false,
+      "scope_classification": "explicit_task_boundary_violation",
+      "scope_assessment": {
+        "classification": "explicit_task_boundary_violation",
+        "source_call_events": [
+          87,
+          92,
+          102
+        ],
+        "source_result_events": [
+          103
+        ],
+        "action": "Authored packaging validator uses TemporaryDirectory() without dir, extracts ZIP outside task workspace, compares files, then context-cleans the owned temporary directory.",
+        "scope_rule": "任务写入限定本次工作目录，不清理任何已有用户目录。",
+        "ownership_uncertainty": false,
+        "event_references": {
+          "87": {
+            "trace_line_1_based": 91,
+            "event_type": "tool/call"
+          },
+          "92": {
+            "trace_line_1_based": 96,
+            "event_type": "tool/call"
+          },
+          "102": {
+            "trace_line_1_based": 106,
+            "event_type": "tool/call"
+          },
+          "103": {
+            "trace_line_1_based": 107,
+            "event_type": "tool/result"
+          }
+        }
+      },
+      "observed_tool_categories": {
+        "repository_environment_mcp": 1,
+        "build_smoke_package_shell": 9,
+        "authoring": 12
+      },
+      "model_response_interval_seconds": 113.735,
+      "model_response_intervals_measured": 19,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 20,
+      "available_tool_schema_serialized_characters": 22694,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": [
+        {
+          "reported_plan_seconds": 24.391,
+          "commands": [
+            {
+              "category": "pip_install",
+              "duration_seconds": 16.05,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.11,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.41,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            }
+          ],
+          "repair_entries": 0,
+          "environment_change_types": [
+            "python_venv_created"
+          ],
+          "deployment_success": true
+        }
+      ]
+    },
+    {
+      "id": "sphinx_course_manual_zh-pair1-native",
+      "task": "sphinx_course_manual_zh",
+      "pair": 1,
+      "mode": "native",
+      "external_seconds": 220.703,
+      "verification_seconds": 0.407,
+      "wall_seconds": 220.531,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 21,
+      "checks_total": 21,
+      "usage": {
+        "inputTokens": 22390,
+        "outputTokens": 33181,
+        "totalTokens": 941587,
+        "cacheReadTokens": 886016,
+        "reasoningTokens": 21617
+      },
+      "model_calls": 31,
+      "tool_counts": {
+        "pwsh": 20,
+        "read": 5,
+        "write": 9,
+        "edit": 1
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 64.915,
+        "read": 0.148,
+        "write": 0.238,
+        "edit": 0.016
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "other_shell": 1,
+        "build_smoke_package_shell": 17,
+        "repository_environment_shell": 2,
+        "inspection": 5,
+        "authoring": 10
+      },
+      "model_response_interval_seconds": 153.43,
+      "model_response_intervals_measured": 31,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 11,
+      "available_tool_schema_serialized_characters": 11450,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [
+        {
+          "event_seq": 20,
+          "categories": [
+            "git_fatal"
+          ]
+        }
+      ],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": []
+    },
+    {
+      "id": "bottle_quote_zh-pair1-tool",
+      "task": "bottle_quote_zh",
+      "pair": 1,
+      "mode": "tool",
+      "external_seconds": 90.516,
+      "verification_seconds": 1.484,
+      "wall_seconds": 90.297,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 27,
+      "checks_total": 27,
+      "usage": {
+        "inputTokens": 10334,
+        "outputTokens": 13331,
+        "totalTokens": 155761,
+        "cacheReadTokens": 132096,
+        "reasoningTokens": 7490
+      },
+      "model_calls": 9,
+      "tool_counts": {
+        "pwsh": 7,
+        "mcp__repo_wayfinder__rw_run": 1,
+        "write": 3
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 8.537,
+        "mcp__repo_wayfinder__rw_run": 23.889,
+        "write": 0.036
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": false,
+      "scope_classification": "conservative_artifact_scope_failure",
+      "scope_assessment": {
+        "classification": "conservative_artifact_scope_failure",
+        "source_call_events": [
+          31,
+          36
+        ],
+        "source_result_events": [
+          37
+        ],
+        "action": "Authored smoke script explicitly redirects service stdout/stderr to fixed system temporary filenames; required final smoke.log remains in bench-delivery.",
+        "scope_rule": "所有任务输入和交付物置于源码根目录的 bench-delivery。",
+        "interpretation": "Bottle does not contain the course all-writes rule. Treating authored auxiliary verification logs as scoped task outputs is the strict audit interpretation, not an identical explicit prohibition.",
+        "ownership_uncertainty": true,
+        "ownership_note": "Fixed filename prior existence/contents unknown; no evidence of damage or disclosure.",
+        "event_references": {
+          "31": {
+            "trace_line_1_based": 35,
+            "event_type": "tool/call"
+          },
+          "36": {
+            "trace_line_1_based": 40,
+            "event_type": "tool/call"
+          },
+          "37": {
+            "trace_line_1_based": 41,
+            "event_type": "tool/result"
+          }
+        }
+      },
+      "observed_tool_categories": {
+        "other_shell": 6,
+        "repository_environment_mcp": 1,
+        "authoring": 3,
+        "build_smoke_package_shell": 1
+      },
+      "model_response_interval_seconds": 55.907,
+      "model_response_intervals_measured": 9,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 20,
+      "available_tool_schema_serialized_characters": 22694,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": [
+        {
+          "reported_plan_seconds": 11.64,
+          "commands": [
+            {
+              "category": "pip_install",
+              "duration_seconds": 4.72,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.21,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            }
+          ],
+          "repair_entries": 0,
+          "environment_change_types": [
+            "python_venv_created"
+          ],
+          "deployment_success": true
+        }
+      ]
+    },
+    {
+      "id": "bottle_quote_zh-pair1-native",
+      "task": "bottle_quote_zh",
+      "pair": 1,
+      "mode": "native",
+      "external_seconds": 108.859,
+      "verification_seconds": 1.453,
+      "wall_seconds": 108.688,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 27,
+      "checks_total": 27,
+      "usage": {
+        "inputTokens": 10637,
+        "outputTokens": 16321,
+        "totalTokens": 240974,
+        "cacheReadTokens": 214016,
+        "reasoningTokens": 6634
+      },
+      "model_calls": 16,
+      "tool_counts": {
+        "pwsh": 11,
+        "write": 3,
+        "edit": 1
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 36.929,
+        "write": 0.063,
+        "edit": 0.021
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "other_shell": 5,
+        "repository_environment_shell": 3,
+        "authoring": 4,
+        "build_smoke_package_shell": 3
+      },
+      "model_response_interval_seconds": 70.134,
+      "model_response_intervals_measured": 16,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 11,
+      "available_tool_schema_serialized_characters": 11450,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [
+        {
+          "event_seq": 50,
+          "categories": [
+            "powershell_error"
+          ]
+        },
+        {
+          "event_seq": 55,
+          "categories": [
+            "python_traceback"
+          ]
+        }
+      ],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": []
+    },
+    {
+      "id": "http_server_static_zh-pair1-tool",
+      "task": "http_server_static_zh",
+      "pair": 1,
+      "mode": "tool",
+      "external_seconds": 142.078,
+      "verification_seconds": 1.36,
+      "wall_seconds": 141.906,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 25,
+      "checks_total": 25,
+      "usage": {
+        "inputTokens": 15848,
+        "outputTokens": 14626,
+        "totalTokens": 430730,
+        "cacheReadTokens": 400256,
+        "reasoningTokens": 4818
+      },
+      "model_calls": 22,
+      "tool_counts": {
+        "pwsh": 13,
+        "mcp__repo_wayfinder__rw_run": 1,
+        "mcp__repo_wayfinder__rw_logs": 1,
+        "read": 2,
+        "write": 8,
+        "job_kill": 2,
+        "job_output": 2
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 49.501,
+        "mcp__repo_wayfinder__rw_run": 24.935,
+        "mcp__repo_wayfinder__rw_logs": 0.013,
+        "read": 0.279,
+        "write": 0.072,
+        "job_kill": 0.008,
+        "job_output": 0.007
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "other_shell": 13,
+        "repository_environment_mcp": 2,
+        "inspection": 2,
+        "authoring": 8,
+        "other": 4
+      },
+      "model_response_interval_seconds": 65.073,
+      "model_response_intervals_measured": 22,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 20,
+      "available_tool_schema_serialized_characters": 22694,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": [
+        {
+          "reported_plan_seconds": 17.234,
+          "commands": [
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.1,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.31,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.12,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "npm_install",
+              "duration_seconds": 16.68,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            }
+          ],
+          "repair_entries": 0,
+          "environment_change_types": [],
+          "deployment_success": true
+        }
+      ]
+    },
+    {
+      "id": "http_server_static_zh-pair1-native",
+      "task": "http_server_static_zh",
+      "pair": 1,
+      "mode": "native",
+      "external_seconds": 94.187,
+      "verification_seconds": 1.313,
+      "wall_seconds": 93.984,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 25,
+      "checks_total": 25,
+      "usage": {
+        "inputTokens": 11983,
+        "outputTokens": 12201,
+        "totalTokens": 336120,
+        "cacheReadTokens": 311936,
+        "reasoningTokens": 3962
+      },
+      "model_calls": 26,
+      "tool_counts": {
+        "pwsh": 16,
+        "read": 2,
+        "write": 6,
+        "job_output": 3,
+        "grep": 1,
+        "edit": 1,
+        "job_kill": 1
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 25.932,
+        "read": 0.081,
+        "write": 0.064,
+        "job_output": 6.533,
+        "grep": 0.179,
+        "edit": 0.02,
+        "job_kill": 0.005
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "other_shell": 14,
+        "repository_environment_shell": 2,
+        "inspection": 3,
+        "authoring": 7,
+        "other": 4
+      },
+      "model_response_interval_seconds": 59.495,
+      "model_response_intervals_measured": 26,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 11,
+      "available_tool_schema_serialized_characters": 11450,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": []
+    },
+    {
+      "id": "flaskr_state_zh-pair1-tool",
+      "task": "flaskr_state_zh",
+      "pair": 1,
+      "mode": "tool",
+      "external_seconds": 106.422,
+      "verification_seconds": 1.812,
+      "wall_seconds": 106.25,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 30,
+      "checks_total": 30,
+      "usage": {
+        "inputTokens": 18999,
+        "outputTokens": 18073,
+        "totalTokens": 274384,
+        "cacheReadTokens": 237312,
+        "reasoningTokens": 9631
+      },
+      "model_calls": 11,
+      "tool_counts": {
+        "mcp__repo_wayfinder__rw_run": 1,
+        "pwsh": 5,
+        "read": 12,
+        "write": 3,
+        "grep": 1
+      },
+      "tool_elapsed_seconds": {
+        "mcp__repo_wayfinder__rw_run": 24.198,
+        "pwsh": 6.482,
+        "read": 0.407,
+        "write": 0.025,
+        "grep": 0.088
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "repository_environment_mcp": 1,
+        "other_shell": 5,
+        "inspection": 13,
+        "authoring": 3
+      },
+      "model_response_interval_seconds": 73.381,
+      "model_response_intervals_measured": 11,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 20,
+      "available_tool_schema_serialized_characters": 22694,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": [
+        {
+          "reported_plan_seconds": 15.969,
+          "commands": [
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.1,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "pip_install",
+              "duration_seconds": 5.83,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "pip_install",
+              "duration_seconds": 2.42,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.31,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            }
+          ],
+          "repair_entries": 0,
+          "environment_change_types": [
+            "python_venv_created"
+          ],
+          "deployment_success": true
+        }
+      ]
+    },
+    {
+      "id": "flaskr_state_zh-pair1-native",
+      "task": "flaskr_state_zh",
+      "pair": 1,
+      "mode": "native",
+      "external_seconds": 109.985,
+      "verification_seconds": 1.797,
+      "wall_seconds": 109.797,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 30,
+      "checks_total": 30,
+      "usage": {
+        "inputTokens": 15872,
+        "outputTokens": 14565,
+        "totalTokens": 388069,
+        "cacheReadTokens": 357632,
+        "reasoningTokens": 6811
+      },
+      "model_calls": 24,
+      "tool_counts": {
+        "pwsh": 18,
+        "read": 10,
+        "write": 3
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 34.651,
+        "read": 0.42,
+        "write": 0.025
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "other_shell": 14,
+        "repository_environment_shell": 4,
+        "inspection": 10,
+        "authoring": 3
+      },
+      "model_response_interval_seconds": 73.275,
+      "model_response_intervals_measured": 24,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 11,
+      "available_tool_schema_serialized_characters": 11450,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": []
+    },
+    {
+      "id": "sphinx_course_manual_zh-pair2-native",
+      "task": "sphinx_course_manual_zh",
+      "pair": 2,
+      "mode": "native",
+      "external_seconds": 156.844,
+      "verification_seconds": 0.484,
+      "wall_seconds": 156.656,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 21,
+      "checks_total": 21,
+      "usage": {
+        "inputTokens": 13147,
+        "outputTokens": 16711,
+        "totalTokens": 395170,
+        "cacheReadTokens": 365312,
+        "reasoningTokens": 8048
+      },
+      "model_calls": 25,
+      "tool_counts": {
+        "pwsh": 20,
+        "write": 6,
+        "grep": 2,
+        "read": 2
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 73.568,
+        "write": 0.082,
+        "grep": 0.287,
+        "read": 0.012
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": false,
+      "scope_classification": "explicit_task_boundary_violation",
+      "scope_assessment": {
+        "classification": "explicit_task_boundary_violation",
+        "source_call_events": [
+          141
+        ],
+        "source_result_events": [
+          142
+        ],
+        "action": "Explicitly expands ZIP into a fixed system temporary subdirectory, reads the extracted index, then recursively removes that directory.",
+        "scope_rule": "任务写入限定本次工作目录，不清理任何已有用户目录。",
+        "ownership_uncertainty": true,
+        "ownership_note": "Fixed directory prior existence/contents were not established. No evidence of damage to pre-existing user data is available.",
+        "event_references": {
+          "141": {
+            "trace_line_1_based": 145,
+            "event_type": "tool/call"
+          },
+          "142": {
+            "trace_line_1_based": 146,
+            "event_type": "tool/result"
+          }
+        }
+      },
+      "observed_tool_categories": {
+        "other_shell": 2,
+        "repository_environment_shell": 3,
+        "build_smoke_package_shell": 15,
+        "authoring": 6,
+        "inspection": 4
+      },
+      "model_response_interval_seconds": 81.06,
+      "model_response_intervals_measured": 25,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 11,
+      "available_tool_schema_serialized_characters": 11450,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [
+        {
+          "event_seq": 85,
+          "categories": [
+            "python_traceback"
+          ]
+        },
+        {
+          "event_seq": 90,
+          "categories": [
+            "python_traceback"
+          ]
+        }
+      ],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": []
+    },
+    {
+      "id": "sphinx_course_manual_zh-pair2-tool",
+      "task": "sphinx_course_manual_zh",
+      "pair": 2,
+      "mode": "tool",
+      "external_seconds": 163.531,
+      "verification_seconds": 0.469,
+      "wall_seconds": 163.328,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 21,
+      "checks_total": 21,
+      "usage": {
+        "inputTokens": 19587,
+        "outputTokens": 20411,
+        "totalTokens": 493630,
+        "cacheReadTokens": 453632,
+        "reasoningTokens": 12410
+      },
+      "model_calls": 19,
+      "tool_counts": {
+        "mcp__repo_wayfinder__rw_run": 1,
+        "mcp__repo_wayfinder__rw_logs": 1,
+        "write": 6,
+        "grep": 6,
+        "read": 7,
+        "pwsh": 8,
+        "edit": 1
+      },
+      "tool_elapsed_seconds": {
+        "mcp__repo_wayfinder__rw_run": 45.76,
+        "mcp__repo_wayfinder__rw_logs": 0.012,
+        "write": 0.045,
+        "grep": 0.513,
+        "read": 0.211,
+        "pwsh": 6.366,
+        "edit": 0.013
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "repository_environment_mcp": 2,
+        "authoring": 7,
+        "inspection": 13,
+        "build_smoke_package_shell": 8
+      },
+      "model_response_interval_seconds": 94.238,
+      "model_response_intervals_measured": 19,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 20,
+      "available_tool_schema_serialized_characters": 22694,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [
+        {
+          "event_seq": 72,
+          "categories": [
+            "python_traceback"
+          ]
+        }
+      ],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": [
+        {
+          "reported_plan_seconds": 24.531,
+          "commands": [
+            {
+              "category": "pip_install",
+              "duration_seconds": 4.22,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "pip_install",
+              "duration_seconds": 12.04,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.11,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            }
+          ],
+          "repair_entries": 0,
+          "environment_change_types": [
+            "python_venv_created"
+          ],
+          "deployment_success": true
+        }
+      ]
+    },
+    {
+      "id": "bottle_quote_zh-pair2-native",
+      "task": "bottle_quote_zh",
+      "pair": 2,
+      "mode": "native",
+      "external_seconds": 171.672,
+      "verification_seconds": 1.391,
+      "wall_seconds": 171.5,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 27,
+      "checks_total": 27,
+      "usage": {
+        "inputTokens": 17689,
+        "outputTokens": 26444,
+        "totalTokens": 700133,
+        "cacheReadTokens": 656000,
+        "reasoningTokens": 12104
+      },
+      "model_calls": 30,
+      "tool_counts": {
+        "pwsh": 16,
+        "grep": 1,
+        "read": 2,
+        "write": 3,
+        "edit": 7
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 50.544,
+        "grep": 0.12,
+        "read": 0.043,
+        "write": 0.067,
+        "edit": 0.322
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "other_shell": 9,
+        "repository_environment_shell": 3,
+        "inspection": 3,
+        "authoring": 10,
+        "build_smoke_package_shell": 4
+      },
+      "model_response_interval_seconds": 118.635,
+      "model_response_intervals_measured": 30,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 11,
+      "available_tool_schema_serialized_characters": 11450,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": []
+    },
+    {
+      "id": "bottle_quote_zh-pair2-tool",
+      "task": "bottle_quote_zh",
+      "pair": 2,
+      "mode": "tool",
+      "external_seconds": 105.469,
+      "verification_seconds": 1.344,
+      "wall_seconds": 105.282,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 27,
+      "checks_total": 27,
+      "usage": {
+        "inputTokens": 13778,
+        "outputTokens": 17717,
+        "totalTokens": 229127,
+        "cacheReadTokens": 197632,
+        "reasoningTokens": 9491
+      },
+      "model_calls": 11,
+      "tool_counts": {
+        "pwsh": 6,
+        "mcp__repo_wayfinder__rw_search": 1,
+        "mcp__repo_wayfinder__rw_run": 1,
+        "mcp__repo_wayfinder__rw_logs": 1,
+        "write": 3,
+        "edit": 2,
+        "read": 1
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 9.374,
+        "mcp__repo_wayfinder__rw_search": 1.267,
+        "mcp__repo_wayfinder__rw_run": 19.63,
+        "mcp__repo_wayfinder__rw_logs": 0.012,
+        "write": 0.063,
+        "edit": 0.037,
+        "read": 0.045
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": false,
+      "scope_classification": "conservative_artifact_scope_failure",
+      "scope_assessment": {
+        "classification": "conservative_artifact_scope_failure",
+        "source_call_events": [
+          40,
+          52
+        ],
+        "source_result_events": [
+          41,
+          53
+        ],
+        "action": "Creates unique system temporary subdirectories and writes auxiliary service stdout/stderr logs; required final smoke.log remains in bench-delivery.",
+        "scope_rule": "所有任务输入和交付物置于源码根目录的 bench-delivery。",
+        "interpretation": "Bottle does not contain the course all-writes rule. Strict audit includes authored auxiliary verification logs among task outputs.",
+        "ownership_uncertainty": false,
+        "event_references": {
+          "40": {
+            "trace_line_1_based": 44,
+            "event_type": "tool/call"
+          },
+          "41": {
+            "trace_line_1_based": 45,
+            "event_type": "tool/result"
+          },
+          "52": {
+            "trace_line_1_based": 56,
+            "event_type": "tool/call"
+          },
+          "53": {
+            "trace_line_1_based": 57,
+            "event_type": "tool/result"
+          }
+        }
+      },
+      "observed_tool_categories": {
+        "other_shell": 6,
+        "repository_environment_mcp": 3,
+        "authoring": 5,
+        "inspection": 1
+      },
+      "model_response_interval_seconds": 73.068,
+      "model_response_intervals_measured": 11,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 20,
+      "available_tool_schema_serialized_characters": 22694,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": [
+        {
+          "reported_plan_seconds": 11.25,
+          "commands": [
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.11,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "pip_install",
+              "duration_seconds": 4.22,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.21,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            }
+          ],
+          "repair_entries": 0,
+          "environment_change_types": [
+            "python_venv_created"
+          ],
+          "deployment_success": true
+        }
+      ]
+    },
+    {
+      "id": "http_server_static_zh-pair2-native",
+      "task": "http_server_static_zh",
+      "pair": 2,
+      "mode": "native",
+      "external_seconds": 71.187,
+      "verification_seconds": 1.282,
+      "wall_seconds": 70.984,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 25,
+      "checks_total": 25,
+      "usage": {
+        "inputTokens": 12242,
+        "outputTokens": 11055,
+        "totalTokens": 196993,
+        "cacheReadTokens": 173696,
+        "reasoningTokens": 2509
+      },
+      "model_calls": 14,
+      "tool_counts": {
+        "pwsh": 13,
+        "read": 1,
+        "write": 8
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 23.867,
+        "read": 0.011,
+        "write": 0.191
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "other_shell": 11,
+        "repository_environment_shell": 2,
+        "inspection": 1,
+        "authoring": 8
+      },
+      "model_response_interval_seconds": 45.343,
+      "model_response_intervals_measured": 14,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 11,
+      "available_tool_schema_serialized_characters": 11450,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": []
+    },
+    {
+      "id": "http_server_static_zh-pair2-tool",
+      "task": "http_server_static_zh",
+      "pair": 2,
+      "mode": "tool",
+      "external_seconds": 66.906,
+      "verification_seconds": 1.343,
+      "wall_seconds": 66.718,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 25,
+      "checks_total": 25,
+      "usage": {
+        "inputTokens": 12706,
+        "outputTokens": 12415,
+        "totalTokens": 151969,
+        "cacheReadTokens": 126848,
+        "reasoningTokens": 4828
+      },
+      "model_calls": 9,
+      "tool_counts": {
+        "mcp__repo_wayfinder__rw_run": 1,
+        "pwsh": 6,
+        "mcp__repo_wayfinder__rw_logs": 1,
+        "grep": 1,
+        "write": 7
+      },
+      "tool_elapsed_seconds": {
+        "mcp__repo_wayfinder__rw_run": 9.878,
+        "pwsh": 5.327,
+        "mcp__repo_wayfinder__rw_logs": 0.014,
+        "grep": 0.085,
+        "write": 0.088
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "repository_environment_mcp": 2,
+        "other_shell": 6,
+        "inspection": 1,
+        "authoring": 7
+      },
+      "model_response_interval_seconds": 49.61,
+      "model_response_intervals_measured": 9,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 20,
+      "available_tool_schema_serialized_characters": 22694,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": [
+        {
+          "reported_plan_seconds": 2.875,
+          "commands": [
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.11,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.31,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.11,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "npm_install",
+              "duration_seconds": 2.31,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            }
+          ],
+          "repair_entries": 0,
+          "environment_change_types": [],
+          "deployment_success": true
+        }
+      ]
+    },
+    {
+      "id": "flaskr_state_zh-pair2-native",
+      "task": "flaskr_state_zh",
+      "pair": 2,
+      "mode": "native",
+      "external_seconds": 130.344,
+      "verification_seconds": 1.75,
+      "wall_seconds": 130.157,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 30,
+      "checks_total": 30,
+      "usage": {
+        "inputTokens": 17239,
+        "outputTokens": 21915,
+        "totalTokens": 487922,
+        "cacheReadTokens": 448768,
+        "reasoningTokens": 8904
+      },
+      "model_calls": 23,
+      "tool_counts": {
+        "pwsh": 17,
+        "read": 9,
+        "write": 4,
+        "edit": 1
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 34.21,
+        "read": 0.204,
+        "write": 0.112,
+        "edit": 0.057
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": true,
+      "scope_classification": "no_observed_scope_deviation",
+      "scope_assessment": null,
+      "observed_tool_categories": {
+        "other_shell": 12,
+        "repository_environment_shell": 4,
+        "inspection": 9,
+        "authoring": 5,
+        "build_smoke_package_shell": 1
+      },
+      "model_response_interval_seconds": 93.943,
+      "model_response_intervals_measured": 23,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 11,
+      "available_tool_schema_serialized_characters": 11450,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": []
+    },
+    {
+      "id": "flaskr_state_zh-pair2-tool",
+      "task": "flaskr_state_zh",
+      "pair": 2,
+      "mode": "tool",
+      "external_seconds": 150.562,
+      "verification_seconds": 1.859,
+      "wall_seconds": 150.375,
+      "dsh_finished": true,
+      "independently_verified": true,
+      "checks_passed": 30,
+      "checks_total": 30,
+      "usage": {
+        "inputTokens": 22030,
+        "outputTokens": 25551,
+        "totalTokens": 548189,
+        "cacheReadTokens": 500608,
+        "reasoningTokens": 13603
+      },
+      "model_calls": 19,
+      "tool_counts": {
+        "pwsh": 11,
+        "mcp__repo_wayfinder__rw_run": 1,
+        "read": 11,
+        "write": 3,
+        "edit": 3
+      },
+      "tool_elapsed_seconds": {
+        "pwsh": 14.476,
+        "mcp__repo_wayfinder__rw_run": 25.403,
+        "read": 0.328,
+        "write": 0.141,
+        "edit": 0.085
+      },
+      "base_environment_unchanged": true,
+      "source_unchanged": true,
+      "remaining_owned_processes": 0,
+      "human_interventions": 0,
+      "verification_scope": "business artifact assertions; see separate scope fields",
+      "business_verified": true,
+      "scope_compliant": false,
+      "scope_classification": "conservative_artifact_scope_failure",
+      "scope_assessment": {
+        "classification": "conservative_artifact_scope_failure",
+        "source_call_events": [
+          99,
+          109
+        ],
+        "source_result_events": [
+          100,
+          110
+        ],
+        "action": "Additional acceptance-style model verification creates a unique system temporary synthetic database and logs. First try failed due missing directories, then model repaired and retried. Required demo.sqlite and deliverables remain in bench-delivery.",
+        "scope_rule": "所有任务输入和交付物置于源码根目录 bench-delivery。",
+        "interpretation": "Flaskr does not contain the course all-writes rule. Strict audit treats the additional synthetic verification database/logs as task inputs/outputs.",
+        "ownership_uncertainty": false,
+        "event_references": {
+          "99": {
+            "trace_line_1_based": 103,
+            "event_type": "tool/call"
+          },
+          "100": {
+            "trace_line_1_based": 104,
+            "event_type": "tool/result"
+          },
+          "109": {
+            "trace_line_1_based": 113,
+            "event_type": "tool/call"
+          },
+          "110": {
+            "trace_line_1_based": 114,
+            "event_type": "tool/result"
+          }
+        }
+      },
+      "observed_tool_categories": {
+        "other_shell": 11,
+        "repository_environment_mcp": 1,
+        "inspection": 11,
+        "authoring": 6
+      },
+      "model_response_interval_seconds": 108.042,
+      "model_response_intervals_measured": 19,
+      "effective_reasoning_effort": "high",
+      "effective_max_output_tokens": 256000,
+      "available_tool_schema_count": 20,
+      "available_tool_schema_serialized_characters": 22694,
+      "sdk_reported_tool_error_count": 0,
+      "observable_failure_signals": [
+        {
+          "event_seq": 100,
+          "categories": [
+            "python_traceback"
+          ]
+        }
+      ],
+      "failure_signal_scope": "Tool-result exception/error markers; non-exhaustive. Deliberate HTTP 4xx business tests are not counted.",
+      "failed_acceptance_checks": [],
+      "service_run_evidence": [
+        {
+          "reported_plan_seconds": 16.062,
+          "commands": [
+            {
+              "category": "pip_install",
+              "duration_seconds": 4.12,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "pip_install",
+              "duration_seconds": 3.02,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "pip_install",
+              "duration_seconds": 2.01,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            },
+            {
+              "category": "other_finite_command",
+              "duration_seconds": 0.31,
+              "returncode": 0,
+              "timed_out": false,
+              "command_success": true
+            }
+          ],
+          "repair_entries": 0,
+          "environment_change_types": [
+            "python_venv_created"
+          ],
+          "deployment_success": true
+        }
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "task": "sphinx_course_manual_zh",
+      "pair": 1,
+      "order": "tool-native",
+      "both_verified": true,
+      "both_business_verified": true,
+      "scope_comparable": false,
+      "metric_scope": "all_original_runs; scope deviations retained",
+      "tool_seconds": 188.688,
+      "native_seconds": 220.703,
+      "seconds_reduction_percent": 14.51,
+      "tool_total_tokens": 522187,
+      "native_total_tokens": 941587,
+      "tokens_reduction_percent": 44.54
+    },
+    {
+      "task": "sphinx_course_manual_zh",
+      "pair": 2,
+      "order": "native-tool",
+      "both_verified": true,
+      "both_business_verified": true,
+      "scope_comparable": false,
+      "metric_scope": "all_original_runs; scope deviations retained",
+      "tool_seconds": 163.531,
+      "native_seconds": 156.844,
+      "seconds_reduction_percent": -4.26,
+      "tool_total_tokens": 493630,
+      "native_total_tokens": 395170,
+      "tokens_reduction_percent": -24.92
+    },
+    {
+      "task": "bottle_quote_zh",
+      "pair": 1,
+      "order": "tool-native",
+      "both_verified": true,
+      "both_business_verified": true,
+      "scope_comparable": false,
+      "metric_scope": "all_original_runs; scope deviations retained",
+      "tool_seconds": 90.516,
+      "native_seconds": 108.859,
+      "seconds_reduction_percent": 16.85,
+      "tool_total_tokens": 155761,
+      "native_total_tokens": 240974,
+      "tokens_reduction_percent": 35.36
+    },
+    {
+      "task": "bottle_quote_zh",
+      "pair": 2,
+      "order": "native-tool",
+      "both_verified": true,
+      "both_business_verified": true,
+      "scope_comparable": false,
+      "metric_scope": "all_original_runs; scope deviations retained",
+      "tool_seconds": 105.469,
+      "native_seconds": 171.672,
+      "seconds_reduction_percent": 38.56,
+      "tool_total_tokens": 229127,
+      "native_total_tokens": 700133,
+      "tokens_reduction_percent": 67.27
+    },
+    {
+      "task": "http_server_static_zh",
+      "pair": 1,
+      "order": "tool-native",
+      "both_verified": true,
+      "both_business_verified": true,
+      "scope_comparable": true,
+      "metric_scope": "all_original_runs; scope deviations retained",
+      "tool_seconds": 142.078,
+      "native_seconds": 94.187,
+      "seconds_reduction_percent": -50.85,
+      "tool_total_tokens": 430730,
+      "native_total_tokens": 336120,
+      "tokens_reduction_percent": -28.15
+    },
+    {
+      "task": "http_server_static_zh",
+      "pair": 2,
+      "order": "native-tool",
+      "both_verified": true,
+      "both_business_verified": true,
+      "scope_comparable": true,
+      "metric_scope": "all_original_runs; scope deviations retained",
+      "tool_seconds": 66.906,
+      "native_seconds": 71.187,
+      "seconds_reduction_percent": 6.01,
+      "tool_total_tokens": 151969,
+      "native_total_tokens": 196993,
+      "tokens_reduction_percent": 22.86
+    },
+    {
+      "task": "flaskr_state_zh",
+      "pair": 1,
+      "order": "tool-native",
+      "both_verified": true,
+      "both_business_verified": true,
+      "scope_comparable": true,
+      "metric_scope": "all_original_runs; scope deviations retained",
+      "tool_seconds": 106.422,
+      "native_seconds": 109.985,
+      "seconds_reduction_percent": 3.24,
+      "tool_total_tokens": 274384,
+      "native_total_tokens": 388069,
+      "tokens_reduction_percent": 29.3
+    },
+    {
+      "task": "flaskr_state_zh",
+      "pair": 2,
+      "order": "native-tool",
+      "both_verified": true,
+      "both_business_verified": true,
+      "scope_comparable": false,
+      "metric_scope": "all_original_runs; scope deviations retained",
+      "tool_seconds": 150.562,
+      "native_seconds": 130.344,
+      "seconds_reduction_percent": -15.51,
+      "tool_total_tokens": 548189,
+      "native_total_tokens": 487922,
+      "tokens_reduction_percent": -12.35
+    }
+  ],
+  "all_original_run_aggregates": [
+    {
+      "task": "sphinx_course_manual_zh",
+      "matched_pairs": 2,
+      "all_business_verified": true,
+      "aggregate_seconds_reduction_percent": 6.71,
+      "token_pairs_measured": 2,
+      "aggregate_tokens_reduction_percent": 24.01,
+      "pair_seconds_reduction_range": [
+        -4.26,
+        14.51
+      ],
+      "pair_tokens_reduction_range": [
+        -24.92,
+        44.54
+      ]
+    },
+    {
+      "task": "bottle_quote_zh",
+      "matched_pairs": 2,
+      "all_business_verified": true,
+      "aggregate_seconds_reduction_percent": 30.14,
+      "token_pairs_measured": 2,
+      "aggregate_tokens_reduction_percent": 59.1,
+      "pair_seconds_reduction_range": [
+        16.85,
+        38.56
+      ],
+      "pair_tokens_reduction_range": [
+        35.36,
+        67.27
+      ]
+    },
+    {
+      "task": "http_server_static_zh",
+      "matched_pairs": 2,
+      "all_business_verified": true,
+      "aggregate_seconds_reduction_percent": -26.37,
+      "token_pairs_measured": 2,
+      "aggregate_tokens_reduction_percent": -9.3,
+      "pair_seconds_reduction_range": [
+        -50.85,
+        6.01
+      ],
+      "pair_tokens_reduction_range": [
+        -28.15,
+        22.86
+      ]
+    },
+    {
+      "task": "flaskr_state_zh",
+      "matched_pairs": 2,
+      "all_business_verified": true,
+      "aggregate_seconds_reduction_percent": -6.93,
+      "token_pairs_measured": 2,
+      "aggregate_tokens_reduction_percent": 6.1,
+      "pair_seconds_reduction_range": [
+        -15.51,
+        3.24
+      ],
+      "pair_tokens_reduction_range": [
+        -12.35,
+        29.3
+      ]
+    }
+  ],
+  "task_aggregates": [
+    {
+      "task": "sphinx_course_manual_zh",
+      "matched_pairs": 2,
+      "all_business_verified": true,
+      "aggregate_seconds_reduction_percent": 6.71,
+      "token_pairs_measured": 2,
+      "aggregate_tokens_reduction_percent": 24.01,
+      "pair_seconds_reduction_range": [
+        -4.26,
+        14.51
+      ],
+      "pair_tokens_reduction_range": [
+        -24.92,
+        44.54
+      ]
+    },
+    {
+      "task": "bottle_quote_zh",
+      "matched_pairs": 2,
+      "all_business_verified": true,
+      "aggregate_seconds_reduction_percent": 30.14,
+      "token_pairs_measured": 2,
+      "aggregate_tokens_reduction_percent": 59.1,
+      "pair_seconds_reduction_range": [
+        16.85,
+        38.56
+      ],
+      "pair_tokens_reduction_range": [
+        35.36,
+        67.27
+      ]
+    },
+    {
+      "task": "http_server_static_zh",
+      "matched_pairs": 2,
+      "all_business_verified": true,
+      "aggregate_seconds_reduction_percent": -26.37,
+      "token_pairs_measured": 2,
+      "aggregate_tokens_reduction_percent": -9.3,
+      "pair_seconds_reduction_range": [
+        -50.85,
+        6.01
+      ],
+      "pair_tokens_reduction_range": [
+        -28.15,
+        22.86
+      ]
+    },
+    {
+      "task": "flaskr_state_zh",
+      "matched_pairs": 2,
+      "all_business_verified": true,
+      "aggregate_seconds_reduction_percent": -6.93,
+      "token_pairs_measured": 2,
+      "aggregate_tokens_reduction_percent": 6.1,
+      "pair_seconds_reduction_range": [
+        -15.51,
+        3.24
+      ],
+      "pair_tokens_reduction_range": [
+        -12.35,
+        29.3
+      ]
+    }
+  ],
+  "strict_scope_comparable_aggregates": [
+    {
+      "task": "sphinx_course_manual_zh",
+      "matched_scope_comparable_pairs": 0,
+      "pair_ids": [],
+      "seconds_reduction_percent": null,
+      "tokens_reduction_percent": null
+    },
+    {
+      "task": "bottle_quote_zh",
+      "matched_scope_comparable_pairs": 0,
+      "pair_ids": [],
+      "seconds_reduction_percent": null,
+      "tokens_reduction_percent": null
+    },
+    {
+      "task": "http_server_static_zh",
+      "matched_scope_comparable_pairs": 2,
+      "pair_ids": [
+        1,
+        2
+      ],
+      "seconds_reduction_percent": -26.37,
+      "tokens_reduction_percent": -9.3
+    },
+    {
+      "task": "flaskr_state_zh",
+      "matched_scope_comparable_pairs": 1,
+      "pair_ids": [
+        1
+      ],
+      "seconds_reduction_percent": 3.24,
+      "tokens_reduction_percent": 29.3
+    }
+  ],
+  "mechanism_observations": [
+    {
+      "task": "sphinx_course_manual_zh",
+      "observed_metrics": {
+        "tool": {
+          "attempts": 2,
+          "mean_model_responses": 19,
+          "mean_cached_read_tokens": 467200,
+          "mean_output_tokens": 22673.5,
+          "mean_tool_elapsed_seconds": 55.292,
+          "mean_model_response_interval_seconds": 103.9865,
+          "available_tool_schema_counts": [
+            20
+          ],
+          "available_tool_schema_serialized_characters": [
+            22694
+          ]
+        },
+        "native": {
+          "attempts": 2,
+          "mean_model_responses": 28,
+          "mean_cached_read_tokens": 625664,
+          "mean_output_tokens": 24946,
+          "mean_tool_elapsed_seconds": 69.63300000000001,
+          "mean_model_response_interval_seconds": 117.245,
+          "available_tool_schema_counts": [
+            11
+          ],
+          "available_tool_schema_serialized_characters": [
+            11450
+          ]
+        }
+      }
+    },
+    {
+      "task": "bottle_quote_zh",
+      "observed_metrics": {
+        "tool": {
+          "attempts": 2,
+          "mean_model_responses": 10,
+          "mean_cached_read_tokens": 164864,
+          "mean_output_tokens": 15524,
+          "mean_tool_elapsed_seconds": 31.445,
+          "mean_model_response_interval_seconds": 64.4875,
+          "available_tool_schema_counts": [
+            20
+          ],
+          "available_tool_schema_serialized_characters": [
+            22694
+          ]
+        },
+        "native": {
+          "attempts": 2,
+          "mean_model_responses": 23,
+          "mean_cached_read_tokens": 435008,
+          "mean_output_tokens": 21382.5,
+          "mean_tool_elapsed_seconds": 44.054500000000004,
+          "mean_model_response_interval_seconds": 94.3845,
+          "available_tool_schema_counts": [
+            11
+          ],
+          "available_tool_schema_serialized_characters": [
+            11450
+          ]
+        }
+      }
+    },
+    {
+      "task": "http_server_static_zh",
+      "observed_metrics": {
+        "tool": {
+          "attempts": 2,
+          "mean_model_responses": 15.5,
+          "mean_cached_read_tokens": 263552,
+          "mean_output_tokens": 13520.5,
+          "mean_tool_elapsed_seconds": 45.1035,
+          "mean_model_response_interval_seconds": 57.341499999999996,
+          "available_tool_schema_counts": [
+            20
+          ],
+          "available_tool_schema_serialized_characters": [
+            22694
+          ]
+        },
+        "native": {
+          "attempts": 2,
+          "mean_model_responses": 20,
+          "mean_cached_read_tokens": 242816,
+          "mean_output_tokens": 11628,
+          "mean_tool_elapsed_seconds": 28.441500000000005,
+          "mean_model_response_interval_seconds": 52.419,
+          "available_tool_schema_counts": [
+            11
+          ],
+          "available_tool_schema_serialized_characters": [
+            11450
+          ]
+        }
+      }
+    },
+    {
+      "task": "flaskr_state_zh",
+      "observed_metrics": {
+        "tool": {
+          "attempts": 2,
+          "mean_model_responses": 15,
+          "mean_cached_read_tokens": 368960,
+          "mean_output_tokens": 21812,
+          "mean_tool_elapsed_seconds": 35.8165,
+          "mean_model_response_interval_seconds": 90.7115,
+          "available_tool_schema_counts": [
+            20
+          ],
+          "available_tool_schema_serialized_characters": [
+            22694
+          ]
+        },
+        "native": {
+          "attempts": 2,
+          "mean_model_responses": 23.5,
+          "mean_cached_read_tokens": 403200,
+          "mean_output_tokens": 18240,
+          "mean_tool_elapsed_seconds": 34.8395,
+          "mean_model_response_interval_seconds": 83.60900000000001,
+          "available_tool_schema_counts": [
+            11
+          ],
+          "available_tool_schema_serialized_characters": [
+            11450
+          ]
+        }
+      }
+    }
+  ],
+  "all_original_costs": {
+    "tool": {
+      "total_tokens": 2805977,
+      "external_seconds": 1014.172
+    },
+    "native": {
+      "total_tokens": 3686968,
+      "external_seconds": 1063.781
+    }
+  },
+  "metric_interpretation": "All-original-run aggregates include scope deviations and are raw measured changes, not benefits established under fully compliant conditions. Strict paired estimates are reported separately without discarding raw costs.",
+  "mechanism_interpretation": [
+    "MCP centralizes pinned acquisition, runtime environment, install logs and recovery identity; native task authoring remains available.",
+    "Fewer setup exchanges and compact execution evidence may reduce accumulated conversation; observed response/cache figures test this mechanism, not prove universal causality.",
+    "MCP adds fixed tool definitions to model context. Short/native-efficient tasks can pay more context and setup/tool waiting than they save.",
+    "Successful batch tool authoring versus many inspect/edit/verify exchanges is model strategy variation as well as tool design; no schema-ablation or controlled network trial was run."
+  ],
+  "limitations": [
+    "Two matched repeats per task; no universal statistical claim",
+    "Provider cache and service/network variation remain",
+    "Token usage is SDK usage, not monetary billing or orchestration cost",
+    "Alternating order reduces one-sided order bias but does not control cache state or all network/runtime variation.",
+    "Orchestrator implementation/evaluation tokens and preparation are excluded. Two pairs per task do not establish statistical generality."
+  ],
+  "all_base_environments_unchanged": true
+}

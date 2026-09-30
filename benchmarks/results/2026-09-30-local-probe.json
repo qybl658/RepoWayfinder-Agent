@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "model_calls": 0,
+  "external_network_calls": 0,
+  "dependencies_installed": 0,
+  "owned_server_stopped": true,
+  "results": [
+    {
+      "state": "ready",
+      "methods": [
+        {
+          "method": "original_test_net_connection_pattern",
+          "correct": true,
+          "seconds": 7.296489,
+          "explicit_sleep_milliseconds": 0
+        },
+        {
+          "method": "bounded_http_known_body",
+          "correct": true,
+          "seconds": 0.035938,
+          "explicit_sleep_milliseconds": 0
+        },
+        {
+          "method": "bounded_tcp_socket",
+          "correct": true,
+          "seconds": 0.005643,
+          "explicit_sleep_milliseconds": 0
+        },
+        {
+          "method": "owned_process_state",
+          "correct": true,
+          "seconds": 0.011467,
+          "explicit_sleep_milliseconds": 0
+        }
+      ]
+    },
+    {
+      "state": "closed",
+      "methods": [
+        {
+          "method": "original_test_net_connection_pattern",
+          "correct": true,
+          "seconds": 8.287337,
+          "explicit_sleep_milliseconds": 0
+        },
+        {
+          "method": "bounded_http_known_body",
+          "correct": true,
+          "seconds": 1.066749,
+          "explicit_sleep_milliseconds": 0
+        },
+        {
+          "method": "bounded_tcp_socket",
+          "correct": true,
+          "seconds": 0.514579,
+          "explicit_sleep_milliseconds": 0
+        },
+        {
+          "method": "owned_process_state",
+          "correct": true,
+          "seconds": 0.012637,
+          "explicit_sleep_milliseconds": 0
+        }
+      ]
+    }
+  ],
+  "scope": "One ready and one closed controlled state, fresh owned 127.0.0.1 server. Within each fresh pwsh process test original pattern then HTTP/socket/PID; ordering and module warm-up are not randomized.",
+  "interpretation": "Tests command-pattern latency and correct detection, not full model task savings. Original patterns include sleeps only if initial state mismatches; explicit sleep is recorded. HTTP checks known body for readiness; socket/PID closure checks do not replace required business HTTP assertions."
+}

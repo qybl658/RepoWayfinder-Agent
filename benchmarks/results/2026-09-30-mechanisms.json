@@ -1,0 +1,367 @@
+{
+  "title": "Why DSH gains varied while historical Grok often saved",
+  "scope": "Existing 16 DSH attempts and historical Grok; no new model calls. One offline owned-loopback probe only.",
+  "business_verified": 16,
+  "conservative_scope_compliant": 11,
+  "scope_flags": {
+    "explicit_course": 2,
+    "interpretive_bottle_flaskr": 3
+  },
+  "dsh_two_repeat_accounting": [
+    {
+      "task": "bottle_quote_zh",
+      "tool": {
+        "responses": 20,
+        "tool_calls": 26,
+        "cumulative_input_including_cache": 353840,
+        "mean_input_per_response": 17692.0,
+        "output_tokens": 31048,
+        "total_tokens": 384888
+      },
+      "native": {
+        "responses": 46,
+        "tool_calls": 44,
+        "cumulative_input_including_cache": 898342,
+        "mean_input_per_response": 19529.2,
+        "output_tokens": 42765,
+        "total_tokens": 941107
+      }
+    },
+    {
+      "task": "http_server_static_zh",
+      "tool": {
+        "responses": 31,
+        "tool_calls": 45,
+        "cumulative_input_including_cache": 555658,
+        "mean_input_per_response": 17924.5,
+        "output_tokens": 27041,
+        "total_tokens": 582699
+      },
+      "native": {
+        "responses": 40,
+        "tool_calls": 52,
+        "cumulative_input_including_cache": 509857,
+        "mean_input_per_response": 12746.4,
+        "output_tokens": 23256,
+        "total_tokens": 533113
+      }
+    },
+    {
+      "task": "flaskr_state_zh",
+      "tool": {
+        "responses": 30,
+        "tool_calls": 51,
+        "cumulative_input_including_cache": 778949,
+        "mean_input_per_response": 25965.0,
+        "output_tokens": 43624,
+        "total_tokens": 822573
+      },
+      "native": {
+        "responses": 47,
+        "tool_calls": 62,
+        "cumulative_input_including_cache": 839511,
+        "mean_input_per_response": 17861.9,
+        "output_tokens": 36480,
+        "total_tokens": 875991
+      }
+    },
+    {
+      "task": "sphinx_course_manual_zh",
+      "tool": {
+        "responses": 38,
+        "tool_calls": 52,
+        "cumulative_input_including_cache": 970470,
+        "mean_input_per_response": 25538.7,
+        "output_tokens": 45347,
+        "total_tokens": 1015817
+      },
+      "native": {
+        "responses": 56,
+        "tool_calls": 65,
+        "cumulative_input_including_cache": 1286865,
+        "mean_input_per_response": 22979.7,
+        "output_tokens": 49892,
+        "total_tokens": 1336757
+      }
+    }
+  ],
+  "historical_grok_single_pair": [
+    {
+      "task": "bottle_quote_zh",
+      "tool": {
+        "responses": 20,
+        "tool_calls": 34,
+        "read_file_calls": 9,
+        "reported_api_seconds": 439.434,
+        "initial_context_tokens": 19041
+      },
+      "discovery_evidence": [
+        {
+          "call_line": 2,
+          "result_line": 3,
+          "query": {
+            "query": "repo_wayfinder rw_run",
+            "limit": 5
+          },
+          "discovered_tool_names": [
+            "repo_wayfinder__rw_run",
+            "repo_wayfinder__rw_cancel",
+            "repo_wayfinder__rw_search",
+            "repo_wayfinder__rw_execute",
+            "repo_wayfinder__rw_prepare"
+          ],
+          "result_serialized_characters": 13502,
+          "decoded_schema_result_characters": 6791
+        }
+      ],
+      "native": {
+        "responses": 40,
+        "tool_calls": 57,
+        "read_file_calls": 24,
+        "reported_api_seconds": 720.412,
+        "initial_context_tokens": 18768
+      }
+    },
+    {
+      "task": "http_server_static_zh",
+      "tool": {
+        "responses": 22,
+        "tool_calls": 39,
+        "read_file_calls": 13,
+        "reported_api_seconds": 418.908,
+        "initial_context_tokens": 19043
+      },
+      "discovery_evidence": [
+        {
+          "call_line": 2,
+          "result_line": 3,
+          "query": {
+            "query": "repo_wayfinder rw_run",
+            "limit": 5
+          },
+          "discovered_tool_names": [
+            "repo_wayfinder__rw_run",
+            "repo_wayfinder__rw_cancel",
+            "repo_wayfinder__rw_search",
+            "repo_wayfinder__rw_execute",
+            "repo_wayfinder__rw_prepare"
+          ],
+          "result_serialized_characters": 13502,
+          "decoded_schema_result_characters": 6791
+        },
+        {
+          "call_line": 4,
+          "result_line": 5,
+          "query": {
+            "query": "repo_wayfinder rw_status rw_replan",
+            "limit": 3
+          },
+          "discovered_tool_names": [
+            "repo_wayfinder__rw_status",
+            "repo_wayfinder__rw_replan",
+            "repo_wayfinder__rw_run"
+          ],
+          "result_serialized_characters": 15121,
+          "decoded_schema_result_characters": 7564
+        }
+      ],
+      "native": {
+        "responses": 24,
+        "tool_calls": 44,
+        "read_file_calls": 19,
+        "reported_api_seconds": 568.986,
+        "initial_context_tokens": 18771
+      }
+    },
+    {
+      "task": "flaskr_state_zh",
+      "tool": {
+        "responses": 31,
+        "tool_calls": 50,
+        "read_file_calls": 16,
+        "reported_api_seconds": 885.976,
+        "initial_context_tokens": 19077
+      },
+      "discovery_evidence": [
+        {
+          "call_line": 2,
+          "result_line": 3,
+          "query": {
+            "query": "rw_run",
+            "limit": 1
+          },
+          "discovered_tool_names": [
+            "repo_wayfinder__rw_run"
+          ],
+          "result_serialized_characters": 6058,
+          "decoded_schema_result_characters": 3395
+        }
+      ],
+      "native": {
+        "responses": 27,
+        "tool_calls": 53,
+        "read_file_calls": 24,
+        "reported_api_seconds": 944.546,
+        "initial_context_tokens": 18802
+      }
+    }
+  ],
+  "fixed_context_observation": {
+    "dsh_initial_tool_extra_tokens_all_8_pairs": 3218,
+    "dsh_tool_catalog": {
+      "native_count": 11,
+      "tool_count": 20,
+      "native_schema_characters": 11450,
+      "tool_schema_characters": 22694
+    },
+    "grok_initial_arm_extra_tokens": [
+      263,
+      272,
+      273,
+      275
+    ],
+    "boundary": "Arm-level initial context difference includes schemas and guides; not precise schema-token attribution. Grok init lacks rw names and real search_tool returns definitions, but per-round provider tool-def sets are absent."
+  },
+  "static_first_pair_timing": {
+    "tool_call_seconds_tool_native": [
+      74.815,
+      32.814
+    ],
+    "model_response_seconds_tool_native": [
+      65.073,
+      59.495
+    ],
+    "test_net_connection_containing_calls": {
+      "run_id": "http_server_static_zh-pair1-tool",
+      "seqs": [
+        79,
+        89,
+        101,
+        111
+      ],
+      "trace_lines": [
+        83,
+        93,
+        105,
+        115
+      ],
+      "seconds": [
+        8.253,
+        9.54,
+        7.681,
+        16.115
+      ],
+      "sum_seconds": 41.589
+    },
+    "second_tool_repeat": {
+      "business_checks": "25/25",
+      "test_net_connection_calls": 0,
+      "all_tool_call_seconds": 15.392
+    },
+    "boundary": "Compound calls also contain HTTP/Git; 41.589 is not pure cmdlet time or measured full-task recoverable savings."
+  },
+  "local_probe": {
+    "passed": true,
+    "model_calls": 0,
+    "external_network_calls": 0,
+    "dependencies_installed": 0,
+    "owned_server_stopped": true,
+    "results": [
+      {
+        "state": "ready",
+        "methods": [
+          {
+            "method": "original_test_net_connection_pattern",
+            "correct": true,
+            "seconds": 7.296489,
+            "explicit_sleep_milliseconds": 0
+          },
+          {
+            "method": "bounded_http_known_body",
+            "correct": true,
+            "seconds": 0.035938,
+            "explicit_sleep_milliseconds": 0
+          },
+          {
+            "method": "bounded_tcp_socket",
+            "correct": true,
+            "seconds": 0.005643,
+            "explicit_sleep_milliseconds": 0
+          },
+          {
+            "method": "owned_process_state",
+            "correct": true,
+            "seconds": 0.011467,
+            "explicit_sleep_milliseconds": 0
+          }
+        ]
+      },
+      {
+        "state": "closed",
+        "methods": [
+          {
+            "method": "original_test_net_connection_pattern",
+            "correct": true,
+            "seconds": 8.287337,
+            "explicit_sleep_milliseconds": 0
+          },
+          {
+            "method": "bounded_http_known_body",
+            "correct": true,
+            "seconds": 1.066749,
+            "explicit_sleep_milliseconds": 0
+          },
+          {
+            "method": "bounded_tcp_socket",
+            "correct": true,
+            "seconds": 0.514579,
+            "explicit_sleep_milliseconds": 0
+          },
+          {
+            "method": "owned_process_state",
+            "correct": true,
+            "seconds": 0.012637,
+            "explicit_sleep_milliseconds": 0
+          }
+        ]
+      }
+    ],
+    "scope": "One ready and one closed controlled state, fresh owned 127.0.0.1 server. Within each fresh pwsh process test original pattern then HTTP/socket/PID; ordering and module warm-up are not randomized.",
+    "interpretation": "Tests command-pattern latency and correct detection, not full model task savings. Original patterns include sleeps only if initial state mismatches; explicit sleep is recorded. HTTP checks known body for readiness; socket/PID closure checks do not replace required business HTTP assertions."
+  },
+  "source_reading_observation": {
+    "grok_bottle_py_reads_tool_native": [
+      7,
+      12
+    ],
+    "overlapping_range_pairs_tool_native": [
+      1,
+      1
+    ],
+    "boundary": "Most reads are distinct ranges; do not call them exact repeats or assume all source inspection unnecessary."
+  },
+  "recovery_observation": {
+    "rw_run_per_tool_attempt": 1,
+    "rw_replan_actual_calls": 0,
+    "rw_status_actual_calls": 0,
+    "rw_cancel_actual_calls": 0,
+    "scope": "Both completed DSH and historical Grok samples. Acquisition/environment batched, task files authored natively; service-recovery savings not tested."
+  },
+  "actionable_routes": [
+    "Short known-body HTTP readiness and bounded socket/owned-PID shutdown probes, retain business/restart assertions.",
+    "Reuse existing environment and exact returned cwd/interpreter; do not reacquire solely because MCP exists.",
+    "Avoid unnecessary fixed-repository search and full successful logs; targeted source ranges and batch independent file work.",
+    "Host-supported lazy MCP definitions can preserve recovery capabilities; no schema ablation or total-gain proof yet.",
+    "Task-authored verification scratch/logs under owned workspace; normal installer caches are separate."
+  ],
+  "limits": [
+    "DSH stage timing is SDK event-based, includes network/provider/streaming, not pure reasoning.",
+    "Historical Grok has reported aggregate API time but no event timestamps; cannot assign exact tool/install/network times.",
+    "Grok discovery results and init tool list are recorded, but actual provider per-round full tool definitions are absent.",
+    "Character sizes measure trace/result serialization, not tokens or guaranteed provider-wire payload.",
+    "Scope audit remains 2 explicit course violations plus 3 conservative Bottle/Flaskr artifact-scope flags; costs not dropped.",
+    "Old Grok course includes 40-response cutoff plus 4 resumed responses; no strict uninterrupted causal estimate.",
+    "Input+cache aggregates repeated processing, not unique context, invoices or equal cross-host token prices."
+  ],
+  "new_grok_rule_control": "Separate Grok efficiency public-summary/report; not recomputed here."
+}

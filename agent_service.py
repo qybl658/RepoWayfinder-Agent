@@ -970,5 +970,5 @@ class AgentService:
                                              if item.get('command_success', item.get('returncode') == 0)]
         self.save(folder, {'status': 'completed' if deployed and not failed_checks else 'failed', 'result': result,
                           'reason': 'Execution and requested checks finished' if deployed and not failed_checks else 'Execution or requested result checks failed',
-                          'next_action': 'Use the recorded outputs; do not claim more than result.outcome' if deployed and not failed_checks else
+                          'next_action': 'For native continuation, set cwd to project_path in every call and use result.python_runtime.executable when present. Complete remaining user requirements; result.outcome covers only submitted commands/checks.' if deployed and not failed_checks else
                           'Reuse this job with rw_replan: exact edits, only affected commands, execute=true; do not clone/install again unless necessary'})
