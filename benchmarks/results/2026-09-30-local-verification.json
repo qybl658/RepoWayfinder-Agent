@@ -1,0 +1,1354 @@
+{
+  "status": "completed_model_comparisons_and_functional_replay",
+  "date": "2026-09-30",
+  "candidate_source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+  "question": "Can a stock Grok client gain token/time efficiency by connecting the complete product, without private rules?",
+  "model": "grok-4.7",
+  "reasoning_effort": "high",
+  "client": "Grok CLI 1.0.41",
+  "conditions": {
+    "fresh_home_and_task_each_arm": true,
+    "private_rules_loaded": 0,
+    "native_capabilities": "full",
+    "product": "complete MCP and standard initialize.instructions",
+    "task_specific_guide": false,
+    "final_arms_permission_mode": "process-only auto; classifier/deny/ask retained",
+    "global_accounts_or_rules_changed": false,
+    "model_turn_or_task_time_limits": 0,
+    "personal_rules_changed": false,
+    "user_level_MCP_installed": false
+  },
+  "product_distribution_guidance": "The product arm receives standard sanitized initialize.instructions as normally distributed; no private rules or benchmark-only guide.",
+  "comparison_scope": "complete product versus full native client; not the isolated causal effect of rw_verify or any individual instruction",
+  "accounting": {
+    "formula": "input_tokens + output_tokens + cache_read_input_tokens + cache_creation_input_tokens",
+    "money_or_bill": false,
+    "classifier_usage_separately_reported": false,
+    "classifier_usage_boundary": "Separate safety-classifier usage is not identifiable and is not claimed included.",
+    "reported_api_seconds_scope": "CLI-reported aggregate, not pure reasoning time",
+    "wall_seconds_scope": "CLI run for the given arm, including startup, tools and permission waits; independent acceptance and development/controller work are separate."
+  },
+  "attempts": [
+    {
+      "case": "csv",
+      "arm": "product",
+      "attempt": 1,
+      "source_commit": "e181de2706a9dea846a2456bbe2128b5488d1577",
+      "permission_mode": "default",
+      "classification": "client approval setup failure; business oracle not reached",
+      "usage": {
+        "input_tokens": 38890,
+        "output_tokens": 7884,
+        "cache_read_input_tokens": 27904,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 74678,
+      "wall_seconds": 115.172,
+      "reported_api_seconds": 108.323,
+      "business_verified": null,
+      "business_checks_reached": false,
+      "pair_validity": "setup-blocked; no matched comparison"
+    },
+    {
+      "case": "csv",
+      "arm": "product",
+      "attempt": 2,
+      "source_commit": "e181de2706a9dea846a2456bbe2128b5488d1577",
+      "permission_mode": "auto",
+      "classification": "earlier field-error product preflight; 15/15 business",
+      "usage": {
+        "input_tokens": 85192,
+        "output_tokens": 41432,
+        "cache_read_input_tokens": 768512,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 895136,
+      "wall_seconds": 641.843,
+      "reported_api_seconds": 592.368,
+      "business_verified": true,
+      "business_checks_reached": true,
+      "passed_checks": 15,
+      "total_checks": 15,
+      "assistant_responses": 16,
+      "dispatch_tool_calls": 18,
+      "pair_validity": "product preflight; no matched native arm"
+    },
+    {
+      "case": "csv",
+      "arm": "product",
+      "attempt": 3,
+      "source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "permission_mode": "auto",
+      "classification": "frozen final comparison",
+      "usage": {
+        "input_tokens": 162814,
+        "output_tokens": 43014,
+        "cache_read_input_tokens": 440448,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 646276,
+      "wall_seconds": 600.484,
+      "reported_api_seconds": 563.57,
+      "business_verified": true,
+      "business_checks_reached": true,
+      "passed_checks": 15,
+      "total_checks": 15,
+      "assistant_responses": 12,
+      "dispatch_tool_calls": 15,
+      "tool_counts": {
+        "list_dir": 2,
+        "search_tool": 1,
+        "read_file": 5,
+        "run_terminal_command": 4,
+        "write": 2,
+        "use_tool": 1
+      },
+      "pair_validity": "valid single CSV pair"
+    },
+    {
+      "case": "csv",
+      "arm": "native",
+      "attempt": 3,
+      "source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "permission_mode": "auto",
+      "classification": "frozen final comparison",
+      "usage": {
+        "input_tokens": 76822,
+        "output_tokens": 38257,
+        "cache_read_input_tokens": 403072,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 518151,
+      "wall_seconds": 571.156,
+      "reported_api_seconds": 543.894,
+      "business_verified": true,
+      "business_checks_reached": true,
+      "passed_checks": 15,
+      "total_checks": 15,
+      "assistant_responses": 11,
+      "dispatch_tool_calls": 13,
+      "tool_counts": {
+        "list_dir": 1,
+        "read_file": 5,
+        "run_terminal_command": 4,
+        "search_replace": 3
+      },
+      "pair_validity": "valid single CSV pair"
+    },
+    {
+      "case": "service",
+      "arm": "product",
+      "attempt": 3,
+      "source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "permission_mode": "auto",
+      "classification": "contaminated exploratory service comparison; costs retained",
+      "usage": {
+        "input_tokens": 79057,
+        "output_tokens": 39187,
+        "cache_read_input_tokens": 475136,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 593380,
+      "wall_seconds": 586.891,
+      "reported_api_seconds": 534.364,
+      "business_verified": true,
+      "business_checks_reached": true,
+      "passed_checks": 18,
+      "total_checks": 18,
+      "assistant_responses": 11,
+      "dispatch_tool_calls": 13,
+      "tool_counts": {
+        "list_dir": 1,
+        "search_tool": 1,
+        "read_file": 2,
+        "run_terminal_command": 5,
+        "search_replace": 3,
+        "use_tool": 1
+      },
+      "pair_validity": "contaminated exploratory service pair; excluded from benefit claims"
+    },
+    {
+      "case": "service",
+      "arm": "native",
+      "attempt": 3,
+      "source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "permission_mode": "auto",
+      "classification": "contaminated exploratory service comparison; costs retained",
+      "usage": {
+        "input_tokens": 156129,
+        "output_tokens": 48360,
+        "cache_read_input_tokens": 1757184,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 1961673,
+      "wall_seconds": 868.812,
+      "reported_api_seconds": 748.638,
+      "business_verified": true,
+      "business_checks_reached": true,
+      "passed_checks": 18,
+      "total_checks": 18,
+      "assistant_responses": 31,
+      "dispatch_tool_calls": 35,
+      "tool_counts": {
+        "list_dir": 2,
+        "run_terminal_command": 15,
+        "read_file": 7,
+        "grep": 3,
+        "search_replace": 4,
+        "get_command_or_subagent_output": 2,
+        "kill_command_or_subagent": 2
+      },
+      "pair_validity": "contaminated exploratory service pair; excluded from benefit claims"
+    },
+    {
+      "case": "service",
+      "arm": "native",
+      "attempt": 4,
+      "source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "finished": true,
+      "exit_code": 0,
+      "wall_seconds": 960.641,
+      "reported_api_seconds": 907.18,
+      "usage": {
+        "input_tokens": 103774,
+        "output_tokens": 64931,
+        "cache_read_input_tokens": 548096,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 716801,
+      "assistant_responses": 10,
+      "dispatch_tool_calls": 12,
+      "tool_counts": {
+        "list_dir": 1,
+        "run_terminal_command": 5,
+        "read_file": 2,
+        "search_replace": 4
+      },
+      "error_result_trace_lines": [],
+      "writes": [
+        {
+          "trace_line": 6,
+          "filename": "server.py",
+          "content_characters": 11342,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 8,
+          "filename": "verify_run.py",
+          "content_characters": 14096,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 12,
+          "filename": "server.py",
+          "content_characters": 92,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 18,
+          "filename": "README.md",
+          "content_characters": 1958,
+          "location": "task directory"
+        }
+      ],
+      "MCP_results": [],
+      "independent_acceptance": {
+        "passed": true,
+        "passed_checks": 18,
+        "total_checks": 18,
+        "checks": {
+          "script_and_readme": true,
+          "health": true,
+          "initial_empty": true,
+          "create_unicode": true,
+          "create_increment": true,
+          "ordered_list": true,
+          "get_existing": true,
+          "malformed_400": true,
+          "nonobject_400": true,
+          "missing_text_400": true,
+          "wrong_type_400": true,
+          "blank_text_400": true,
+          "unknown_404": true,
+          "missing_id_404": true,
+          "invalid_no_insert": true,
+          "restart_health": true,
+          "restart_persistent": true,
+          "restart_increment": true
+        }
+      },
+      "source_identity_valid": true,
+      "post_source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "post_source_tree_clean": true,
+      "scope_review": {
+        "outside_business_reads_observed": false,
+        "oracle_or_other_arm_access": false,
+        "subagent_read_uncertainty": false,
+        "dynamic_shell_and_generated_checker_reviewed": true,
+        "business_writes": "current task only",
+        "owned_process_cleanup_checked": true,
+        "allowed_external_read": "official client bundled SKILL.md"
+      },
+      "source_review": {
+        "loopback_only": true,
+        "README_launch_correct": true,
+        "README_validation_discrepancy": "claims nonloopback refusal exit 2; current implementation returns 1; contract did not require a specific exit code"
+      },
+      "retained_execution_failures": [
+        {
+          "trace_line": 11,
+          "exit_code": 1,
+          "cause": "model checker incorrectly rejects standard-library __future__ import; model removed future annotation import from business source and reran"
+        }
+      ],
+      "permission_mode": "auto",
+      "classification": "isolated observed service comparison",
+      "business_verified": true,
+      "business_checks_reached": true,
+      "passed_checks": 18,
+      "total_checks": 18,
+      "pair_validity": "valid single isolated pair; documentation quality separately recorded"
+    },
+    {
+      "case": "service",
+      "arm": "product",
+      "attempt": 4,
+      "source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "finished": true,
+      "exit_code": 0,
+      "wall_seconds": 735.485,
+      "reported_api_seconds": 695.731,
+      "usage": {
+        "input_tokens": 99004,
+        "output_tokens": 47899,
+        "cache_read_input_tokens": 515584,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 662487,
+      "assistant_responses": 11,
+      "dispatch_tool_calls": 12,
+      "tool_counts": {
+        "list_dir": 1,
+        "search_tool": 1,
+        "run_terminal_command": 5,
+        "search_replace": 2,
+        "use_tool": 1,
+        "read_file": 2
+      },
+      "error_result_trace_lines": [],
+      "writes": [
+        {
+          "trace_line": 6,
+          "filename": "server.py",
+          "content_characters": 7860,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 18,
+          "filename": "README.md",
+          "content_characters": 1595,
+          "location": "task directory"
+        }
+      ],
+      "MCP_results": [
+        {
+          "trace_line": 11,
+          "tool": "rw_verify",
+          "ok": true,
+          "passed": true,
+          "checks_passed": 0,
+          "checks_total": 0,
+          "execution_count": 51,
+          "seconds": 2.266
+        }
+      ],
+      "independent_acceptance": {
+        "passed": true,
+        "passed_checks": 18,
+        "total_checks": 18,
+        "checks": {
+          "script_and_readme": true,
+          "health": true,
+          "initial_empty": true,
+          "create_unicode": true,
+          "create_increment": true,
+          "ordered_list": true,
+          "get_existing": true,
+          "malformed_400": true,
+          "nonobject_400": true,
+          "missing_text_400": true,
+          "wrong_type_400": true,
+          "blank_text_400": true,
+          "unknown_404": true,
+          "missing_id_404": true,
+          "invalid_no_insert": true,
+          "restart_health": true,
+          "restart_persistent": true,
+          "restart_increment": true
+        }
+      },
+      "source_identity_valid": true,
+      "post_source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "post_source_tree_clean": true,
+      "scope_review": {
+        "outside_business_reads_observed": false,
+        "oracle_or_other_arm_access": false,
+        "subagent_read_uncertainty": false,
+        "dynamic_shell_and_generated_checker_reviewed": true,
+        "business_writes": "current task only",
+        "owned_process_cleanup_checked": true,
+        "literal_detector_false_positive": "http URL classified as a drive-shaped literal; manually confirmed network URL, not filesystem access"
+      },
+      "source_review": {
+        "loopback_only": true,
+        "README_launch_correct": true,
+        "README_validation_discrepancy": null
+      },
+      "retained_execution_failures": [
+        {
+          "trace_line": 15,
+          "exit_code": 1,
+          "cause": "PowerShell readonly $PID variable in process-status loop; no additional service work was performed; independent post-run check confirmed owned processes gone"
+        }
+      ],
+      "owned_HTTP_batch": {
+        "calls": 1,
+        "seconds": 2.266,
+        "HTTP_requests": 46,
+        "restart_steps": 1,
+        "starts": 2,
+        "successful_cleanup": 2,
+        "execution_events": 51,
+        "execution_event_count_is_not_process_start_count": true
+      },
+      "permission_mode": "auto",
+      "classification": "isolated observed service comparison",
+      "business_verified": true,
+      "business_checks_reached": true,
+      "passed_checks": 18,
+      "total_checks": 18,
+      "pair_validity": "valid single isolated pair; documentation quality separately recorded"
+    },
+    {
+      "case": "service",
+      "arm": "product",
+      "attempt": 5,
+      "source_commit": "843a3d75bb54741012224c436b7c10e19aecef9f",
+      "finished": true,
+      "exit_code": 0,
+      "wall_seconds": 831.703,
+      "reported_api_seconds": 757.115,
+      "usage": {
+        "input_tokens": 152369,
+        "output_tokens": 54624,
+        "cache_read_input_tokens": 512000,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 718993,
+      "assistant_responses": 12,
+      "dispatch_tool_calls": 13,
+      "tool_counts": {
+        "list_dir": 1,
+        "search_tool": 1,
+        "read_file": 1,
+        "run_terminal_command": 6,
+        "search_replace": 3,
+        "use_tool": 1
+      },
+      "error_result_trace_lines": [],
+      "writes": [
+        {
+          "trace_line": 8,
+          "filename": "server.py",
+          "content_characters": 9200,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 10,
+          "filename": "server.py",
+          "content_characters": 443,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 22,
+          "filename": "README.md",
+          "content_characters": 2045,
+          "location": "task directory"
+        }
+      ],
+      "MCP_results": [
+        {
+          "trace_line": 19,
+          "tool": "rw_verify",
+          "ok": true,
+          "passed": true,
+          "checks_passed": 0,
+          "checks_total": 0,
+          "execution_count": 43,
+          "seconds": 2.14
+        }
+      ],
+      "independent_acceptance": {
+        "passed": true,
+        "passed_checks": 18,
+        "total_checks": 18,
+        "checks": {
+          "script_and_readme": true,
+          "health": true,
+          "initial_empty": true,
+          "create_unicode": true,
+          "create_increment": true,
+          "ordered_list": true,
+          "get_existing": true,
+          "malformed_400": true,
+          "nonobject_400": true,
+          "missing_text_400": true,
+          "wrong_type_400": true,
+          "blank_text_400": true,
+          "unknown_404": true,
+          "missing_id_404": true,
+          "invalid_no_insert": true,
+          "restart_health": true,
+          "restart_persistent": true,
+          "restart_increment": true
+        }
+      },
+      "source_identity_valid": true,
+      "post_source_commit": "843a3d75bb54741012224c436b7c10e19aecef9f",
+      "post_source_tree_clean": true,
+      "scope_and_source_review": {
+        "outside_business_reads_observed": false,
+        "oracle_or_other_arm_access": false,
+        "subagent_read_uncertainty": false,
+        "dynamic_shell_and_tool_arguments_reviewed": true,
+        "all_business_writes": "current task directory",
+        "ordinary_client_and_MCP_evidence_logs": "normal runtime artifacts; MCP evidence explicitly placed within current task",
+        "source_identity_valid": true,
+        "pre_and_post_source_commit": "843a3d75bb54741012224c436b7c10e19aecef9f",
+        "whole_source_tree_clean_before_and_after": true,
+        "loopback_only_source_guard": true,
+        "README_launch_correct": true,
+        "README_validation_statement_consistent": true,
+        "owned_process_cleanup_checked": true,
+        "remaining_owned_processes": 0,
+        "listening_service_ports": 0,
+        "not_an_OS_sandbox": true,
+        "read_trace_boundary": "only read_file invocation reads current task prompt; shell commands read only current task SQLite/metadata; process inventory does not expose other business files"
+      },
+      "permission_mode": "auto",
+      "classification": "single later raw-body complete product candidate",
+      "business_verified": true,
+      "business_checks_reached": true,
+      "passed_checks": 18,
+      "total_checks": 18,
+      "pair_validity": "historical native-a4 reference; not a fresh pair or isolated field comparison"
+    }
+  ],
+  "valid_csv_a3": {
+    "business_assertions_each_arm": "15/15",
+    "order": "product then native, sequential",
+    "product_observable_session_usage_sum": 646276,
+    "native_observable_session_usage_sum": 518151,
+    "product_wall_seconds": 600.484,
+    "native_wall_seconds": 571.156,
+    "product_cost_change_percent": {
+      "observable_session_usage_sum": 24.73,
+      "wall_seconds": 5.13
+    },
+    "product_reduction_percent": {
+      "observable_session_usage_sum": -24.73,
+      "wall_seconds": -5.13
+    },
+    "benefit_demonstrated": false,
+    "observable_mechanism": {
+      "rw_verify": {
+        "calls": 1,
+        "supplied_assertions": 25,
+        "executions": 2,
+        "seconds": 0.422,
+        "protocol_errors": 0
+      },
+      "native_checker_characters": 9633,
+      "native_checker_correction_characters": 95,
+      "product_manifest_characters": 9972,
+      "application_characters": {
+        "native": 8423,
+        "product": 11006
+      },
+      "limits": "The manifest replaced a similarly sized checker; necessary assertion contracts differed, so not every generated step is redundant and no single component cost is isolated."
+    },
+    "scope_and_cleanup": "Task did not prohibit all auxiliary writes. Both arms wrote verification artifacts in system temporary storage. Native removed its own helper; product did not request deletion. Product receipts remained task-local."
+  },
+  "contaminated_service_a3": {
+    "business_assertions_each_arm": "18/18",
+    "product_observable_session_usage_sum": 593380,
+    "native_observable_session_usage_sum": 1961673,
+    "product_wall_seconds": 586.891,
+    "native_wall_seconds": 868.812,
+    "pair_validity": "contaminated exploratory only",
+    "benefit_demonstrated": false,
+    "excluded_from_benefit_claims": true,
+    "contamination": {
+      "parent_directory_search_trace_lines": [
+        40,
+        44
+      ],
+      "oracle_read_trace_line": 42,
+      "other_arm_README_read_trace_line": 48,
+      "oracle_executed_trace_line": 52
+    },
+    "independent_acceptance_boundary": "External oracle was independently authored and rerun after completion, but native had read it during generation and also read the other arm README.",
+    "product_scope": {
+      "business_DB_and_evidence": "task directory",
+      "external_business_temp_artifact_observed": false,
+      "regular_CLI_logs_and_caches": "ordinary client runtime, excluded by prompt",
+      "rw_verify": {
+        "calls": 1,
+        "seconds": 1.89,
+        "HTTP_requests": 21,
+        "restart_steps": 1,
+        "owned_starts": 2,
+        "owned_cleanups": 2,
+        "all_stopped": true
+      },
+      "extra_native_validation": "malformed raw JSON/invalid UTF-8 requests not represented by the JSON-object request interface",
+      "retained_failure": "PowerShell $PID loop variable was read-only; subsequent $procId check confirmed all task-owned service PIDs exited"
+    },
+    "product_functional_mechanism": "One rw_verify phase performed 21 HTTP requests, one restart, two owned starts and two cleanups; no service remained. It does not establish comparative efficiency."
+  },
+  "retained_preflights": {
+    "a1": {
+      "classification": "default-permission client approval setup blocker, not business 0/15",
+      "observable_session_usage_sum": 74678,
+      "wall_seconds": 115.172
+    },
+    "a2": {
+      "classification": "15/15 business preflight with three CSV schema errors and denied cleanup; no matched comparison",
+      "observable_session_usage_sum": 895136,
+      "wall_seconds": 641.843,
+      "assistant_responses": 16,
+      "dispatch_tool_calls": 18,
+      "protocol_errors": [
+        {
+          "assistant_trace_line": 20,
+          "result_trace_line": 21,
+          "check_type": "csv_counts",
+          "missing": [
+            "column"
+          ],
+          "expected_value_given": "integer",
+          "expected_value_required": "object mapping values to integer counts",
+          "returned_error": "CSV check requires a column",
+          "intended_check": "filtered row count"
+        },
+        {
+          "assistant_trace_line": 22,
+          "result_trace_line": 23,
+          "check_type": "csv_count",
+          "unsupported_fields": [
+            "column"
+          ],
+          "returned_error": "Unknown artifact check field"
+        },
+        {
+          "assistant_trace_line": 26,
+          "result_trace_line": 27,
+          "check_types": [
+            "csv_count",
+            "csv_rows"
+          ],
+          "unsupported_fields": [
+            "column"
+          ],
+          "returned_error": "Unknown artifact check field"
+        }
+      ],
+      "evidence_order": "Native checker authored and passed before the first rw_verify schema error; not an error-induced fallback.",
+      "cleanup": "Deletion of own temporary helper and task-local receipt was denied; neither denial was bypassed."
+    }
+  },
+  "all_six_completed_attempts": {
+    "count": 6,
+    "observable_session_usage_sum": 4689294,
+    "wall_seconds_sum": 3384.358,
+    "scope": "Only the current rw_verify development-stage six completed Grok sessions; retains every setup/preflight/valid/contaminated attempt. Not the whole project/all-model cost; old DSH and Grok rule trials remain in their separate reports. Excludes a4 (now retained separately), controller Codex, development, independent acceptance and unexposed auto classifier usage."
+  },
+  "isolated_service_a4": {
+    "native": {
+      "case": "service",
+      "arm": "native",
+      "attempt": 4,
+      "source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "finished": true,
+      "exit_code": 0,
+      "wall_seconds": 960.641,
+      "reported_api_seconds": 907.18,
+      "usage": {
+        "input_tokens": 103774,
+        "output_tokens": 64931,
+        "cache_read_input_tokens": 548096,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 716801,
+      "assistant_responses": 10,
+      "dispatch_tool_calls": 12,
+      "tool_counts": {
+        "list_dir": 1,
+        "run_terminal_command": 5,
+        "read_file": 2,
+        "search_replace": 4
+      },
+      "error_result_trace_lines": [],
+      "writes": [
+        {
+          "trace_line": 6,
+          "filename": "server.py",
+          "content_characters": 11342,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 8,
+          "filename": "verify_run.py",
+          "content_characters": 14096,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 12,
+          "filename": "server.py",
+          "content_characters": 92,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 18,
+          "filename": "README.md",
+          "content_characters": 1958,
+          "location": "task directory"
+        }
+      ],
+      "MCP_results": [],
+      "independent_acceptance": {
+        "passed": true,
+        "passed_checks": 18,
+        "total_checks": 18,
+        "checks": {
+          "script_and_readme": true,
+          "health": true,
+          "initial_empty": true,
+          "create_unicode": true,
+          "create_increment": true,
+          "ordered_list": true,
+          "get_existing": true,
+          "malformed_400": true,
+          "nonobject_400": true,
+          "missing_text_400": true,
+          "wrong_type_400": true,
+          "blank_text_400": true,
+          "unknown_404": true,
+          "missing_id_404": true,
+          "invalid_no_insert": true,
+          "restart_health": true,
+          "restart_persistent": true,
+          "restart_increment": true
+        }
+      },
+      "source_identity_valid": true,
+      "post_source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "post_source_tree_clean": true,
+      "scope_review": {
+        "outside_business_reads_observed": false,
+        "oracle_or_other_arm_access": false,
+        "subagent_read_uncertainty": false,
+        "dynamic_shell_and_generated_checker_reviewed": true,
+        "business_writes": "current task only",
+        "owned_process_cleanup_checked": true,
+        "allowed_external_read": "official client bundled SKILL.md"
+      },
+      "source_review": {
+        "loopback_only": true,
+        "README_launch_correct": true,
+        "README_validation_discrepancy": "claims nonloopback refusal exit 2; current implementation returns 1; contract did not require a specific exit code"
+      },
+      "retained_execution_failures": [
+        {
+          "trace_line": 11,
+          "exit_code": 1,
+          "cause": "model checker incorrectly rejects standard-library __future__ import; model removed future annotation import from business source and reran"
+        }
+      ]
+    },
+    "product": {
+      "case": "service",
+      "arm": "product",
+      "attempt": 4,
+      "source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "finished": true,
+      "exit_code": 0,
+      "wall_seconds": 735.485,
+      "reported_api_seconds": 695.731,
+      "usage": {
+        "input_tokens": 99004,
+        "output_tokens": 47899,
+        "cache_read_input_tokens": 515584,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 662487,
+      "assistant_responses": 11,
+      "dispatch_tool_calls": 12,
+      "tool_counts": {
+        "list_dir": 1,
+        "search_tool": 1,
+        "run_terminal_command": 5,
+        "search_replace": 2,
+        "use_tool": 1,
+        "read_file": 2
+      },
+      "error_result_trace_lines": [],
+      "writes": [
+        {
+          "trace_line": 6,
+          "filename": "server.py",
+          "content_characters": 7860,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 18,
+          "filename": "README.md",
+          "content_characters": 1595,
+          "location": "task directory"
+        }
+      ],
+      "MCP_results": [
+        {
+          "trace_line": 11,
+          "tool": "rw_verify",
+          "ok": true,
+          "passed": true,
+          "checks_passed": 0,
+          "checks_total": 0,
+          "execution_count": 51,
+          "seconds": 2.266
+        }
+      ],
+      "independent_acceptance": {
+        "passed": true,
+        "passed_checks": 18,
+        "total_checks": 18,
+        "checks": {
+          "script_and_readme": true,
+          "health": true,
+          "initial_empty": true,
+          "create_unicode": true,
+          "create_increment": true,
+          "ordered_list": true,
+          "get_existing": true,
+          "malformed_400": true,
+          "nonobject_400": true,
+          "missing_text_400": true,
+          "wrong_type_400": true,
+          "blank_text_400": true,
+          "unknown_404": true,
+          "missing_id_404": true,
+          "invalid_no_insert": true,
+          "restart_health": true,
+          "restart_persistent": true,
+          "restart_increment": true
+        }
+      },
+      "source_identity_valid": true,
+      "post_source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+      "post_source_tree_clean": true,
+      "scope_review": {
+        "outside_business_reads_observed": false,
+        "oracle_or_other_arm_access": false,
+        "subagent_read_uncertainty": false,
+        "dynamic_shell_and_generated_checker_reviewed": true,
+        "business_writes": "current task only",
+        "owned_process_cleanup_checked": true,
+        "literal_detector_false_positive": "http URL classified as a drive-shaped literal; manually confirmed network URL, not filesystem access"
+      },
+      "source_review": {
+        "loopback_only": true,
+        "README_launch_correct": true,
+        "README_validation_discrepancy": null
+      },
+      "retained_execution_failures": [
+        {
+          "trace_line": 15,
+          "exit_code": 1,
+          "cause": "PowerShell readonly $PID variable in process-status loop; no additional service work was performed; independent post-run check confirmed owned processes gone"
+        }
+      ],
+      "owned_HTTP_batch": {
+        "calls": 1,
+        "seconds": 2.266,
+        "HTTP_requests": 46,
+        "restart_steps": 1,
+        "starts": 2,
+        "successful_cleanup": 2,
+        "execution_events": 51,
+        "execution_event_count_is_not_process_start_count": true
+      }
+    },
+    "observed_product_minus_native": {
+      "observable_session_usage_sum": -54314,
+      "wall_seconds": -225.156,
+      "reported_api_seconds": -211.449,
+      "assistant_responses": 1,
+      "dispatch_tool_calls": 0
+    },
+    "observed_product_change_percent": {
+      "observable_session_usage_sum": -7.58,
+      "wall_seconds": -23.44,
+      "reported_api_seconds": -23.31
+    },
+    "native_runtime_anomaly": {
+      "classification": "unattributed runtime/provider interval",
+      "previous_result_trace_line": 5,
+      "next_response_trace_line": 6,
+      "next_response_index": 3,
+      "start_received_UTC": "2026-09-30T06:49:37.354742+00:00",
+      "end_received_UTC": "2026-09-30T07:02:12.098857+00:00",
+      "start_elapsed_seconds": 29.797,
+      "end_elapsed_seconds": 784.547,
+      "seconds": 754.75,
+      "not_identified_as": [
+        "pure reasoning",
+        "tool failure"
+      ],
+      "warning_boundary": "observed stderr warnings concerned Mixpanel telemetry sending; not evidence of model API failure"
+    },
+    "acceptance_boundary": "both business 18/18; native README has an accuracy defect, so not all quality dimensions are equal",
+    "time_boundary": "real observed duration only; anomaly and single sequential pair do not establish stable time benefit",
+    "status": "complete",
+    "source_commit": "2a653ec0d602f5b1834802c3af8dc3d6f1964449",
+    "conditions": {
+      "order": "native then product",
+      "isolated_random_task_and_control_roots": true,
+      "loaded_private_rules": 0,
+      "full_native_capabilities": true,
+      "product": "complete MCP plus standard initialize.instructions",
+      "task_special_guide": false,
+      "permission_mode": "official process-only auto, safety decisions retained",
+      "model_turn_or_task_limits": 0,
+      "same_prompt_both_arms": true,
+      "scope_addition": "范围：只读写当前任务目录内的业务文件，不读取目录外业务文件或其他任务产物；系统工具、已安装运行时及其正常使用文档除外。",
+      "not_an_OS_sandbox": true
+    },
+    "benefit_boundary": "modest observed single service pair; not universal or large general token savings",
+    "mechanism": {
+      "native_verifier_characters": 14096,
+      "product_manifest_JSON_characters": 6478,
+      "product_manifest_compact_characters": 5790,
+      "extra_raw_body_helper_characters": 3266,
+      "extra_raw_body_helper_response": 6,
+      "extra_raw_body_helper_trace_line": 12,
+      "helper_usage": {
+        "input": 6203,
+        "output": 4144,
+        "cache_read": 56192,
+        "sum": 66539
+      },
+      "following_PID_check_response": 7,
+      "following_PID_check_usage": {
+        "input": 4579,
+        "output": 917,
+        "cache_read": 62336,
+        "sum": 67832
+      },
+      "two_response_usage_upper_bound": 134371,
+      "upper_bound_is_not_predicted_saving": true,
+      "gap": "current requests JSON serialization cannot express malformed JSON bytes or invalid UTF-8; this triggered a second native client/service stack",
+      "existing_requests": "17 status-400 requests cover nonobjects and invalid fields; those are already representable",
+      "retained_business_judgment": "derive expected outcomes, assess affected error/state risks and complete independent acceptance"
+    }
+  },
+  "limitations": [
+    "observable session usage includes input/output/cache categories but separate classifier usage is not identifiable",
+    "reported API time is not pure reasoning duration",
+    "single sequential pair per case: CSV a3 product first; isolated service a4 native first; no randomization or shared provider/OS cache control",
+    "whole product plus standard shipped instructions, not isolated component causality",
+    "earlier setup/preflight and contaminated attempts count toward series costs and are not matched valid baselines",
+    "prior DSH and personal-rule Grok experiments are separate previously preserved research",
+    "service a3 native read the oracle and other-arm README; a3 is contaminated exploratory evidence",
+    "a4 native includes a 754.750-second unattributed runtime/provider interval; observed wall reduction is not evidence of stable throughput savings",
+    "a4 native README exit-code claim differs from source; contract did not require a specific exit code; retain the documentation defect separately from 18/18 business assertions",
+    "a5 changes both raw-body capability and standard shipped selection guidance and reuses historical native-a4; no isolated causal attribution. Later body_text/body_bytes representation changes have no end-to-end model performance measurement."
+  ],
+  "public_fixture_candidates": [
+    {
+      "source_basename": "csv-task.txt",
+      "proposed_public_path": "benchmarks/local-verification/csv-task.txt",
+      "copy_status": "copied to development fixture directory; privacy reviewed by separate owner",
+      "role": "fixed prompt"
+    },
+    {
+      "source_basename": "csv-input.csv",
+      "proposed_public_path": "benchmarks/local-verification/csv-input.csv",
+      "copy_status": "copied to development fixture directory; privacy reviewed by separate owner",
+      "role": "synthetic CSV"
+    },
+    {
+      "source_basename": "verify_csv.py",
+      "proposed_public_path": "benchmarks/local-verification/verify_csv.py",
+      "copy_status": "copied to development fixture directory; privacy reviewed by separate owner",
+      "role": "independent acceptance oracle (must stay inaccessible to generating model)"
+    },
+    {
+      "source_basename": "service-task.txt",
+      "proposed_public_path": "benchmarks/local-verification/service-task.txt",
+      "copy_status": "copied to development fixture directory; privacy reviewed by separate owner",
+      "role": "fixed prompt"
+    },
+    {
+      "source_basename": "verify_service.py",
+      "proposed_public_path": "benchmarks/local-verification/verify_service.py",
+      "copy_status": "copied to development fixture directory; privacy reviewed by separate owner",
+      "role": "independent acceptance oracle (must stay inaccessible to generating model)"
+    },
+    {
+      "source_basename": "service-task-isolated.txt",
+      "proposed_public_path": "benchmarks/local-verification/service-task-isolated.txt",
+      "copy_status": "exact shared a4 prompt copied byte-for-byte from evidence owner to development fixture directory",
+      "role": "fixed a4 isolated prompt, kept separately from a3 task"
+    }
+  ],
+  "excluded_public_material": [
+    "raw traces",
+    "full manifests",
+    "private runner paths",
+    "login/configuration content",
+    "private global rules",
+    "private runners",
+    "runtime homes/workspaces",
+    "authentication references",
+    "account/device identifiers"
+  ],
+  "source_evidence_basenames": [
+    "stock-product-final-public-summary.json",
+    "csv-stock-product-pair-public-summary.json",
+    "csv-stock-product-pair-public-report.md",
+    "csv-product-a2-public-summary.json",
+    "stock-product-a4-public-summary.json",
+    "a4-scope-review-public.json",
+    "stock-product-a5-public-summary.json",
+    "stock-product-a5-public-report.md",
+    "a5-mechanism-public.json",
+    "a5-scope-review-public.json",
+    "raw-body-replay-public-summary.json"
+  ],
+  "publication_status": "sanitized_public_report",
+  "all_eight_completed_attempts": {
+    "count": 8,
+    "observable_session_usage_sum": 6068582,
+    "wall_seconds_sum": 5080.484,
+    "scope": "Only the current rw_verify development-stage eight completed Grok sessions, including setup, preflight and contaminated samples. Not whole project/all-model cost; excludes old DSH/Grok rule trials, controller Codex, development, independent acceptance and unexposed classifier usage."
+  },
+  "source_evidence_scope": "a4 and a5 facts use their respective final compact summaries and scope reviews; older final summary remains historical a3 evidence only.",
+  "candidate_source_commit_scope": "2a653ec records the matched a3/a4 experiments; newer a5 uses its own separately recorded source identity.",
+  "service_product_a5": {
+    "status": "complete",
+    "candidate_source_commit": "843a3d75bb54741012224c436b7c10e19aecef9f",
+    "candidate": {
+      "case": "service",
+      "arm": "product",
+      "attempt": 5,
+      "source_commit": "843a3d75bb54741012224c436b7c10e19aecef9f",
+      "finished": true,
+      "exit_code": 0,
+      "wall_seconds": 831.703,
+      "reported_api_seconds": 757.115,
+      "usage": {
+        "input_tokens": 152369,
+        "output_tokens": 54624,
+        "cache_read_input_tokens": 512000,
+        "cache_creation_input_tokens": 0,
+        "server_tool_use": {
+          "web_search_requests": 0
+        }
+      },
+      "observable_session_usage_sum": 718993,
+      "assistant_responses": 12,
+      "dispatch_tool_calls": 13,
+      "tool_counts": {
+        "list_dir": 1,
+        "search_tool": 1,
+        "read_file": 1,
+        "run_terminal_command": 6,
+        "search_replace": 3,
+        "use_tool": 1
+      },
+      "error_result_trace_lines": [],
+      "writes": [
+        {
+          "trace_line": 8,
+          "filename": "server.py",
+          "content_characters": 9200,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 10,
+          "filename": "server.py",
+          "content_characters": 443,
+          "location": "task directory"
+        },
+        {
+          "trace_line": 22,
+          "filename": "README.md",
+          "content_characters": 2045,
+          "location": "task directory"
+        }
+      ],
+      "MCP_results": [
+        {
+          "trace_line": 19,
+          "tool": "rw_verify",
+          "ok": true,
+          "passed": true,
+          "checks_passed": 0,
+          "checks_total": 0,
+          "execution_count": 43,
+          "seconds": 2.14
+        }
+      ],
+      "independent_acceptance": {
+        "passed": true,
+        "passed_checks": 18,
+        "total_checks": 18,
+        "checks": {
+          "script_and_readme": true,
+          "health": true,
+          "initial_empty": true,
+          "create_unicode": true,
+          "create_increment": true,
+          "ordered_list": true,
+          "get_existing": true,
+          "malformed_400": true,
+          "nonobject_400": true,
+          "missing_text_400": true,
+          "wrong_type_400": true,
+          "blank_text_400": true,
+          "unknown_404": true,
+          "missing_id_404": true,
+          "invalid_no_insert": true,
+          "restart_health": true,
+          "restart_persistent": true,
+          "restart_increment": true
+        }
+      },
+      "source_identity_valid": true,
+      "post_source_commit": "843a3d75bb54741012224c436b7c10e19aecef9f",
+      "post_source_tree_clean": true,
+      "scope_and_source_review": {
+        "outside_business_reads_observed": false,
+        "oracle_or_other_arm_access": false,
+        "subagent_read_uncertainty": false,
+        "dynamic_shell_and_tool_arguments_reviewed": true,
+        "all_business_writes": "current task directory",
+        "ordinary_client_and_MCP_evidence_logs": "normal runtime artifacts; MCP evidence explicitly placed within current task",
+        "source_identity_valid": true,
+        "pre_and_post_source_commit": "843a3d75bb54741012224c436b7c10e19aecef9f",
+        "whole_source_tree_clean_before_and_after": true,
+        "loopback_only_source_guard": true,
+        "README_launch_correct": true,
+        "README_validation_statement_consistent": true,
+        "owned_process_cleanup_checked": true,
+        "remaining_owned_processes": 0,
+        "listening_service_ports": 0,
+        "not_an_OS_sandbox": true,
+        "read_trace_boundary": "only read_file invocation reads current task prompt; shell commands read only current task SQLite/metadata; process inventory does not expose other business files"
+      }
+    },
+    "historical_native_reference": "service-native-a4, retained once in attempts; not rerun or counted twice",
+    "previous_product_reference": "service-product-a4",
+    "conditions": {
+      "order": "a4 native then a4 product, followed by one later product-only candidate",
+      "isolated_random_task_and_control_roots": true,
+      "loaded_private_rules": 0,
+      "full_native_capabilities": true,
+      "product": "complete MCP plus standard initialize.instructions",
+      "task_special_guide": false,
+      "permission_mode": "official process-only auto, safety decisions retained",
+      "model_turn_or_task_limits": 0,
+      "same_prompt_both_arms": true,
+      "scope_addition": "范围：只读写当前任务目录内的业务文件，不读取目录外业务文件或其他任务产物；系统工具、已安装运行时及其正常使用文档除外。",
+      "not_an_OS_sandbox": true
+    },
+    "source_change": "candidate freeze adds raw body_base64/content_type requests and standard public selection guidance; no private or task-specific instructions",
+    "comparator_boundary": "historical native-a4 retained; no fresh native run or repeated matrix; different product source freezes and uncontrolled caches/order prevent single-component causal attribution",
+    "observed_candidate_minus_historical_native": {
+      "observable_session_usage_sum": 2192,
+      "wall_seconds": -128.938,
+      "reported_api_seconds": -150.065,
+      "assistant_responses": 2,
+      "dispatch_tool_calls": 1
+    },
+    "observed_candidate_change_percent_vs_historical_native": {
+      "observable_session_usage_sum": 0.31,
+      "wall_seconds": -13.42,
+      "reported_api_seconds": -16.54
+    },
+    "observed_candidate_minus_previous_product": {
+      "observable_session_usage_sum": 56506,
+      "wall_seconds": 96.218,
+      "reported_api_seconds": 61.384,
+      "assistant_responses": 1,
+      "dispatch_tool_calls": 1
+    },
+    "observed_candidate_change_percent_vs_previous_product": {
+      "observable_session_usage_sum": 8.53,
+      "wall_seconds": 13.08,
+      "reported_api_seconds": 8.82
+    },
+    "mechanism": {
+      "natural_discovery": {
+        "search_tool_response": 1,
+        "rw_verify_response": 9,
+        "rw_verify_trace_line": 18,
+        "body_base64_used": true,
+        "body_base64_request_count": 17,
+        "separate_raw_HTTP_helper_generated": false,
+        "third_service_started": false
+      },
+      "owned_HTTP_batch": {
+        "calls": 1,
+        "seconds": 2.14,
+        "HTTP_requests": 38,
+        "restart_steps": 1,
+        "starts": 2,
+        "readiness_checks": 2,
+        "cleanup_successes": 2,
+        "execution_events": 43,
+        "execution_events_are_not_process_launches": true,
+        "protocol_errors": 0,
+        "passed": true,
+        "checks_total_0_boundary": "only artifact checks are counted; HTTP outcome is represented by passed/first_failure and recorded request execution results",
+        "complete_result_or_log_readback": false
+      },
+      "representation": {
+        "a4_product_manifest_Unicode_JSON_characters": 6478,
+        "a5_product_manifest_Unicode_JSON_characters": 6127,
+        "a4_compact_Unicode_JSON_characters": 5790,
+        "a5_compact_Unicode_JSON_characters": 5556,
+        "a4_initial_application_write_characters": 7860,
+        "a5_initial_application_write_characters": 9200,
+        "a5_application_followup_replacement_characters": 443,
+        "a4_raw_HTTP_helper_characters": 3266,
+        "a5_native_body_encoding_commands_characters": [
+          947,
+          1298
+        ],
+        "a5_post_batch_native_process_DB_inventory_command_characters": 596,
+        "a5_final_native_bytecode_cleanup_process_check_command_characters": 341,
+        "a4_README_write_characters": 1595,
+        "a5_README_write_characters": 2045
+      },
+      "retained_failures": [
+        {
+          "response": 7,
+          "trace_line": 14,
+          "result_trace_line": 15,
+          "exit_code": 1,
+          "cause": "nested PowerShell/python -c quoting produced unterminated string SyntaxError while preparing Base64 bodies",
+          "recovered_response": 8,
+          "recovered_trace_line": 16,
+          "recovery": "here-string Python batch emitted bodies; no service had been started by either preparation command"
+        }
+      ],
+      "token_deltas_vs_a4_product": {
+        "input_tokens": 53365,
+        "output_tokens": 6725,
+        "cache_read_input_tokens": -3584,
+        "cache_creation_input_tokens": 0
+      },
+      "observed_context_boundary": "input+cache exposure rose 49781 tokens and output rose 6725 across one extra assistant response; response 11 reports 75675 uncached input and 1536 cache-read, which is a cache-distribution observation, not proof of why the provider missed cache",
+      "output_boundary": "reported output lacks separate reasoning/tool-argument-token fields; code character counts must not be treated as output-token attribution",
+      "causal_boundary": "raw capability genuinely absorbed malformed JSON/invalid UTF-8 into one owned stage, but this sample replaced the old helper with encoding setup/recovery and a different application/manifest sequence; capability success does not establish net token improvement"
+    },
+    "conclusion": "business and scope accepted; +0.31% observable usage versus historical native, +8.53% versus previous product; no net token reduction",
+    "same_prompt_bytes_as_a4": true
+  },
+  "all_nine_completed_attempts": {
+    "count": 9,
+    "observable_session_usage_sum": 6787575,
+    "wall_seconds_sum": 5912.187,
+    "scope": "Only current rw_verify development-stage nine completed Grok sessions, including setup, preflight and contaminated samples. Historical native-a4 is counted once. Not whole project/all-model cost; excludes old DSH/Grok rule trials, controller Codex, development, independent acceptance and unexposed classifier usage."
+  },
+  "final_representation_revision": {
+    "status": "deterministic_replay_complete",
+    "purpose": "direct raw UTF-8 text or byte-array input without a model-authored Base64 encoding bridge",
+    "no_new_model_calls": true,
+    "end_to_end_model_performance_measured": false,
+    "deterministic_replay": {
+      "status": "deterministic_replay_complete",
+      "no_model_calls": true,
+      "transport": "actual JSON CLI agent.py call rw_verify",
+      "CLI_exit_code": 0,
+      "ok": true,
+      "passed": true,
+      "first_failure": null,
+      "HTTP_requests": 38,
+      "restart_steps": 1,
+      "converted": {
+        "body_text": 16,
+        "body_bytes": 1
+      },
+      "all_39_steps_preserve_order_expected_and_original_request_bytes": true,
+      "application_source_unchanged": true,
+      "original_artifacts_modified": false,
+      "DB": "new initially absent database in independent private scratch",
+      "service_starts": 2,
+      "successful_owned_cleanup": 2,
+      "execution_events": 43,
+      "tool_seconds": 2.078,
+      "CLI_wall_seconds": 2.25,
+      "declaration_sizes": {
+        "original_Unicode_JSON_characters": 6127,
+        "new_Unicode_JSON_characters_normalized_path_db": 6049,
+        "original_compact_Unicode_JSON_characters": 5556,
+        "new_compact_Unicode_JSON_characters_normalized_path_db": 5467
+      },
+      "scope": "new private scratch and normal installed runtime; original model task untouched",
+      "claim_boundary": "functional batch evidence only, no claim of real Grok end-to-end token/time savings; no independent business oracle rerun",
+      "dev_source_commit": "f0484d8ca9408d4cc855ec3875631de81f3cef59"
+    },
+    "source_identity_boundary": "Replay occurred on current development code before final commit; the final API source identity is recorded separately after integration.",
+    "evidence_boundary": "Equivalent request bytes and functional batch verified; a4/a5 do not establish token/time success of this later representation revision.",
+    "final_api_source_commit": "dadc5c15562671fc0746ff2b4a0fd1061914190d",
+    "final_api_development_source_commit": "81edc870915db6bcabde5d52baeec3d0cb4fc3ea"
+  },
+  "final_api_source_commit": "dadc5c15562671fc0746ff2b4a0fd1061914190d",
+  "final_api_development_source_commit": "81edc870915db6bcabde5d52baeec3d0cb4fc3ea"
+}

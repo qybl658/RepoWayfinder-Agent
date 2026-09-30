@@ -2,7 +2,7 @@
 
 2026-09-30。[机制数据](../benchmarks/results/2026-09-30-mechanisms.json) · [DSH 全部重复结果](DSH_REPEATED_COMPARISON.md) · [Grok 日常规则对照](GROK_DAILY_EFFICIENCY.md)。
 
-已完成证据复审，不新增模型基准。DSH业务16/16通过；保守范围审计11/16，包含2项课程明确越界与3项Bottle/Flaskr解释性范围问题。全部成本保留，不能把含偏离的合并变化叫完全合规收益。新旧Grok日常规则负对照由其独立报告负责。
+本页记录前一阶段的证据复审。后续新增的本地验证能力、原装 Grok 对照与原始请求修复见[本地验证比较](LOCAL_VERIFICATION_COMPARISON.md)，没有把这些后续结果混入旧批次。旧批次DSH业务16/16通过；保守范围审计11/16，包含2项课程明确越界与3项Bottle/Flaskr解释性范围问题。全部成本保留，不能把含偏离的合并变化叫完全合规收益。新旧Grok日常规则负对照由其独立报告负责。
 
 **少轮次并不保证少token。** 两次DSH重复合计：
 

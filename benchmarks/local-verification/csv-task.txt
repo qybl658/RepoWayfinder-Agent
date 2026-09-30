@@ -1,0 +1,5 @@
+处理当前目录的 input.csv，交付可重复运行的 Python 标准库脚本 reconcile.py，以及 results/ 中的 accepted.csv、quarantine.csv、summary.json、README.md。脚本接口为 python reconcile.py input.csv --output-dir results。使用本机现有 Python，不安装依赖。CSV 保留中文，读取兼容 UTF-8 BOM，输出可由普通 CSV 工具读取。accepted.csv 包含原字段与 total_cents；quarantine.csv 包含 row_number、原字段与 reason。
+
+按以下已确定规则审计，不要静默丢数据或猜日期：record_id 非空；日期只接受有效 YYYY-MM-DD；qty 是可选前导负号的十进制整数，规范化为整数值；unit_cents 是非负十进制整数；name 非空；金额为 qty * unit_cents 的整数分。record_id 相同且规范化后其它字段完全相同的行，只接受第一行，后续标 duplicate；同一 record_id 的有效候选字段冲突时，该 id 的所有候选均标 conflicting_id，不能猜哪个正确。格式不合法的行标 invalid，并保留原始全部字段与 reason。quarantine 包含原始 CSV 的行号（第一条数据为2）和原始字段；对 ambiguous 斜杠日期说明日期格式不接受。
+
+summary.json 包含 total_rows、accepted_rows、quarantined_rows、accepted_total_cents、reason_counts（duplicate/conflicting_id/invalid 均包含，即使为0）。所有原输入行恰好归入 accepted 或 quarantine。运行脚本生成结果，实际核对重复、冲突、日期、负数和中文案例；再运行一次确认不会把旧结果追加进去。README 简短说明运行命令和输出含义。不读取其它项目或私人文件，不发布，不调用其它模型。完成时给结果路径和真实检查结果。
