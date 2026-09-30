@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
@@ -17,6 +18,57 @@ def request(method, params=None, request_id=1):
 
 
 class MCPTransportTests(unittest.TestCase):
+    def test_real_verify_backend_batches_run_repeat_and_cli_failure(self):
+        # Exercise the shipped entry points, not a mocked dispatch: command
+        # prints must stay out of JSON and Unicode must survive Windows locale.
+        project = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory(prefix='rw-wire-') as folder:
+            root = Path(folder).resolve()
+            task = root / 'existing-task'
+            task.mkdir()
+            script = task / 'task.py'
+            script.write_text(
+                "from pathlib import Path\n"
+                "import csv,json\n"
+                "p=Path('counter.txt')\n"
+                "p.write_text(str(int(p.read_text())+1) if p.exists() else '1')\n"
+                "with open('数据.csv','w',encoding='utf-8',newline='') as f:\n"
+                " w=csv.DictWriter(f,fieldnames=['name','amount']);w.writeheader();"
+                "w.writerows([{'name':'甲','amount':'0.10'},{'name':'乙','amount':'0.20'}])\n"
+                "Path('结果.json').write_text(json.dumps({'说明':'中文😀','rows':2},ensure_ascii=False),encoding='utf-8')\n"
+                "print('command output 中文😀')\n", encoding='utf-8')
+            original = script.read_bytes()
+            arguments = {'directory': str(task), 'run': {'argv': ['python', 'task.py']},
+                'unchanged': ['数据.csv', '结果.json'], 'checks': [
+                    {'type': 'csv_sum', 'path': '数据.csv', 'column': 'amount', 'expected': '0.30'},
+                    {'type': 'json_value', 'path': '结果.json', 'pointer': '/说明', 'expected': '中文😀'}]}
+            command = [sys.executable, str(project / 'agent.py'), '--workspace', str(root / 'workspace')]
+            env = {**os.environ, 'PYTHONIOENCODING': 'gbk:surrogateescape', 'PYTHONUTF8': '0'}
+            wire = request('tools/call', {'name': 'rw_verify', 'arguments': arguments})
+            result = subprocess.run(command + ['serve'], cwd=project, env=env,
+                input=(json.dumps(wire, ensure_ascii=False)+'\n').encode('utf-8'),
+                capture_output=True, timeout=20)
+            self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', errors='replace'))
+            reply = json.loads(result.stdout.decode('utf-8'))
+            report = json.loads(reply['result']['content'][0]['text'])
+            self.assertTrue(report['passed'], report)
+            self.assertTrue(report['unchanged']['passed'])
+            self.assertEqual((task / 'counter.txt').read_text(), '2')
+            self.assertEqual(script.read_bytes(), original)
+            self.assertFalse((task / '.venv').exists())
+            self.assertTrue(Path(report['evidence_path']).is_file())
+            self.assertIn('command output', Path(report['evidence_path']).with_name('run-1.log').read_text(encoding='utf-8'))
+            # A false assertion is a nonzero JSON CLI result, with no re-run.
+            bad = {'directory': str(task), 'checks': [
+                {'type': 'csv_count', 'path': '数据.csv', 'expected': 99}]}
+            config = root / 'bad.json'
+            config.write_text(json.dumps(bad, ensure_ascii=False), encoding='utf-8')
+            result = subprocess.run(command + ['call', 'rw_verify', '--file', str(config)],
+                cwd=project, env=env, capture_output=True, timeout=20)
+            self.assertEqual(result.returncode, 2)
+            self.assertFalse(json.loads(result.stdout.decode('utf-8'))['passed'])
+            self.assertEqual((task / 'counter.txt').read_text(), '2')
+
     def test_real_stdio_is_utf8_even_under_legacy_windows_locale(self):
         content = '课程实验：采样 → 实验 → 归档；参考 :ref:`步骤`。 😀'
         payload = request('tools/call', {'name': 'rw_run', 'arguments': {
@@ -51,7 +103,7 @@ class MCPTransportTests(unittest.TestCase):
                          ["2024-11-05", "2025-03-26", "2025-06-18", "2025-06-18"])
         self.assertEqual(replies[0]["result"]["capabilities"], {"tools": {}})
         tools = {tool["name"]: tool for tool in replies[4]["result"]["tools"]}
-        self.assertEqual(set(tools), {"rw_search", "rw_prepare", "rw_run", "rw_execute", "rw_replan", "rw_status", "rw_resume", "rw_logs", "rw_cancel"})
+        self.assertEqual(set(tools), {"rw_verify", "rw_search", "rw_prepare", "rw_run", "rw_execute", "rw_replan", "rw_status", "rw_resume", "rw_logs", "rw_cancel"})
         self.assertTrue(all(tool["inputSchema"]["additionalProperties"] is False for tool in tools.values()))
         self.assertTrue(tools["rw_search"]["annotations"]["readOnlyHint"])
         self.assertTrue(tools["rw_execute"]["annotations"]["destructiveHint"])
@@ -117,6 +169,8 @@ class MCPTransportTests(unittest.TestCase):
             ("rw_run", {"repository": "owner/repo", "commands": ["x"], "plan": {}}),
             ("rw_logs", {"job_id": "j", "max_chars": 0}),
             ("rw_cancel", {"job_id": 3}),
+            ("rw_verify", {"directory": ".", "run": {"argv": []}}),
+            ("rw_verify", {"directory": ".", "checks": [{"type": "csv_count", "path": "data.csv", "where": {"name": 2}}]}),
             ("rw_replan", {"job_id": "j", "edits": [{"path": "x", "old": "", "new": "x"}]}),
             ("rw_replan", {"job_id": "j", "execute": "true"}),
             ("rw_run", {"repository": "owner/repo", "commands": ["x"], "files": [{"path": "x", "content": "\udcac"}]}),
@@ -129,6 +183,27 @@ class MCPTransportTests(unittest.TestCase):
                                                for index, (name, args) in enumerate(bad_calls, 1)))
         self.assertEqual(len(replies), len(bad_calls))
         self.assertTrue(all(reply["error"]["code"] == -32602 for reply in replies))
+        service.dispatch.assert_not_called()
+
+    def test_verify_structured_expected_values_reach_backend(self):
+        arguments = {"directory": "D:/authorized-task", "checks": [
+            {"type": "json_value", "path": "结果.json",
+             "expected": {"中文": [{"count": 2, "enabled": False}, None]}},
+            {"type": "csv_rows", "path": "数据.csv",
+             "expected": [{"name": "甲", "value": "2"}]}]}
+        service = Mock()
+        service.dispatch.return_value = {"ok": True, "passed": True}
+        replies = self.run_messages(service, request("tools/call", {
+            "name": "rw_verify", "arguments": arguments}))
+        self.assertNotIn("error", replies[0])
+        service.dispatch.assert_called_once_with("rw_verify", arguments)
+
+    def test_verify_rejects_nested_nonfinite_values_before_dispatch(self):
+        service = Mock()
+        reply = mcp_server._handle(request("tools/call", {"name": "rw_verify", "arguments": {
+            "directory": "D:/authorized-task", "checks": [{"type": "json_value",
+                "path": "data.json", "expected": {"bad": [float('nan')]}}]}}), service)
+        self.assertEqual(reply["error"]["code"], -32602)
         service.dispatch.assert_not_called()
 
     def test_replan_dispatches_valid_plan_and_checks(self):

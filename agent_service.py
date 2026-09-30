@@ -344,13 +344,20 @@ class AgentService:
     def dispatch(self, name, arguments):
         if not isinstance(arguments, dict):
             raise ValueError('arguments must be a JSON object')
-        handlers = {'rw_search': self.search, 'rw_prepare': self.prepare, 'rw_run': self.run,
+        handlers = {'rw_verify': self.verify, 'rw_search': self.search, 'rw_prepare': self.prepare, 'rw_run': self.run,
                     'rw_replan': self.replan, 'rw_execute': self.execute,
                     'rw_status': self.status, 'rw_resume': self.resume, 'rw_logs': self.logs,
                     'rw_cancel': self.cancel}
         if name not in handlers:
             raise ValueError('Unknown tool: ' + str(name))
         return handlers[name](**arguments)
+
+    def verify(self, directory, checks=None, run=None, unchanged=None, service=None,
+               evidence_directory='.repowayfinder-checks'):
+        """Finite local verification; does not create or resume a deployment job."""
+        from verification import verify
+        return verify(directory, checks=checks, run=run, unchanged=unchanged, service=service,
+                      evidence_directory=evidence_directory)
 
     def summary(self, job):
         keys = ['job_id', 'attempt_id', 'status', 'phase', 'repository', 'reason', 'next_action', 'python_version']

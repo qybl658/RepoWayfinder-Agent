@@ -21,6 +21,15 @@ from agent_service import (MAX_COMMANDS, MAX_COMMAND_CHARS, MAX_CHECKS, MAX_EXPE
 LATEST_PROTOCOL = "2025-06-18"
 SUPPORTED_PROTOCOLS = {"2024-11-05", "2025-03-26", LATEST_PROTOCOL}
 SERVER_INFO = {"name": "repowayfinder-agent", "version": "0.5.0"}
+SERVER_INSTRUCTIONS = (
+    "RepoWayfinder batches deterministic work without calling another model. "
+    "For batches of CSV/JSON/file assertions or local HTTP lifecycle checks, discover rw_verify: "
+    "supply the task's expected results; the tool handles parsing, explicit reruns, requests, "
+    "restarts and owned-process cleanup. Prefer it to writing another checker for covered assertions. "
+    "Use rw_run for repository acquisition/environment jobs. "
+    "Keep native tools for business code and work outside these contracts. "
+    "Passing supplied assertions proves only those assertions."
+)
 
 
 def _object(properties: dict[str, Any], required: tuple[str, ...] = ()) -> dict[str, Any]:
@@ -79,8 +88,66 @@ _RUN_ARGS = _object({"repository": _string(minLength=1),
                      "timeout": {"type": "integer", "minimum": 1, "maximum": 600, "default": 300},
                      "request_id": _string(minLength=1, maxLength=MAX_REQUEST_ID_CHARS)}, ("repository", "commands"))
 
+# Verification inspects caller-selected local artifacts, independently of a
+# repository job's freshness claims. The implementation validates cross-field
+# contracts before starting any process or creating evidence.
+_JSON_VALUE = {"type": ["string", "number", "boolean", "null", "object", "array"],
+               "items": {}, "additionalProperties": {}}
+_VERIFY_CHECK = _object({
+    "id": _string(minLength=1, maxLength=100),
+    "type": {"type": "string", "enum": ["file_exists", "file_contains", "json_value",
+        "csv_count", "csv_sum", "csv_counts", "csv_rows"]},
+    "path": _string(minLength=1, maxLength=MAX_FILE_PATH_CHARS),
+    "expected": _JSON_VALUE,
+    "pointer": _string(),
+    "column": _string(minLength=1),
+    "where": {"type": "object", "additionalProperties": {"type": "string"},
+              "description": "Optional exact CSV column/value filters; all must match."},
+}, ("type", "path"))
+_VERIFY_COMMAND = _object({
+    "argv": {"type": "array", "minItems": 1, "maxItems": 128,
+             "items": _string(minLength=1, maxLength=MAX_COMMAND_CHARS)},
+    "timeout_seconds": {"type": "number", "minimum": 0.1, "maximum": 600, "default": 60,
+                        "description": "Total phase deadline, including explicit repeat. Host tool timeout must exceed it."},
+}, ("argv",))
+_VERIFY_REQUEST = {
+    "method": {"type": "string", "enum": ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]},
+    "path": _string(minLength=1),
+    "status": {"type": "integer", "minimum": 100, "maximum": 599},
+    "contains": _string(minLength=1),
+    "json_pointer": _string(),
+    "expected": _JSON_VALUE,
+    "json": _JSON_VALUE,
+    "form": {"type": "object", "additionalProperties": {"type": "string"}},
+    "actor": _string(minLength=1, maxLength=120),
+}
+_VERIFY_SERVICE = _object({
+    **_VERIFY_COMMAND["properties"],
+    "port": {"type": "integer", "minimum": 1, "maximum": 65535,
+             "description": "Optional loopback port; otherwise allocated. argv may use {port}."},
+    "ready": _object({key: _VERIFY_REQUEST[key] for key in ("path", "status", "contains")}, ("path", "status")),
+    "requests": {"type": "array", "minItems": 1, "maxItems": 64,
+                 "items": _object({**_VERIFY_REQUEST, "restart": {"type": "boolean"}}),
+                 "description": "Request assertions (path/status required), or {restart:true}; cookies are separate by actor."},
+}, ("argv", "ready", "requests"))
+_VERIFY_ARGS = _object({
+    "directory": _string(minLength=1),
+    "evidence_directory": _string(minLength=1, maxLength=MAX_FILE_PATH_CHARS,
+                                   description="Relative directory for new per-call evidence, default .repowayfinder-checks. Put it inside the task's allowed output area."),
+    "checks": {"type": "array", "maxItems": MAX_CHECKS, "items": _VERIFY_CHECK,
+               "description": "Task-specific assertions. Optional only when service has HTTP request assertions."},
+    "run": _VERIFY_COMMAND,
+    "unchanged": {"type": "array", "minItems": 1, "maxItems": MAX_CHECKS,
+                  "items": _string(minLength=1, maxLength=MAX_FILE_PATH_CHARS),
+                  "description": "Explicitly run the same command twice and compare parsed CSV/JSON or UTF-8 text. This is not an automatic retry."},
+    "service": _VERIFY_SERVICE,
+}, ("directory",))
+
 
 TOOLS: tuple[dict[str, Any], ...] = (
+    {"name": "rw_verify", "description": "Batch CSV/JSON/file assertions or an explicitly owned loopback HTTP service in an authorized existing directory. Optional run executes argv once; unchanged explicitly repeats it and compares parsed artifacts. service manages start/request assertions/restart/cleanup, mutually exclusive with run. No clone, install, automatic repair or nested model. Use task-specific expected results; passing proves only supplied checks, not full task completion or fresh job output. Full evidence stays local; the response is compact. Commands run with normal user permissions, not in an OS sandbox.",
+     "inputSchema": _VERIFY_ARGS,
+     "annotations": {"readOnlyHint": False, "destructiveHint": True, "openWorldHint": True}},
     {"name": "rw_search", "description": "Search public GitHub repositories and return candidates; no target code runs.",
      "inputSchema": _object({"query": _string(minLength=1, maxLength=300), "limit": {"type": "integer", "minimum": 1, "maximum": 10, "default": 5}}, ("query",)),
      "annotations": {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": True}},
@@ -131,6 +198,15 @@ def _type_matches(value: Any, kind: str) -> bool:
 
 
 def _validate(value: Any, schema: dict[str, Any], location: str = "arguments") -> None:
+    if not schema:
+        # An open JSON value still needs valid Unicode and finite numbers.
+        try:
+            encoded = json.dumps(value, ensure_ascii=False, allow_nan=False).encode("utf-8")
+        except (TypeError, ValueError, UnicodeEncodeError) as exc:
+            raise ValueError(f"{location} must be valid finite UTF-8 JSON") from exc
+        if len(encoded) > MAX_INPUT_BYTES:
+            raise ValueError(f"{location} exceeds {MAX_INPUT_BYTES} UTF-8 bytes")
+        return
     kinds = schema["type"]
     if isinstance(kinds, str):
         kinds = [kinds]
@@ -150,6 +226,8 @@ def _validate(value: Any, schema: dict[str, Any], location: str = "arguments") -
         for key, item in value.items():
             if key in props:
                 _validate(item, props[key], f"{location}.{key}")
+            elif isinstance(schema.get("additionalProperties"), dict):
+                _validate(item, schema["additionalProperties"], f"{location}.{key}")
     elif isinstance(value, list):
         if len(value) < schema.get("minItems", 0):
             raise ValueError(f"{location} has too few items")
@@ -204,7 +282,8 @@ def _handle(message: Any, service: Any) -> dict[str, Any] | None:
         if not isinstance(proposed, str):
             return _error(request_id, -32602, "protocolVersion must be a string")
         version = proposed if proposed in SUPPORTED_PROTOCOLS else LATEST_PROTOCOL
-        return _result(request_id, {"protocolVersion": version, "capabilities": {"tools": {}}, "serverInfo": SERVER_INFO})
+        return _result(request_id, {"protocolVersion": version, "capabilities": {"tools": {}},
+                                    "serverInfo": SERVER_INFO, "instructions": SERVER_INSTRUCTIONS})
     if method == "ping":
         return _result(request_id, {})
     if method == "tools/list":

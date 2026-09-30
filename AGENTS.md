@@ -10,6 +10,19 @@ when simpler; do not force every stage through files/checks/replan. A setup-only
 success proves setup, not the final deliverable. Use the returned project_path
 and result.python_runtime.executable for native continuation, keeping writes in the task.
 
+For an existing task directory, `rw_verify` batches explicit CSV/JSON/file
+assertions or owned loopback HTTP request checks. It does not acquire source,
+install dependencies or create a deployment job. Optional `run` executes argv;
+`unchanged` explicitly runs it twice and compares parsed artifacts. A service
+scenario owns its process lifetime and stops it when checks finish. Supply the
+user's actual expected results and failure cases; passing only proves those
+assertions. Prefer existing native tools for work outside this finite contract.
+See `docs/LOCAL_VERIFICATION.md`. Product comparisons must work with the host's
+ordinary instructions plus the product's shipped capability guidance. Reusable,
+de-identified prompts or Skills may be part of that delivery; record them as
+part of the product arm. Do not rely on undistributed private rules, hidden
+benchmark-only guidance or disabled native abilities.
+
 When using the service's batched execution path:
 
 1. `rw_search` only if a repository has not been chosen.

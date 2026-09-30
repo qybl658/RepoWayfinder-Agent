@@ -3353,12 +3353,16 @@ def render_command_for_replay(command: list[str] | str) -> str:
     return shlex.join(argv)
 
 
-def run_process(command: list[str] | str, cwd: Path, timeout: int, shell: bool = False, target_process: bool = False) -> CommandResult:
+def run_process(command: list[str] | str, cwd: Path, timeout: int, shell: bool = False, target_process: bool = False,
+                env_overrides: dict[str, str] | None = None) -> CommandResult:
     started = time.time()
     printable = render_command_for_replay(command)
     argv = [] if isinstance(command, str) else [str(part) for part in command]
     log(f"$ {printable}")
     popen_command = popen_command_for_execution(command)
+    child_env = build_process_env(target_process=target_process)
+    if env_overrides:
+        child_env.update(env_overrides)
     process = subprocess.Popen(
         popen_command,
         cwd=str(cwd),
@@ -3369,7 +3373,7 @@ def run_process(command: list[str] | str, cwd: Path, timeout: int, shell: bool =
         text=True,
         encoding="utf-8",
         errors="replace",
-        env=build_process_env(target_process=target_process),
+        env=child_env,
         bufsize=1,
     )
     result = collect_process_output(process, timeout)
