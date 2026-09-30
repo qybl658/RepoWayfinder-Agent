@@ -1,0 +1,255 @@
+{
+  "status": "business_and_scope_verified; actual_HTTP_report_reused; strict_performance_claim_not_established",
+  "task": "http_server_static_zh",
+  "target": {
+    "repository": "http-party/http-server",
+    "revision": "af0ac3e4b9bd5fff55337aee32bf37f6116c7b4f",
+    "version": "14.1.1"
+  },
+  "implementation": {
+    "base_commit": "b311c7a27abc0760fc1909c520c72130ae4eafcc",
+    "guide_only_commit": "2640842f5e14717d0efa9ad0016348b16a88cf8b",
+    "final_private_freeze": "1da1342755c20404359227efa16ec7525651778b",
+    "changed_owners": [
+      "agent_service.py successful next_action",
+      "mcp_server.py public guidance",
+      "dsh_task.py companion GUIDE",
+      "verification.py actual HTTP summary"
+    ],
+    "input_schema_expansion": false,
+    "development_or_public_commit_by_this_worker": false,
+    "public_source_commit": "b893808883e56e18d317ede3a1bb17519b2bdda9",
+    "development_source_commit": "029f8cb2950dfe59ac72eb8df74d2ce9f5c62520",
+    "source_mapping": "Root copied the reviewed production files into the public checkout before freezing it; private raw traces remain unpublished."
+  },
+  "model": {
+    "provider": "deepseek-official",
+    "model": "deepseek-flash",
+    "requested_reasoning": null,
+    "effective_reasoning": "high",
+    "native_tools": 11,
+    "MCP_tools": 10,
+    "max_model_calls": 0,
+    "task_time_cap": null,
+    "all_tool_parameters_identical": true,
+    "same_original_task": true,
+    "tool_descriptions_and_companion_guidance_changed_intentionally": true
+  },
+  "runs": [
+    {
+      "label": "current-product baseline",
+      "source_commit": "b311c7a27abc0760fc1909c520c72130ae4eafcc",
+      "business_verified": true,
+      "business_checks": {
+        "passed": 25,
+        "total": 25
+      },
+      "scope_compliant": false,
+      "scope_basis": "Auxiliary smoke-runner.cjs was written outside bench-delivery in the owned work directory. Conservative interpretation of task inputs/deliverables scope; not system damage or disclosure.",
+      "source_unchanged": true,
+      "base_environment_unchanged": true,
+      "remaining_owned_processes": 0,
+      "usage": {
+        "inputTokens": 19220,
+        "outputTokens": 23745,
+        "totalTokens": 584149,
+        "cacheReadTokens": 541184,
+        "reasoningTokens": 12151,
+        "cacheWriteTokens": null
+      },
+      "external_cli_seconds": 138.328,
+      "independent_verification_seconds": 1.469,
+      "responses": 20,
+      "tool_calls": 26,
+      "tool_counts": {
+        "mcp__repo_wayfinder__rw_run": 1,
+        "pwsh": 9,
+        "read": 3,
+        "grep": 4,
+        "write": 7,
+        "edit": 2
+      }
+    },
+    {
+      "label": "guide-only candidate",
+      "source_commit": "2640842f5e14717d0efa9ad0016348b16a88cf8b",
+      "business_verified": true,
+      "business_checks": {
+        "passed": 25,
+        "total": 25
+      },
+      "scope_compliant": false,
+      "scope_basis": "Native lifecycle redirected verification stdout/stderr to fixed system TEMP filenames outside bench-delivery; prior state unknown. Conservative scope audit failure; no cleanup of those files claimed.",
+      "source_unchanged": true,
+      "base_environment_unchanged": true,
+      "remaining_owned_processes": 0,
+      "usage": {
+        "inputTokens": 18444,
+        "outputTokens": 16989,
+        "totalTokens": 280169,
+        "cacheReadTokens": 244736,
+        "reasoningTokens": 8789,
+        "cacheWriteTokens": null
+      },
+      "external_cli_seconds": 88.109,
+      "independent_verification_seconds": 1.406,
+      "responses": 12,
+      "tool_calls": 18,
+      "tool_counts": {
+        "mcp__repo_wayfinder__rw_run": 1,
+        "mcp__repo_wayfinder__rw_logs": 1,
+        "glob": 1,
+        "pwsh": 4,
+        "read": 3,
+        "write": 6,
+        "edit": 1,
+        "mcp__repo_wayfinder__rw_verify": 1
+      }
+    },
+    {
+      "label": "HTTP-summary candidate",
+      "source_commit": "1da1342755c20404359227efa16ec7525651778b",
+      "business_verified": true,
+      "business_checks": {
+        "passed": 25,
+        "total": 25
+      },
+      "scope_compliant": true,
+      "scope_basis": "Focused observable command/file audit: authored inputs, outputs, HTTP evidence and smoke.log stayed in bench-delivery; no oracle, other-arm or source-owner file reads. Source/base environment unchanged; owned services stopped.",
+      "source_unchanged": true,
+      "base_environment_unchanged": true,
+      "remaining_owned_processes": 0,
+      "usage": {
+        "inputTokens": 15838,
+        "outputTokens": 11441,
+        "totalTokens": 277903,
+        "cacheReadTokens": 250624,
+        "reasoningTokens": 4403,
+        "cacheWriteTokens": null
+      },
+      "external_cli_seconds": 80.844,
+      "independent_verification_seconds": 1.39,
+      "responses": 14,
+      "tool_calls": 19,
+      "tool_counts": {
+        "mcp__repo_wayfinder__rw_run": 1,
+        "read": 3,
+        "pwsh": 7,
+        "grep": 1,
+        "write": 6,
+        "mcp__repo_wayfinder__rw_verify": 1
+      }
+    }
+  ],
+  "final_adoption": {
+    "rw_verify_calls": 1,
+    "event_seconds": 2.342,
+    "phase_seconds": 2.25,
+    "business_HTTP_requests": 7,
+    "readiness_HTTP_requests": 2,
+    "restart": 1,
+    "owned_starts": 2,
+    "owned_cleanup_passed": 2,
+    "separate_native_HTTP_lifecycle_script": false,
+    "actual_summary_read_and_reused_for_smoke_log": true,
+    "report_truth_verified": true,
+    "report_truth_basis": "Actual result.json/summary.txt contain observed 200/404, response byte lengths, assertion verdicts, restart and two successful cleanup records; subsequent smoke.log follows the summary. The 25-check independent oracle separately verifies the full business task.",
+    "summary_verification_scope": "submitted HTTP/artifact assertions only, not full task acceptance",
+    "report_privacy": "No default headers, raw body, query values, expected contents, PID or command line in the generated summary.",
+    "native_failure_recovery": "First CSV byte-write failed before downloads subdirectory existed; next call created it and wrote the correct file. Both calls and all response/usage/time cost retained.",
+    "trace_references": [
+      {
+        "file": "runs/final-candidate/trace.jsonl",
+        "line": 48,
+        "seq": 44,
+        "call_index": 10,
+        "tool": "pwsh",
+        "meaning": "CSV write failed because output subdirectory did not yet exist"
+      },
+      {
+        "file": "runs/final-candidate/trace.jsonl",
+        "line": 53,
+        "seq": 49,
+        "call_index": 11,
+        "tool": "pwsh",
+        "meaning": "Explicit mkdir and CSV write recovery; cost retained"
+      },
+      {
+        "file": "runs/final-candidate/trace.jsonl",
+        "line": 58,
+        "seq": 54,
+        "call_index": 12,
+        "tool": "mcp__repo_wayfinder__rw_verify",
+        "meaning": "One rw_verify HTTP lifecycle phase"
+      },
+      {
+        "file": "runs/final-candidate/trace.jsonl",
+        "line": 63,
+        "seq": 59,
+        "call_index": 13,
+        "tool": "read",
+        "meaning": "Read the generated actual-result summary"
+      },
+      {
+        "file": "runs/final-candidate/trace.jsonl",
+        "line": 73,
+        "seq": 69,
+        "call_index": 15,
+        "tool": "write",
+        "meaning": "Write smoke.log from actual results"
+      }
+    ]
+  },
+  "comparability": {
+    "original_matched_baseline_scope_valid": false,
+    "strict_matched_savings_established": false,
+    "guide_only_vs_final": {
+      "responses": [
+        12,
+        14
+      ],
+      "tool_calls": [
+        18,
+        19
+      ],
+      "total_usage": [
+        280169,
+        277903
+      ],
+      "external_cli_seconds": [
+        88.109,
+        80.844
+      ],
+      "interpretation": "The duplicate-lifecycle replacement worked; rounds increased 12 to 14. Usage 280169 to 277903 is similar; 88.109 to 80.844 seconds is a single-run difference, not stable savings evidence. The earlier guide-only run also failed conservative scope audit."
+    }
+  },
+  "observable_cost": {
+    "model_attempts": 3,
+    "total_usage": 1142221,
+    "inputTokens": 53502,
+    "cacheReadTokens": 1036544,
+    "outputTokens": 52175,
+    "external_cli_seconds": 307.281,
+    "scope": "These three SDK model sessions only; includes cached input, not a bill. Primary Codex/development and independent verification are excluded; reasoningTokens are an output subset, not added again.",
+    "pre_model_failures_retained": [
+      "task newline reconciliation",
+      "pure archive missing Git identity",
+      "dirty candidate clean-tree gate",
+      "final supervisor missing runs directory"
+    ],
+    "pre_model_failures_model_calls": 0
+  },
+  "limits": [
+    "One final adoption run; no final matched compliant baseline.",
+    "No universal DSH or other-model efficiency conclusion.",
+    "Current rw_verify/report candidate must not be treated as the older 16-run implementation.",
+    "Prior business successes, scope failures and negative deployment evidence remain retained."
+  ],
+  "evidence": {
+    "final_summary": "runs/final-candidate/summary.json",
+    "independent_business_oracle": "runs/final-candidate/independent-verification.json",
+    "command_audit": "runs/final-candidate/command-audit.json",
+    "production_diff": "candidate.patch",
+    "previous_pair": "../public-summary.json"
+  }
+}

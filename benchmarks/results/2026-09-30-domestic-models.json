@@ -1,0 +1,252 @@
+{
+  "recorded_at_utc": "2026-09-30T13:21:44.637964+00:00",
+  "source_freeze": "b893808883e56e18d317ede3a1bb17519b2bdda9",
+  "client": "Qwen Code 0.24.7",
+  "task": "http_server_static_zh",
+  "permission_mode": "auto with concrete host approval; no yolo, blanket allow or global policy change",
+  "input_route": "See input_route_by_attempt; first attempt used text input.",
+  "private_rules": false,
+  "special_benchmark_guide": false,
+  "attempts": [
+    {
+      "attempt": "qwen-static-formal-p1/native",
+      "provider": "qwen",
+      "model": "qwen3.8-max-0902",
+      "outcome": "client_setup_failure_missing_native_mutators",
+      "input_tokens": 428799,
+      "output_tokens": 27193,
+      "cache_read_input_tokens": 321664,
+      "observable_total_tokens": 455992,
+      "wall_seconds": 630.125,
+      "duration_api_ms": 378184,
+      "num_turns": 9,
+      "tool_calls": 18,
+      "mcp_connected": false,
+      "mcp_discovered_tools_count": 0,
+      "mcp_actual_calls": 0,
+      "identity_valid": true,
+      "oracle": {
+        "expected_checks": 25,
+        "executed_checks": 0,
+        "passed_checks": null,
+        "missing_deliverables": null
+      },
+      "scope": {
+        "status": "not_comparison_eligible",
+        "delegated_read_scope": "uncertain",
+        "reason": "Initial missing-tools failure included agent subcalls; no complete delivery."
+      },
+      "cleanup": {
+        "not_started": true,
+        "reason": "No native execution capability; CLI had already exited."
+      },
+      "host_wait": {
+        "request_count": 0,
+        "request_to_decision_sum_seconds": 0,
+        "largest_request_to_decision_seconds": null,
+        "control_timeout_count": 0,
+        "callback_window_seconds": 60,
+        "measurement_boundary": "Observer received request to decision-file readiness. For timed-out native requests this is not the exact blocked duration: the observer was itself waiting for the host decision before receiving subsequent cancellation lines. Do not subtract this sum from wall or label it provider/model time."
+      },
+      "evidence": "qwen-static-formal-p1/control-native/run"
+    },
+    {
+      "attempt": "qwen-static-formal-p2/native",
+      "provider": "qwen",
+      "model": "qwen3.8-max-0902",
+      "outcome": "free_quota_exhausted_partial_delivery",
+      "input_tokens": 987225,
+      "output_tokens": 19221,
+      "cache_read_input_tokens": 900224,
+      "observable_total_tokens": 1006446,
+      "wall_seconds": 507.422,
+      "duration_api_ms": 434649,
+      "num_turns": 26,
+      "tool_calls": 37,
+      "mcp_connected": false,
+      "mcp_discovered_tools_count": 0,
+      "mcp_actual_calls": 0,
+      "identity_valid": true,
+      "oracle": {
+        "expected_checks": 25,
+        "executed_checks": 25,
+        "passed_checks": 23,
+        "missing_deliverables": [
+          "README.md",
+          "smoke.log"
+        ]
+      },
+      "scope": {
+        "status": "reviewed_observed_calls",
+        "not_an_os_sandbox": true,
+        "business_paths_outside_task_observed": 0,
+        "other_arm_or_oracle_reads_observed": 0,
+        "runtime_background_output_reads": 1,
+        "runtime_background_output_read_scope": "Only this arm own Qwen Code background shell output; ordinary runtime use exception.",
+        "subagent_calls": 0,
+        "terminal_commands_reviewed": true,
+        "normal_package_cache_writes": "npm/CLI runtime caches are not model-authored business files; not exhaustively filesystem-monitored."
+      },
+      "cleanup": {
+        "matching_owned_processes": 0,
+        "agent_killed_count": 0,
+        "evidence": "qwen-static-formal-p2/control-native/run/owned-service-cleanup.json"
+      },
+      "host_wait": {
+        "request_count": 2,
+        "request_to_decision_sum_seconds": null,
+        "largest_request_to_decision_seconds": null,
+        "control_timeout_count": 0,
+        "callback_window_seconds": 60,
+        "measurement_boundary": "Observer received request to decision-file readiness. For timed-out native requests this is not the exact blocked duration: the observer was itself waiting for the host decision before receiving subsequent cancellation lines. Do not subtract this sum from wall or label it provider/model time.",
+        "requests_denied_fail_closed": 2,
+        "reason": "Initial handler sent fail-closed denial without separate decision files; scoped approval arrived after CLI exit, so no approved execution was replayed."
+      },
+      "evidence": "qwen-static-formal-p2/control-native/run"
+    },
+    {
+      "attempt": "glm-static-formal-p2/native",
+      "provider": "glm",
+      "model": "glm-4.7-flash",
+      "outcome": "contract_delivery_incomplete_standard_oracle_not_entered",
+      "input_tokens": 890323,
+      "output_tokens": 8666,
+      "cache_read_input_tokens": 422476,
+      "observable_total_tokens": 898989,
+      "wall_seconds": 2621.89,
+      "duration_api_ms": 1782770,
+      "num_turns": 37,
+      "tool_calls": 36,
+      "mcp_connected": false,
+      "mcp_discovered_tools_count": 0,
+      "mcp_actual_calls": 0,
+      "identity_valid": true,
+      "oracle": {
+        "expected_checks": 25,
+        "executed_checks": 0,
+        "passed_checks": null,
+        "missing_deliverables": [
+          "bench-delivery/serve.cjs"
+        ]
+      },
+      "scope": {
+        "status": "reviewed_observed_calls",
+        "not_an_os_sandbox": true,
+        "business_paths_outside_task_observed": 0,
+        "other_arm_or_oracle_reads_observed": 0,
+        "runtime_background_output_reads": 1,
+        "runtime_background_output_read_scope": "Only this arm own Qwen Code background shell output; ordinary runtime use exception.",
+        "subagent_calls": 0,
+        "terminal_commands_reviewed": true,
+        "normal_package_cache_writes": "npm/CLI runtime caches are not model-authored business files; not exhaustively filesystem-monitored.",
+        "delivery_path_deviation": "serve.cjs was authored at repository root instead of required bench-delivery; task directory scope remained intact."
+      },
+      "cleanup": {
+        "matching_owned_processes": 0,
+        "agent_killed_count": 0,
+        "evidence": "glm-static-formal-p2/control-native/run/owned-service-cleanup.json"
+      },
+      "host_wait": {
+        "request_count": 19,
+        "request_to_decision_sum_seconds": 640.22,
+        "largest_request_to_decision_seconds": 115.926,
+        "control_timeout_count": 3,
+        "callback_window_seconds": 60,
+        "measurement_boundary": "Observer received request to decision-file readiness. For timed-out native requests this is not the exact blocked duration: the observer was itself waiting for the host decision before receiving subsequent cancellation lines. Do not subtract this sum from wall or label it provider/model time."
+      },
+      "evidence": "glm-static-formal-p2/control-native/run"
+    },
+    {
+      "attempt": "glm-static-formal-p2/product",
+      "provider": "glm",
+      "model": "glm-4.7-flash",
+      "outcome": "contract_delivery_incomplete_standard_oracle_not_entered",
+      "input_tokens": 2257425,
+      "output_tokens": 17954,
+      "cache_read_input_tokens": 1680510,
+      "observable_total_tokens": 2275379,
+      "wall_seconds": 2920.469,
+      "duration_api_ms": 784434,
+      "num_turns": 70,
+      "tool_calls": 69,
+      "mcp_connected": true,
+      "mcp_discovered_tools_count": 10,
+      "mcp_actual_calls": 0,
+      "identity_valid": true,
+      "oracle": {
+        "expected_checks": 25,
+        "executed_checks": 0,
+        "passed_checks": null,
+        "missing_deliverables": [
+          "bench-delivery/serve.cjs"
+        ]
+      },
+      "scope": {
+        "status": "reviewed_observed_calls",
+        "not_an_os_sandbox": true,
+        "business_paths_outside_task_observed": 0,
+        "other_arm_or_oracle_reads_observed": 0,
+        "runtime_background_output_reads": 5,
+        "runtime_background_output_read_scope": "Only this arm own Qwen Code background shell output; ordinary runtime use exception.",
+        "subagent_calls": 0,
+        "terminal_commands_reviewed": true,
+        "normal_package_cache_writes": "npm/CLI runtime caches are not model-authored business files; not exhaustively filesystem-monitored.",
+        "delivery_path_deviation": "serve.cjs was authored at repository root instead of required bench-delivery; task directory scope remained intact."
+      },
+      "cleanup": {
+        "matching_owned_processes": 0,
+        "agent_killed_count": 0,
+        "evidence": "glm-static-formal-p2/control-product/run/owned-service-cleanup.json"
+      },
+      "host_wait": {
+        "request_count": 36,
+        "request_to_decision_sum_seconds": 1691.391,
+        "largest_request_to_decision_seconds": 378.052,
+        "control_timeout_count": 0,
+        "callback_window_seconds": 600,
+        "measurement_boundary": "Observer received request to decision-file readiness. For timed-out native requests this is not the exact blocked duration: the observer was itself waiting for the host decision before receiving subsequent cancellation lines. Do not subtract this sum from wall or label it provider/model time."
+      },
+      "evidence": "glm-static-formal-p2/control-product/run"
+    }
+  ],
+  "prepared_without_model": [
+    {
+      "attempt": "qwen-static-p1",
+      "status": "prepared_only_no_model_run",
+      "model_requests": 0
+    },
+    {
+      "attempt": "glm-static-formal-p1",
+      "status": "prepared_only_no_model_run",
+      "model_requests": 0
+    },
+    {
+      "attempt": "qwen-static-formal-p1/product",
+      "status": "not_started_client_prerequisite_failure",
+      "model_requests": 0
+    },
+    {
+      "attempt": "qwen-static-formal-p2/product",
+      "status": "not_started_free_guard_exhausted",
+      "model_requests": 0
+    }
+  ],
+  "totals": {
+    "model_attempts": 4,
+    "observable_session_tokens": 4636806,
+    "wall_seconds": 6679.906
+  },
+  "usage_boundary": "CLI terminal cumulative usage counted once; cached input is already included in input. Cache creation/classifier/provider billing not independently separable; this is not a paid bill/free quota deduction. Primary Codex/delegated development and investigation tokens and independent verification time are excluded; no project-wide cost is claimed.",
+  "comparison_conclusion": "No valid tool-performance comparison: Qwen never completed the pair; GLM product connected ten definitions but made zero MCP calls and both GLM arms missed required delivery structure. Host approval delays and 60s/600s callback difference additionally confound wall comparisons.",
+  "public_raw_policy": "Only sanitized aggregates are public. Raw payloads, credentials, account endpoints, session IDs and device runtime paths remain private.",
+  "input_route_by_attempt": {
+    "qwen-static-formal-p1/native": "headless text input; missing native write/execute tools in auto mode",
+    "other_executed_attempts": "official stream-json initialize and user message protocol"
+  },
+  "mcp_instruction_delivery_review": {
+    "client_version": "0.24.7",
+    "source_path_supported": true,
+    "actual_api_wire_capture": false,
+    "finding": "Installed source reads MCP server instructions after connect and adds them to initial user-role reminders. The reason for zero MCP adoption remains undetermined."
+  }
+}
