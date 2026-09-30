@@ -23,13 +23,14 @@ SUPPORTED_PROTOCOLS = {"2024-11-05", "2025-03-26", LATEST_PROTOCOL}
 SERVER_INFO = {"name": "repowayfinder-agent", "version": "0.5.0"}
 SERVER_INSTRUCTIONS = (
     "RepoWayfinder batches deterministic work without calling another model. "
-    "Before writing a one-off checker for CSV/JSON/files or local HTTP lifecycle checks, discover rw_verify "
-    "and batch the assertions it covers in one call. "
-    "Supply the task's expected results; the tool handles parsing, explicit reruns, requests, "
-    "restarts and owned-process cleanup. Reuse still-valid test results; add checks for uncovered risks "
-    "or changed code/data. An additional rw_verify call is unnecessary when equivalent assertions already passed. "
     "Use rw_run for repository acquisition/environment jobs. "
-    "Keep native tools for business code and work outside these contracts. "
+    "Keep native tools for business code, existing environments and compact task-specific checks. "
+    "Use rw_verify when one batch replaces repeated parsing/runs or local HTTP start/request/restart/cleanup code. "
+    "Do not translate a compact native check into an equally long assertion manifest just to use the tool. "
+    "HTTP error cases can use body_base64 with content_type to send raw bytes in the same owned service batch. "
+    "Supply the task's expected results and necessary failure cases. Reuse still-valid test results; "
+    "add checks for uncovered risks or changed code/data, without repeating equivalent passing assertions. "
+    "Full logs stay local; read more only when the compact result is insufficient. "
     "Passing supplied assertions proves only those assertions."
 )
 
@@ -122,6 +123,10 @@ _VERIFY_REQUEST = {
     "expected": _JSON_VALUE,
     "json": _JSON_VALUE,
     "form": {"type": "object", "additionalProperties": {"type": "string"}},
+    "body_base64": _string(maxLength=20 * 1024 * 1024,
+                           description="Exact raw request bytes in standard Base64, including malformed JSON or invalid UTF-8. Exclusive with json/form; GET/HEAD cannot have bodies. Empty string sends an empty body."),
+    "content_type": _string(minLength=1, maxLength=200,
+                            description="Only with body_base64. Defaults to application/octet-stream; use application/json for malformed JSON tests. ASCII without control characters."),
     "actor": _string(minLength=1, maxLength=120),
 }
 _VERIFY_SERVICE = _object({

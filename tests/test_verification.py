@@ -1,5 +1,6 @@
 """Existing artifacts, finite commands, and owned loopback HTTP phases."""
 import contextlib
+import base64
 import io
 import json
 import os
@@ -40,6 +41,9 @@ class Handler(BaseHTTPRequestHandler):
         if self.path=='/huge': return self.reply(200,b'x'*4096)
         if self.path=='/slow': time.sleep(2); return self.reply(200,b'slow')
         if self.path=='/typed': return self.reply(200,b'{"nested":[true]}')
+        if self.path=='/items':
+            items=json.loads(Path('items.json').read_text(encoding='utf-8')) if Path('items.json').exists() else []
+            return self.reply(200,json.dumps({'items':items},ensure_ascii=False).encode('utf-8'))
         if self.path=='/drip-header':
             self.wfile.write(b'HTTP/1.1 200 OK\r\n'); self.wfile.flush()
             for _ in range(100): self.wfile.write(b'X'); self.wfile.flush(); time.sleep(.05)
@@ -50,7 +54,21 @@ class Handler(BaseHTTPRequestHandler):
             return
         return self.reply(404,b'not found')
     def do_POST(self):
-        form=parse_qs(self.rfile.read(int(self.headers.get('Content-Length','0'))).decode())
+        raw=self.rfile.read(int(self.headers.get('Content-Length','0')))
+        if self.path=='/raw-type':
+            return self.reply(200,json.dumps({'content_type':self.headers.get('Content-Type'),'bytes':len(raw)}).encode())
+        if self.path=='/items':
+            if self.headers.get('Content-Type','').split(';',1)[0]!='application/json':
+                return self.reply(415,b'{"error":"JSON required"}')
+            try: value=json.loads(raw.decode('utf-8'))
+            except (ValueError,UnicodeError): return self.reply(400,b'{"error":"invalid JSON"}')
+            if not isinstance(value,dict) or not isinstance(value.get('text'),str) or not value['text'].strip():
+                return self.reply(400,b'{"error":"invalid text"}')
+            items=json.loads(Path('items.json').read_text(encoding='utf-8')) if Path('items.json').exists() else []
+            item={'id':len(items)+1,'text':value['text']};items.append(item)
+            Path('items.json').write_text(json.dumps(items,ensure_ascii=False),encoding='utf-8')
+            return self.reply(201,json.dumps(item,ensure_ascii=False).encode('utf-8'))
+        form=parse_qs(raw.decode())
         if self.path=='/login': return self.reply(200,b'login', [('Set-Cookie','user='+form['user'][0])])
         if self.path=='/write':
             if 'user=alice' not in self.headers.get('Cookie',''): return self.reply(403,b'forbidden')
@@ -221,6 +239,55 @@ class VerificationTests(unittest.TestCase):
         self.assertEqual(len(starts),2)
         self.assertTrue(all(e['stopped'] for e in result['side_effects'] if e['kind']=='service_cleanup'))
         self.assert_port_closed(starts[0]['port'])
+
+    def test_raw_bad_json_and_invalid_utf8_do_not_insert_and_service_continues(self):
+        steps=[{'method':'POST','path':'/items','status':400,
+                'body_base64':base64.b64encode(body).decode('ascii'),
+                'content_type':'application/json'} for body in (b'{',b'{"text":"\xff"}',b'')]
+        steps += [{'path':'/items','status':200,'json_pointer':'','expected':{'items':[]}},
+                  {'method':'POST','path':'/items','status':201,'json':{'text':'有效记录'},
+                   'json_pointer':'/id','expected':1},
+                  {'path':'/items','status':200,'json_pointer':'',
+                   'expected':{'items':[{'id':1,'text':'有效记录'}]}},
+                  {'path':'/health','status':200,'json_pointer':'/ok','expected':True},
+                  {'method':'POST','path':'/raw-type','status':200,'body_base64':'',
+                   'json_pointer':'','expected':{'content_type':'application/octet-stream','bytes':0}}]
+        result=self.verify(service=self.service(steps))
+        self.assertTrue(result['passed'],result)
+        self.assertEqual(json.loads((self.root/'items.json').read_text(encoding='utf-8')),
+                         [{'id':1,'text':'有效记录'}])
+        self.assert_port_closed(next(e['port'] for e in result['side_effects'] if e['kind']=='service_start'))
+
+    def test_raw_body_validation_rejects_before_service_or_evidence(self):
+        cases=[{'body_base64':'%'}, {'body_base64':'ew=='+'\n'}, {'body_base64':[]},
+               {'body_base64':'ew==','json':{}}, {'body_base64':'ew==','form':{}},
+               {'body_base64':'','method':'GET'}, {'body_base64':'','method':'HEAD'},
+               {'body_base64':'','content_type':'application/json\r\nX-Injected: yes'},
+               {'body_base64':'','content_type':'非ASCII'},
+               {'body_base64':'','content_type':'x'*201},
+               {'content_type':'application/json','json':{}}]
+        with patch('owned_process.spawn_owned') as spawn:
+            for case in cases:
+                step={'method':'POST','path':'/items','status':400,**case}
+                with self.subTest(case=case), self.assertRaises(ValueError):
+                    self.verify(service=self.service([step]))
+            spawn.assert_not_called()
+        self.assertFalse((self.root/'.repowayfinder-checks').exists())
+
+    def test_encoded_and_total_request_payload_limits_precede_effects(self):
+        # URL encoding expands UTF-8 bytes while the JSON declaration still
+        # fits; test the actual wire limit rather than a matching string length.
+        specs=[self.service([{'method':'POST','path':'/write','status':200,
+                              'form':{'value':'汉'*120}}]),
+               self.service([{'method':'POST','path':'/write','status':200,
+                              'form':{'value':'汉'*65}} for _ in range(2)])]
+        with patch.object(verification,'MAX_BODY',1024), patch('owned_process.spawn_owned') as spawn:
+            for spec in specs:
+                self.assertLessEqual(len(json.dumps(spec,ensure_ascii=False).encode('utf-8')),1024)
+                with self.subTest(requests=len(spec['requests'])), self.assertRaises(ValueError):
+                    self.verify(service=spec)
+            spawn.assert_not_called()
+        self.assertFalse((self.root/'.repowayfinder-checks').exists())
 
     def test_wrong_business_status_stops_requests_and_service(self):
         result=self.verify(service=self.service([{'method':'GET','path':'/missing','status':200},

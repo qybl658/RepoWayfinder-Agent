@@ -6,6 +6,8 @@ requests can have effects: this module is not an operating-system sandbox.
 from __future__ import annotations
 
 from contextlib import redirect_stdout
+import base64
+import binascii
 from http.client import HTTPConnection, HTTPException
 from http.cookiejar import CookieJar
 import json
@@ -102,6 +104,47 @@ def _expect(value, where):
                                          'pointer': pointer, 'expected': value['expected']}])
 
 
+def _payload(step):
+    """Encode one declared body without files, I/O or implicit HTTP effects."""
+    modes = [name for name in ('json', 'form', 'body_base64') if name in step]
+    if len(modes) > 1:
+        raise ValueError('HTTP json, form and body_base64 are mutually exclusive')
+    if modes and step.get('method', 'GET') in {'GET', 'HEAD'}:
+        raise ValueError('GET/HEAD requests cannot have a body')
+    if 'content_type' in step and 'body_base64' not in step:
+        raise ValueError('content_type is only available with body_base64')
+    data, headers = None, {}
+    if 'json' in step:
+        data = json.dumps(step['json'], ensure_ascii=False, allow_nan=False).encode('utf-8')
+        headers['Content-Type'] = 'application/json; charset=utf-8'
+    elif 'form' in step:
+        if not isinstance(step['form'], dict) or any(
+            not isinstance(key, str) or not isinstance(value, str)
+            for key, value in step['form'].items()
+        ):
+            raise ValueError('form must be an object with text keys and scalar values')
+        data = urlencode(step['form']).encode('utf-8')
+        headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8'
+    elif 'body_base64' in step:
+        value = step['body_base64']
+        if not isinstance(value, str):
+            raise ValueError('body_base64 must be standard Base64 text')
+        try:
+            data = base64.b64decode(value.encode('ascii'), validate=True)
+        except (UnicodeEncodeError, binascii.Error, ValueError):
+            raise ValueError('body_base64 must be valid padded standard Base64') from None
+        if base64.b64encode(data).decode('ascii') != value:
+            raise ValueError('body_base64 must be canonical padded standard Base64')
+        content_type = step.get('content_type', 'application/octet-stream')
+        if (not isinstance(content_type, str) or not 1 <= len(content_type) <= 200
+            or any(not 32 <= ord(char) < 127 for char in content_type)):
+            raise ValueError('content_type must be 1-200 ASCII characters without controls')
+        headers['Content-Type'] = content_type
+    if data is not None and len(data) > MAX_BODY:
+        raise ValueError('HTTP request payload exceeds 20 MiB')
+    return data, headers
+
+
 def _check_port(port):
     with socket.socket() as probe:
         if hasattr(socket, 'SO_EXCLUSIVEADDRUSE'):
@@ -147,6 +190,9 @@ def _validate(directory, checks, run, unchanged, service, evidence_directory):
     if service is not None:
         _fields(service, {'argv', 'port', 'ready', 'requests', 'timeout_seconds'},
                 {'argv', 'ready', 'requests'}, 'service')
+        # Bound the original declaration before decoding any raw bodies.
+        if len(json.dumps(service, ensure_ascii=False, allow_nan=False).encode('utf-8')) > MAX_BODY:
+            raise ValueError('Service request declaration exceeds 20 MiB')
         argv, interpreter = _argv(service['argv'], root)
         lower = ' '.join(argv).lower()
         if any(word in lower for word in ('--reload', '--reloader', '--daemon', '--detach',
@@ -166,32 +212,26 @@ def _validate(directory, checks, run, unchanged, service, evidence_directory):
         if not isinstance(requests, list) or not 1 <= len(requests) <= 64:
             raise ValueError('service.requests must contain 1-64 steps')
         count = 0
+        payload_bytes = 0
         for item in requests:
             if isinstance(item, dict) and item.get('restart') is True:
                 _fields(item, {'restart'}, {'restart'}, 'restart')
                 continue
             _fields(item, {'method', 'path', 'status', 'contains', 'json_pointer', 'expected',
-                           'json', 'form', 'actor'}, {'path', 'status'}, 'request')
+                           'json', 'form', 'body_base64', 'content_type', 'actor'},
+                    {'path', 'status'}, 'request')
             if item.get('method', 'GET') not in {'GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'}:
                 raise ValueError('Unsupported HTTP method')
             _expect(item, 'request')
-            if 'json' in item and 'form' in item:
-                raise ValueError('HTTP json and form bodies are mutually exclusive')
-            if item.get('method', 'GET') in {'GET', 'HEAD'} and ('json' in item or 'form' in item):
-                raise ValueError('GET/HEAD requests cannot have a body')
-            if 'form' in item and (not isinstance(item['form'], dict) or any(
-                not isinstance(k, str) or not isinstance(v, str)
-                for k, v in item['form'].items()
-            )):
-                raise ValueError('form must be an object with text keys and scalar values')
+            payload, _ = _payload(item)
+            payload_bytes += len(payload) if payload is not None else 0
+            if payload_bytes > MAX_BODY:
+                raise ValueError('Service request payloads exceed 20 MiB in total')
             if not isinstance(item.get('actor', 'default'), str) or not 1 <= len(item.get('actor', 'default')) <= 120:
                 raise ValueError('actor must be nonempty text up to 120 characters')
             count += 1
         if not normalized and not count:
             raise ValueError('Pure service verification needs at least one real request assertion')
-        # All body/expectation values must be serializable before effects occur.
-        if len(json.dumps(service, ensure_ascii=False, allow_nan=False).encode('utf-8')) > MAX_BODY:
-            raise ValueError('Service request declaration exceeds 20 MiB')
         budget = _timeout(service.get('timeout_seconds', 60))
         selected_service = {'argv': argv, 'interpreter': interpreter, 'port': port,
                             'ready': ready, 'requests': requests}
@@ -283,14 +323,7 @@ class _DeadlineHTTPHandler(HTTPHandler):
 
 
 def _response(opener, origin, step, deadline, evidence, label, execution):
-    headers = {}
-    data = None
-    if 'json' in step:
-        data = json.dumps(step['json'], ensure_ascii=False, allow_nan=False).encode('utf-8')
-        headers['Content-Type'] = 'application/json; charset=utf-8'
-    if 'form' in step:
-        data = urlencode(step['form']).encode('utf-8')
-        headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8'
+    data, headers = _payload(step)
     path = quote(step['path'], safe="/%?&=:+,@;!$'()*-._~")
     req = Request(origin + path, data=data, headers=headers, method=step.get('method', 'GET'))
     started = time.monotonic()

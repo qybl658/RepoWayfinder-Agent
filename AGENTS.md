@@ -17,6 +17,10 @@ install dependencies or create a deployment job. Optional `run` executes argv;
 scenario owns its process lifetime and stops it when checks finish. Supply the
 user's actual expected results and failure cases; passing only proves those
 assertions. Prefer existing native tools for work outside this finite contract.
+Select this path when it removes repeated parsing, execution or service lifecycle
+code. Keep compact native checks; rewriting them as an equally long assertion
+manifest is not an efficiency gain. Reuse still-valid evidence and check only
+changed behavior or uncovered risks instead of duplicating passing assertions.
 See `docs/LOCAL_VERIFICATION.md`. Product comparisons must work with the host's
 ordinary instructions plus the product's shipped capability guidance. Reusable,
 de-identified prompts or Skills may be part of that delivery; record them as

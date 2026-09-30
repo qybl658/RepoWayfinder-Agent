@@ -18,6 +18,48 @@ def request(method, params=None, request_id=1):
 
 
 class MCPTransportTests(unittest.TestCase):
+    def test_real_verify_wire_preserves_raw_http_bytes(self):
+        project = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory(prefix='rw-raw-wire-') as folder:
+            root = Path(folder).resolve()
+            task = root / 'task'
+            task.mkdir()
+            (task / 'server.py').write_text(
+                "from http.server import BaseHTTPRequestHandler, HTTPServer\n"
+                "import json,sys\n"
+                "class Handler(BaseHTTPRequestHandler):\n"
+                " def do_GET(self):\n"
+                "  self.send_response(200);self.end_headers();self.wfile.write(b'ready')\n"
+                " def do_POST(self):\n"
+                "  data=self.rfile.read(int(self.headers.get('Content-Length',0)))\n"
+                "  body=json.dumps({'hex':data.hex(),'type':self.headers.get('Content-Type')}).encode()\n"
+                "  self.send_response(200);self.end_headers();self.wfile.write(body)\n"
+                "HTTPServer(('127.0.0.1',int(sys.argv[1])),Handler).serve_forever()\n",
+                encoding='utf-8')
+            arguments = {'directory': str(task), 'service': {
+                'argv': ['python', 'server.py', '{port}'],
+                'ready': {'path': '/', 'status': 200, 'contains': 'ready'},
+                'requests': [
+                    {'method': 'POST', 'path': '/', 'status': 200,
+                     'body_base64': 'ew==', 'content_type': 'application/json',
+                     'json_pointer': '', 'expected': {'hex': '7b', 'type': 'application/json'}},
+                    {'method': 'POST', 'path': '/', 'status': 200,
+                     'body_base64': '/w==', 'content_type': 'application/json',
+                     'json_pointer': '', 'expected': {'hex': 'ff', 'type': 'application/json'}},
+                    {'path': '/', 'status': 200, 'contains': 'ready'},
+                ]}}
+            wire = request('tools/call', {'name': 'rw_verify', 'arguments': arguments})
+            result = subprocess.run(
+                [sys.executable, str(project / 'agent.py'), '--workspace', str(root / 'jobs'), 'serve'],
+                cwd=project, input=(json.dumps(wire) + '\n').encode('utf-8'),
+                capture_output=True, timeout=20)
+            self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8', errors='replace'))
+            reply = json.loads(result.stdout.decode('utf-8'))
+            self.assertNotIn('error', reply)
+            report = json.loads(reply['result']['content'][0]['text'])
+            self.assertTrue(report['passed'], report)
+            self.assertTrue(Path(report['evidence_path']).is_file())
+
     def test_real_verify_backend_batches_run_repeat_and_cli_failure(self):
         # Exercise the shipped entry points, not a mocked dispatch: command
         # prints must stay out of JSON and Unicode must survive Windows locale.
