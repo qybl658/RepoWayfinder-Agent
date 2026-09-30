@@ -1,0 +1,277 @@
+{
+  "status": "One ordinary-entry necessity candidate completed; sample observation, not general causal proof.",
+  "model": "grok-4.7",
+  "reasoning_effort": "high",
+  "prompt_and_input_identical": true,
+  "wrapper_guide_or_tool_filter": false,
+  "approval_mode_changed": false,
+  "new_model_calls": 1,
+  "turn_or_task_timeout_caps": false,
+  "baseline": {
+    "wall_seconds": 564.938,
+    "reported_api_seconds": 558.175,
+    "rounds": 11,
+    "tool_calls": 14,
+    "usage": {
+      "input_tokens": 109830,
+      "output_tokens": 40729,
+      "cache_read_input_tokens": 424832,
+      "cache_creation_input_tokens": 0
+    },
+    "usage_sum_including_cache": 575391,
+    "global_rule_bytes": 15205,
+    "helper_script_chars": 10975,
+    "independent_checks": "15/15"
+  },
+  "candidate": {
+    "wall_seconds": 479.797,
+    "reported_api_seconds": 467.851,
+    "rounds": 15,
+    "tool_calls": 23,
+    "usage": {
+      "input_tokens": 138110,
+      "output_tokens": 33937,
+      "cache_read_input_tokens": 579200,
+      "cache_creation_input_tokens": 0
+    },
+    "usage_sum_including_cache": 751247,
+    "global_rule_bytes": 13682,
+    "independently_verified": true,
+    "passed_checks": 15,
+    "total_checks": 15,
+    "actual_tools": {
+      "list_dir": 1,
+      "read_file": 7,
+      "run_terminal_command": 10,
+      "search_replace": 5
+    },
+    "new_file_writes": [
+      {
+        "line": 8,
+        "tool": "search_replace",
+        "basename": "reconcile.py",
+        "old_chars": 0,
+        "new_chars": 8100
+      }
+    ],
+    "local_edits": [
+      {
+        "line": 10,
+        "tool": "search_replace",
+        "basename": "reconcile.py",
+        "old_chars": 69,
+        "new_chars": 59
+      },
+      {
+        "line": 10,
+        "tool": "search_replace",
+        "basename": "reconcile.py",
+        "old_chars": 122,
+        "new_chars": 208
+      },
+      {
+        "line": 18,
+        "tool": "search_replace",
+        "basename": "reconcile.py",
+        "old_chars": 144,
+        "new_chars": 212
+      },
+      {
+        "line": 26,
+        "tool": "search_replace",
+        "basename": "reconcile.py",
+        "old_chars": 92,
+        "new_chars": 39
+      }
+    ],
+    "model_verifier_helpers": [],
+    "first_context_tokens": 22833,
+    "last_context_tokens": 62751,
+    "output_rounds": [
+      {
+        "round": 2,
+        "line": 4,
+        "output_tokens": 8207,
+        "argument_chars": 252,
+        "thinking_chars": 5311,
+        "tools": [
+          "read_file",
+          "run_terminal_command"
+        ]
+      },
+      {
+        "round": 4,
+        "line": 8,
+        "output_tokens": 6123,
+        "argument_chars": 8727,
+        "thinking_chars": 2284,
+        "tools": [
+          "search_replace"
+        ]
+      },
+      {
+        "round": 3,
+        "line": 6,
+        "output_tokens": 5628,
+        "argument_chars": 299,
+        "thinking_chars": 3698,
+        "tools": [
+          "run_terminal_command"
+        ]
+      },
+      {
+        "round": 9,
+        "line": 18,
+        "output_tokens": 2965,
+        "argument_chars": 683,
+        "thinking_chars": 1656,
+        "tools": [
+          "search_replace",
+          "run_terminal_command"
+        ]
+      }
+    ],
+    "model_temp_reference_calls": [
+      {
+        "line": 12,
+        "tool": "run_terminal_command",
+        "kind": "model-chosen temporary path/reference"
+      },
+      {
+        "line": 14,
+        "tool": "run_terminal_command",
+        "kind": "model-chosen temporary path/reference"
+      },
+      {
+        "line": 16,
+        "tool": "run_terminal_command",
+        "kind": "model-chosen temporary path/reference"
+      },
+      {
+        "line": 20,
+        "tool": "run_terminal_command",
+        "kind": "model-chosen temporary path/reference"
+      },
+      {
+        "line": 22,
+        "tool": "run_terminal_command",
+        "kind": "model-chosen temporary path/reference"
+      },
+      {
+        "line": 28,
+        "tool": "run_terminal_command",
+        "kind": "model-chosen temporary path/reference"
+      }
+    ],
+    "command_audit_pattern_hits": {
+      "global_install_flags": [],
+      "other_model_cli": [],
+      "account_or_global_config_writes": []
+    }
+  },
+  "sample_change": {
+    "recorded_usage_reduction_percent": -30.563,
+    "wall_reduction_percent": 15.071,
+    "input_token_delta": 28280,
+    "output_token_delta": -6792,
+    "cache_read_token_delta": 154368,
+    "total_recorded_token_delta": 175856,
+    "output_reduction_percent": 16.676
+  },
+  "necessity_clause_retained": false,
+  "rule_if_negative": "Automatically restored pretrial owner bytes; preserve external edits.",
+  "scope": "Added only contract/risk necessity, evidence reuse and known-work batching to the existing check owner for this candidate.",
+  "limitations": [
+    "Existing historical baseline used the earlier expanded rules; intervening priority/reference/rule revisions differ, so this is not one-clause-only A/B.",
+    "One sample, fixed chronological order, shared caches and server conditions uncontrolled.",
+    "Recorded cache is cumulative context reading, not fresh input, money or subscription quota.",
+    "Output token fields do not separate reasoning from visible tool code; signature/character lengths are not exact token attribution.",
+    "15 independent assertions were unchanged except verifier scratch output directory; model does not know external evaluator.",
+    "Trace command/path audit is not a full filesystem/network audit; no raw traces or private global rule text published.",
+    "Repaired capture separates CLI exit from inherited stdout lifetime; old baseline had a 1.860-second result-receipt-to-return gap without direct exit timestamp."
+  ],
+  "restoration": {
+    "owner_bytes_equal_before_trial": true,
+    "current_snapshot_equal_before_trial": true,
+    "owner_bytes": 13411,
+    "ordinary_global_rules_loaded": [
+      {
+        "scope": "global",
+        "bytes": 13411,
+        "approx_tokens": 3352
+      }
+    ],
+    "project_trusted": true,
+    "cli_version": "1.0.41",
+    "experiment_lock_removed": true
+  },
+  "observed_chain": {
+    "baseline_tools": {
+      "list_dir": 1,
+      "read_file": 6,
+      "run_terminal_command": 4,
+      "search_replace": 3
+    },
+    "candidate_terminal_command_chars": 11532,
+    "candidate_terminal_commands": 10,
+    "standalone_265_line_verifier_absent": true,
+    "validation_code_still_generated_inline": true,
+    "after_initial_code_and_edits": {
+      "baseline_responses_6_to_10": 5,
+      "candidate_responses_6_to_14": 9
+    },
+    "events": [
+      {
+        "line": 12,
+        "round": 6,
+        "action": "Run task, parse outputs, partition/case assertions and SHA256 snapshot",
+        "command_chars": 4114
+      },
+      {
+        "line": 14,
+        "round": 7,
+        "action": "Rerun and compare hashes/line counts"
+      },
+      {
+        "line": 16,
+        "round": 8,
+        "action": "BOM/conflict/leap-day/overwrite fixture; checker expects 8 rows but creates 9",
+        "result_line": 17,
+        "exit_code": 1
+      },
+      {
+        "line": 18,
+        "round": 9,
+        "action": "Fix CSV physical-line tracking and discover python on PATH"
+      },
+      {
+        "line": 20,
+        "round": 10,
+        "action": "Rerun using python and create blank-line fixture"
+      },
+      {
+        "line": 22,
+        "round": 11,
+        "action": "Assert rejected blank-line source row and compare outputs again"
+      },
+      {
+        "line": 24,
+        "round": 12,
+        "action": "Read own implementation plus four delivered outputs"
+      },
+      {
+        "line": 26,
+        "round": 13,
+        "action": "Edit README contract wording, regenerate twice and compare hashes"
+      },
+      {
+        "line": 28,
+        "round": 14,
+        "action": "Clean model-chosen temporary JSON and fixture directories"
+      }
+    ],
+    "interpretation": "A separate verifier file disappeared, but checks became more terminal steps; SHA256 persisted. Real line-number/README edits justify affected rechecks. This observation does not prove that all added validation is waste or that the rule caused the regression.",
+    "failed_edge_check_recovery": "Model inspected output and recognized expected count was wrong; the complete edge assertion script was not rerun with corrected count. Independent 15 required-contract assertions passed separately.",
+    "path_scope": "Required outputs remained in task/results. Model wrote a temporary hash JSON plus edge/blank CSV fixture directories and removed them. CLI-owned session logs are separate routine runtime evidence. Prompt does not impose an all-writes-in-task-root contract."
+  }
+}

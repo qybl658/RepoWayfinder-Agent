@@ -1,0 +1,568 @@
+[
+  {
+    "case": "bottle-old-rules-run",
+    "accounting": {
+      "context_token_sum": 809780,
+      "output_token_sum": 26453,
+      "assistant_tool_argument_chars": 17445,
+      "raw_result_chars": 162727,
+      "last_context_tokens": 57428,
+      "first_context_tokens": 19194,
+      "known_model_prompt_result_chars": 34303
+    },
+    "largest_output_rounds": [
+      {
+        "round": 9,
+        "line": 18,
+        "output_tokens": 6492,
+        "argument_chars": 2968,
+        "thinking_chars": 4711,
+        "tools": [
+          "write",
+          "write"
+        ],
+        "context_tokens": 34946
+      },
+      {
+        "round": 2,
+        "line": 4,
+        "output_tokens": 3728,
+        "argument_chars": 368,
+        "thinking_chars": 2150,
+        "tools": [
+          "repo_wayfinder__rw_run"
+        ],
+        "context_tokens": 20979
+      },
+      {
+        "round": 12,
+        "line": 24,
+        "output_tokens": 3540,
+        "argument_chars": 8916,
+        "thinking_chars": 473,
+        "tools": [
+          "search_replace",
+          "write"
+        ],
+        "context_tokens": 44159
+      },
+      {
+        "round": 7,
+        "line": 14,
+        "output_tokens": 2345,
+        "argument_chars": 229,
+        "thinking_chars": 1745,
+        "tools": [
+          "grep"
+        ],
+        "context_tokens": 30659
+      }
+    ],
+    "largest_exposure_results": [
+      {
+        "line": 16,
+        "result_line": 17,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 19338,
+        "model_prompt_field_chars": 6045,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 12,
+        "model_prompt_chars_times_later_responses": 72540
+      },
+      {
+        "line": 8,
+        "result_line": 9,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 12108,
+        "model_prompt_field_chars": 3782,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 16,
+        "model_prompt_chars_times_later_responses": 60512
+      },
+      {
+        "line": 8,
+        "result_line": 9,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 9788,
+        "model_prompt_field_chars": 3018,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 16,
+        "model_prompt_chars_times_later_responses": 48288
+      },
+      {
+        "line": 22,
+        "result_line": 23,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 10953,
+        "model_prompt_field_chars": 3418,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 9,
+        "model_prompt_chars_times_later_responses": 30762
+      },
+      {
+        "line": 20,
+        "result_line": 21,
+        "tool": "grep",
+        "target_name": "bottle.py",
+        "raw_result_chars": 11788,
+        "model_prompt_field_chars": 2409,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 10,
+        "model_prompt_chars_times_later_responses": 24090
+      },
+      {
+        "line": 6,
+        "result_line": 7,
+        "tool": "grep",
+        "target_name": "bottle.py",
+        "raw_result_chars": 6929,
+        "model_prompt_field_chars": 1384,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 17,
+        "model_prompt_chars_times_later_responses": 23528
+      }
+    ],
+    "highest_cost_rounds": [
+      {
+        "round": 20,
+        "line": 40,
+        "context_tokens": 57428,
+        "output_tokens": 494,
+        "recorded_total_tokens": 57922,
+        "tools": []
+      },
+      {
+        "round": 19,
+        "line": 38,
+        "context_tokens": 56779,
+        "output_tokens": 636,
+        "recorded_total_tokens": 57415,
+        "tools": [
+          "run_terminal_command"
+        ]
+      },
+      {
+        "round": 18,
+        "line": 36,
+        "context_tokens": 55258,
+        "output_tokens": 1440,
+        "recorded_total_tokens": 56698,
+        "tools": [
+          "list_dir"
+        ]
+      },
+      {
+        "round": 17,
+        "line": 34,
+        "context_tokens": 54733,
+        "output_tokens": 83,
+        "recorded_total_tokens": 54816,
+        "tools": [
+          "read_file"
+        ]
+      },
+      {
+        "round": 16,
+        "line": 32,
+        "context_tokens": 54508,
+        "output_tokens": 100,
+        "recorded_total_tokens": 54608,
+        "tools": [
+          "grep"
+        ]
+      },
+      {
+        "round": 15,
+        "line": 30,
+        "context_tokens": 52399,
+        "output_tokens": 929,
+        "recorded_total_tokens": 53328,
+        "tools": [
+          "read_file",
+          "read_file"
+        ]
+      }
+    ]
+  },
+  {
+    "case": "bottle-new-rules-run",
+    "accounting": {
+      "context_token_sum": 1224780,
+      "output_token_sum": 33261,
+      "assistant_tool_argument_chars": 23768,
+      "raw_result_chars": 243758,
+      "last_context_tokens": 69187,
+      "first_context_tokens": 19475,
+      "known_model_prompt_result_chars": 54157
+    },
+    "largest_output_rounds": [
+      {
+        "round": 18,
+        "line": 36,
+        "output_tokens": 6105,
+        "argument_chars": 12797,
+        "thinking_chars": 1444,
+        "tools": [
+          "write",
+          "write",
+          "write"
+        ],
+        "context_tokens": 53325
+      },
+      {
+        "round": 17,
+        "line": 34,
+        "output_tokens": 4308,
+        "argument_chars": 206,
+        "thinking_chars": 3401,
+        "tools": [
+          "read_file"
+        ],
+        "context_tokens": 48205
+      },
+      {
+        "round": 2,
+        "line": 4,
+        "output_tokens": 4279,
+        "argument_chars": 405,
+        "thinking_chars": 2112,
+        "tools": [
+          "repo_wayfinder__rw_run"
+        ],
+        "context_tokens": 21305
+      },
+      {
+        "round": 25,
+        "line": 50,
+        "output_tokens": 2595,
+        "argument_chars": 995,
+        "thinking_chars": 1600,
+        "tools": [
+          "run_terminal_command"
+        ],
+        "context_tokens": 66102
+      }
+    ],
+    "largest_exposure_results": [
+      {
+        "line": 8,
+        "result_line": 9,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 18473,
+        "model_prompt_field_chars": 5771,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 23,
+        "model_prompt_chars_times_later_responses": 132733
+      },
+      {
+        "line": 8,
+        "result_line": 9,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 16757,
+        "model_prompt_field_chars": 5245,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 23,
+        "model_prompt_chars_times_later_responses": 120635
+      },
+      {
+        "line": 22,
+        "result_line": 23,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 18726,
+        "model_prompt_field_chars": 5898,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 16,
+        "model_prompt_chars_times_later_responses": 94368
+      },
+      {
+        "line": 30,
+        "result_line": 31,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 21684,
+        "model_prompt_field_chars": 6825,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 12,
+        "model_prompt_chars_times_later_responses": 81900
+      },
+      {
+        "line": 26,
+        "result_line": 27,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 12040,
+        "model_prompt_field_chars": 3739,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 14,
+        "model_prompt_chars_times_later_responses": 52346
+      },
+      {
+        "line": 12,
+        "result_line": 13,
+        "tool": "read_file",
+        "target_name": "bottle.py",
+        "raw_result_chars": 7017,
+        "model_prompt_field_chars": 2138,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 21,
+        "model_prompt_chars_times_later_responses": 44898
+      }
+    ],
+    "highest_cost_rounds": [
+      {
+        "round": 27,
+        "line": 54,
+        "context_tokens": 69187,
+        "output_tokens": 503,
+        "recorded_total_tokens": 69690,
+        "tools": []
+      },
+      {
+        "round": 26,
+        "line": 52,
+        "context_tokens": 68947,
+        "output_tokens": 227,
+        "recorded_total_tokens": 69174,
+        "tools": [
+          "run_terminal_command"
+        ]
+      },
+      {
+        "round": 25,
+        "line": 50,
+        "context_tokens": 66102,
+        "output_tokens": 2595,
+        "recorded_total_tokens": 68697,
+        "tools": [
+          "run_terminal_command"
+        ]
+      },
+      {
+        "round": 24,
+        "line": 48,
+        "context_tokens": 63789,
+        "output_tokens": 1929,
+        "recorded_total_tokens": 65718,
+        "tools": [
+          "run_terminal_command"
+        ]
+      },
+      {
+        "round": 23,
+        "line": 46,
+        "context_tokens": 62413,
+        "output_tokens": 122,
+        "recorded_total_tokens": 62535,
+        "tools": [
+          "run_terminal_command"
+        ]
+      },
+      {
+        "round": 22,
+        "line": 44,
+        "context_tokens": 62181,
+        "output_tokens": 219,
+        "recorded_total_tokens": 62400,
+        "tools": [
+          "run_terminal_command"
+        ]
+      }
+    ]
+  },
+  {
+    "case": "daily-task-run",
+    "accounting": {
+      "context_token_sum": 534662,
+      "output_token_sum": 40729,
+      "assistant_tool_argument_chars": 24084,
+      "raw_result_chars": 76701,
+      "last_context_tokens": 66854,
+      "first_context_tokens": 23226,
+      "known_model_prompt_result_chars": 7280
+    },
+    "largest_output_rounds": [
+      {
+        "round": 3,
+        "line": 6,
+        "output_tokens": 14988,
+        "argument_chars": 292,
+        "thinking_chars": 12833,
+        "tools": [
+          "run_terminal_command"
+        ],
+        "context_tokens": 24676
+      },
+      {
+        "round": 4,
+        "line": 8,
+        "output_tokens": 13804,
+        "argument_chars": 9109,
+        "thinking_chars": 7756,
+        "tools": [
+          "search_replace"
+        ],
+        "context_tokens": 41008
+      },
+      {
+        "round": 8,
+        "line": 16,
+        "output_tokens": 6373,
+        "argument_chars": 11857,
+        "thinking_chars": 2043,
+        "tools": [
+          "search_replace"
+        ],
+        "context_tokens": 57658
+      },
+      {
+        "round": 5,
+        "line": 10,
+        "output_tokens": 1503,
+        "argument_chars": 969,
+        "thinking_chars": 765,
+        "tools": [
+          "search_replace"
+        ],
+        "context_tokens": 54858
+      }
+    ],
+    "largest_exposure_results": [
+      {
+        "line": 6,
+        "result_line": 7,
+        "tool": "run_terminal_command",
+        "target_name": null,
+        "raw_result_chars": 8577,
+        "model_prompt_field_chars": 1940,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 8,
+        "model_prompt_chars_times_later_responses": 15520
+      },
+      {
+        "line": 4,
+        "result_line": 5,
+        "tool": "read_file",
+        "target_name": "prompt.txt",
+        "raw_result_chars": 3050,
+        "model_prompt_field_chars": 938,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 9,
+        "model_prompt_chars_times_later_responses": 8442
+      },
+      {
+        "line": 18,
+        "result_line": 19,
+        "tool": "run_terminal_command",
+        "target_name": null,
+        "raw_result_chars": 9866,
+        "model_prompt_field_chars": 1835,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 2,
+        "model_prompt_chars_times_later_responses": 3670
+      },
+      {
+        "line": 4,
+        "result_line": 5,
+        "tool": "read_file",
+        "target_name": "input.csv",
+        "raw_result_chars": 1268,
+        "model_prompt_field_chars": 337,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 9,
+        "model_prompt_chars_times_later_responses": 3033
+      },
+      {
+        "line": 14,
+        "result_line": 15,
+        "tool": "read_file",
+        "target_name": "README.md",
+        "raw_result_chars": 2264,
+        "model_prompt_field_chars": 662,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 4,
+        "model_prompt_chars_times_later_responses": 2648
+      },
+      {
+        "line": 14,
+        "result_line": 15,
+        "tool": "read_file",
+        "target_name": "quarantine.csv",
+        "raw_result_chars": 1720,
+        "model_prompt_field_chars": 480,
+        "available_concise_prompt_chars": null,
+        "later_response_count": 4,
+        "model_prompt_chars_times_later_responses": 1920
+      }
+    ],
+    "highest_cost_rounds": [
+      {
+        "round": 11,
+        "line": 22,
+        "context_tokens": 66854,
+        "output_tokens": 1094,
+        "recorded_total_tokens": 67948,
+        "tools": []
+      },
+      {
+        "round": 10,
+        "line": 20,
+        "context_tokens": 65431,
+        "output_tokens": 1350,
+        "recorded_total_tokens": 66781,
+        "tools": [
+          "run_terminal_command"
+        ]
+      },
+      {
+        "round": 9,
+        "line": 18,
+        "context_tokens": 64065,
+        "output_tokens": 455,
+        "recorded_total_tokens": 64520,
+        "tools": [
+          "run_terminal_command"
+        ]
+      },
+      {
+        "round": 8,
+        "line": 16,
+        "context_tokens": 57658,
+        "output_tokens": 6373,
+        "recorded_total_tokens": 64031,
+        "tools": [
+          "search_replace"
+        ]
+      },
+      {
+        "round": 7,
+        "line": 14,
+        "context_tokens": 56672,
+        "output_tokens": 177,
+        "recorded_total_tokens": 56849,
+        "tools": [
+          "read_file",
+          "read_file",
+          "read_file",
+          "read_file"
+        ]
+      },
+      {
+        "round": 6,
+        "line": 12,
+        "context_tokens": 56404,
+        "output_tokens": 236,
+        "recorded_total_tokens": 56640,
+        "tools": [
+          "run_terminal_command"
+        ]
+      }
+    ]
+  }
+]

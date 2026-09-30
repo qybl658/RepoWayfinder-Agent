@@ -39,6 +39,8 @@ input包括uncached与cache reads的累计处理量，不是唯一上下文或�
 
 为判断是否能直接开启按需加载，另只读检查了本机该版 SDK：`@deepseek-ai/dsh-mcp-client/lib/index.js` 的 `syncTools` 先获取完整分页再注册全部工具，公开配置 schema 没有工具按需发现开关；`dsh-agent-tool-presentation` 只列 native/ptc/both。这个检查范围内未找到可直接启用的等价开关，因此没有修改宿主或将 programmatic tool calling 冒充懒加载。它不证明其他版本或插件不能实现；更换呈现方式需要单独核对完整能力、实际上下文和任务结果。
 
+后续普通Grok CSV候选也验证了单指标的局限：独立合同检查15/15，output少16.68%、wall少15.07%，但响应11→15使累计usage多30.56%。265行辅助检查文件消失，验证仍以更多终端步骤生成，含检查器自身计数错误；不能把文件变少当作阶段工作消失。候选已恢复，不加入项目默认。项目复用现有commands/checks/环境/局部恢复，是否扩展共享能力仍需对应实际重复阶段和完整任务证据，不能由本例推导“再建一个框架就会省”。[分项、混杂与回滚](GROK_DAILY_EFFICIENCY.md#普通入口后续候选节时但不省总-token)。
+
 紧凑数字与定位引用见[机制数据](../benchmarks/results/2026-09-30-mechanisms.json)，局部判别结果见[八项状态检查](../benchmarks/results/2026-09-30-local-probe.json)。原始逐调用记录留本地，不公开。实际requested reasoning未覆盖，旧、新DSH effective均high；同名high不证明跨供应商等计算强度。
 
 如需复现局部探测，将 [Python 入口](../benchmarks/check_local_probe.py) 和 [PowerShell 检查](../benchmarks/check_local_probe.ps1) 一起复制到新的空目录，用已有 Python 运行 `python check_local_probe.py`，另需已有 `pwsh`。脚本只创建和停止自己的 loopback 服务，在该目录写入 `local-probe-verification.json`，不调用模型、不访问外网、不安装依赖。使用新目录保留每次结果，不覆盖历史证据。
