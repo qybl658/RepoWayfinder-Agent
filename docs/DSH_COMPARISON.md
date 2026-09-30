@@ -37,7 +37,7 @@
 
 ### 证据与使用
 
-本机根目录：`D:/CodexWorkspace/RepoWayfinder-Agent-20260927/dsh/companion-course/`。
+本机根目录：`本地实验档案/dsh/companion-course/`。
 
 - `experiment.json` 记录预定顺序和验收条件；`comparison.json` 汇总全部三次尝试，`attempt-ledger.jsonl` 记录完整进程时间。
 - `dev-tool-01-run/`、`formal-tool-01-run/`、`formal-native-01-run/` 各保存 summary、原始 trace、独立验收和 command-audit。
@@ -89,14 +89,14 @@
 
 原生安装为本地源码 wheel，工具安装为本地源码 editable，均为题目允许的源码安装。两次构建命令与模型工具执行记录保留。原生 ZIP 验证曾在系统 TEMP 建临时解压目录并清理，这是“所有写入限定工作目录”的指令偏离；pip/编译工具还可能使用系统缓存/临时文件。本表“通过”指功能产物，不声称所有进程写入均在任务目录，也未进行 OS 文件访问审计。
 
-运行顺序为原生→工具，共享机器包缓存未清空，模型服务与网络会波动。只有一对任务，不能推断稳定倍数或模型能力上限。此前 Gitingest 环境调试轮次全部排除，原始结果见 [历史环境调试记录](DSH_ENVIRONMENT_DEBUGGING.md)。
+运行顺序为原生→工具，共享机器包缓存未清空，模型服务与网络会波动。只有一对任务，不能推断稳定倍数或模型能力上限。此前 Gitingest 环境调试轮次全部排除，原始调试日志保留在本地，未作为正式比较样本或随公开仓库发布。
 
 ## 复现与证据
 
 - 共同任务：[mkdocs_site_zh.txt](../benchmarks/tasks/mkdocs_site_zh.txt)。目标提交 `bb7e8b62185b11d9f59bb7f50b13c15134f62f8a`。
 - 入口：[dsh_compare.py](../benchmarks/dsh_compare.py)，两组均 `--permissions danger-full-access --max-model-calls 0`。15 分钟异常超时保护未触发。
 - 独立检查：[verify_mkdocs_site.py](../benchmarks/verify_mkdocs_site.py)。
-- 本机证据根：`D:/CodexWorkspace/RepoWayfinder-Agent-20260927/dsh/final-mkdocs/`。
+- 本机证据根：`本地实验档案/dsh/final-mkdocs/`。
 - `attempt-ledger.jsonl` 自动追加每次启动/退出，`experiment.json` 固定配置；两组 `*-01-run/summary.json`、`trace.jsonl`、`independent-verification.json` 全部保留。
 - 工具作业 `a7b22e0268b24baeb23939706b2f4500`，其 history/runs 包含全部阶段。
 - 原始会话、凭据及私密运行状态不入仓库。
@@ -127,7 +127,7 @@
 
 工具虽只做 10 次响应，输出却达到 61,440 tokens：四次 rw_run 提交包含一次非法 Unicode 拒绝、一个实际构建后检查失败的作业、一次超过 20 检查项的拒绝，最后另一个作业完成。两份源码安装、所有重复大段脚本均计入。没有从 322.689 秒中剔除失败或只展示最终成功作业。原生结果较快但未完整满足题目，因此不发布“同质量任务省时/省 token”的百分比结论。
 
-本机证据：`D:/CodexWorkspace/RepoWayfinder-Agent-20260927/dsh/optimized-sphinx/`，共同任务 `prompt.txt`，外层 `attempt-ledger.jsonl`，两组 `*-01-run/summary.json` 与 `independent-verification.json`。工具失败作业 `163c7b7ed84044858214169f40a0d107`，最终作业 `956fe49dbf354a7e959e76845f05b4bd`。两组共计 492.729 秒实际运行、1,282,247 SDK totalTokens；研发/评估者消耗另计且尚无完整可靠 token 计数。原始证据保留。
+本机证据：`本地实验档案/dsh/optimized-sphinx/`，共同任务 `prompt.txt`，外层 `attempt-ledger.jsonl`，两组 `*-01-run/summary.json` 与 `independent-verification.json`。工具失败作业 `163c7b7ed84044858214169f40a0d107`，最终作业 `956fe49dbf354a7e959e76845f05b4bd`。两组共计 492.729 秒实际运行、1,282,247 SDK totalTokens；研发/评估者消耗另计且尚无完整可靠 token 计数。原始证据保留。
 
 ### 第二轮后的修复现场（历史记录）
 
@@ -176,7 +176,7 @@
 
 修后 48 项受影响检查通过，包含真实 worker 的失败→局部修复→同环境成功→保留前阶段产物，以及改输入后旧输出不能默认通过。完整原始批量请求的重放记录在 `post-fix-transport-replay.json`。这些证明修复路径，不等于新版本的模型用量收益；该轮成绩保持不变。
 
-本机证据根 `D:/CodexWorkspace/RepoWayfinder-Agent-20260927/dsh/recovery-course/`：`experiment.json`、`attempt-ledger.jsonl`、`comparison.json`，各组 summary/trace/independent-verification，以及工具作业 `ee1dac9c31744087b69c7658a6f1f9e5` 的全部 history/runs。原始内容不提交仓库。
+本机证据根 `本地实验档案/dsh/recovery-course/`：`experiment.json`、`attempt-ledger.jsonl`、`comparison.json`，各组 summary/trace/independent-verification，以及工具作业 `ee1dac9c31744087b69c7658a6f1f9e5` 的全部 history/runs。原始内容不提交仓库。
 
 ### 后续测量顺序
 

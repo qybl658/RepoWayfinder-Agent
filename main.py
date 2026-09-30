@@ -1,7 +1,6 @@
 
 from __future__ import annotations
 
-import argparse
 from contextlib import contextmanager
 from html.parser import HTMLParser
 import ctypes
@@ -4138,11 +4137,6 @@ def create_readable_guide(report_path: Path, allow_send: bool = False) -> int:
     return 0
 
 
-def write_readable_guide_launcher(report_path: Path) -> None:
-    path = report_path.parent / "生成简明使用指南.bat"
-    runner = PROJECT_DIR / "run_reposcout.ps1"
-    body = '@echo off\r\nchcp 65001 >nul\r\n' + f'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{runner}" -ReturnToCaller --guide-report "%~dp0{report_path.name}"\r\n' + 'set "result=%errorlevel%"\r\npause\r\nexit /b %result%\r\n'
-    path.write_text(body, encoding="utf-8", newline="")
 
 
 def generate_beginner_guide(
@@ -4659,111 +4653,11 @@ def recommended_target_config_keys(required_config: list[str]) -> list[str]:
         return selected[:6]
     likely = [key for key in required_config if re.search(r"(api_?key|token)$", key.lower())]
     return likely[:3]
-def write_project_configuration_launcher(repo_path: Path) -> None:
-    if not repo_path.is_dir() or not any((repo_path / name).is_file() for name in (".env.example", "config.example.toml")):
-        return
-    marker = "@rem RepoWayfinder target-project configuration entry"
-    path = repo_path / "修改项目API Key.bat"
-    if path.is_symlink() or path.resolve().parent != repo_path.resolve():
-        raise RepoWayfinderError("Refusing a redirected target configuration launcher.")
-    if path.exists() and not path.read_text(encoding="utf-8-sig").startswith(marker):
-        return
-    # Keep the generated command readable by the same repository risk review
-    # used on the next deployment. Percent signs are literal in BAT paths.
-    quote = lambda text: '"' + str(text).replace('%', '%%') + '"'
-    language = "en" if UI_LANGUAGE.startswith("en") else "zh-CN"
-    command = ('"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File '
-               + quote(PROJECT_DIR / "project_configuration.ps1")
-               + ' -Root "%~dp0." -PythonExecutable ' + quote(sys.executable)
-               + ' -Language ' + language)
-    path.write_text(marker + "\r\n@echo off\r\nchcp 65001 >nul\r\nsetlocal DisableDelayedExpansion\r\n" + command + "\r\nset \"CODE=%ERRORLEVEL%\"\r\npause\r\nexit /b %CODE%\r\n", encoding="utf-8", newline="")
 
 
 def configure_target_project(repo_path: Path, required_config: list[str]) -> None:
-    write_project_configuration_launcher(repo_path)
-    if not required_config or os.getenv("REPOSCOUT_SKIP_TARGET_CONFIG") == "1":
-        return
-    config_example = repo_path / "config.example.toml"
-    config_toml = repo_path / "config.toml"
-    env_example = repo_path / ".env.example"
-    env_file = repo_path / ".env"
-    touched: dict[str, list[str]] = {}
-    for config_path in (config_example, config_toml, env_example, env_file):
-        if config_path.is_symlink() or config_path.resolve().parent != repo_path.resolve():
-            raise RepoWayfinderError("Refusing a redirected target project configuration path.")
-
-    if config_example.exists() and not config_toml.exists():
-        config_toml.write_text(read_text_limited(config_example, 300000), encoding="utf-8-sig")
-        touched.setdefault(str(config_toml), []).append("created_from_config.example.toml")
-    if env_example.exists() and not env_file.exists():
-        env_file.write_text(read_text_limited(env_example, 300000), encoding="utf-8-sig")
-        touched.setdefault(str(env_file), []).append("created_from_.env.example")
-
-    if os.name == "nt" and reposcout_interactive():
-        helper = PROJECT_DIR / "project_configuration.ps1"
-        powershell = shutil.which("powershell.exe")
-        if not helper.is_file() or not powershell:
-            log(ui_text("项目配置向导缺失；请在目标项目配置文件中手动填写。", "Project configuration wizard is unavailable; edit the target project configuration locally."))
-            return
-        for path in (config_toml, env_file):
-            if path.exists() and path.resolve() != repo_path.resolve() / path.name:
-                raise RepoWayfinderError("Refusing a redirected target project configuration path.")
-        completed = subprocess.run(
-            [powershell, "-NoLogo", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(helper), "-Root", str(repo_path.resolve()), "-PythonExecutable", sys.executable, "-Language", "en" if UI_LANGUAGE.startswith("en") else "zh-CN"],
-            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=1800,
-            creationflags=subprocess.CREATE_NO_WINDOW,
-        )
-        if completed.returncode != 0:
-            log(ui_text("项目配置未保存；基础运行仍会继续。请检查配置结构和权限。", "Project settings were not saved; basic operation will continue. Check the configuration structure and permissions."))
-        else:
-            try:
-                settings_result = json.loads(completed.stdout.strip())
-                for item in settings_result.get("configuration", []):
-                    if item.get("status") == "updated":
-                        touched.setdefault(str(repo_path / item["target"]), []).append(item["field"])
-            except (ValueError, KeyError, TypeError):
-                pass
-    elif reposcout_interactive():
-        print("\nRepoWayfinder 检测到目标项目可能需要配置项。基础 Demo 会先尽量启动；完整功能可能需要 API key。")
-        print("真实 key 只会写入目标项目本地配置文件，不会写入 reports。")
-        print("为防止第三方代码取得 RepoWayfinder 自身凭据，RepoWayfinder 不会自动复用自己的 GitHub/AI key。")
-        remaining_keys = []
-        current_text = read_text_limited(config_toml, 300000) if config_toml.exists() else ""
-        for key in required_config:
-            if current_text and config_key_has_value(current_text, key):
-                continue
-            remaining_keys.append(key)
-        recommended_keys = recommended_target_config_keys(remaining_keys)
-        if remaining_keys:
-            preview = ", ".join(remaining_keys[:12]) + (" ..." if len(remaining_keys) > 12 else "")
-            print("\nRepoWayfinder 建议：小白先不要逐项乱填。先让基础 Demo 启动；如果页面提示缺 key，再回来看 full_guide.md。")
-            print("检测到的配置项名称：" + preview)
-        if recommended_keys:
-            print("RepoWayfinder 认为现在最可能需要、且值得询问的配置项：" + ", ".join(recommended_keys))
-            if prompt_yes_no("是否只输入这些推荐配置？直接回车表示先跳过", default_yes=False):
-                for key in recommended_keys:
-                    current_text = read_text_limited(config_toml, 300000) if config_toml.exists() else ""
-                    if current_text and config_key_has_value(current_text, key):
-                        continue
-                    value = secret_prompt(f"输入 {key}，直接回车跳过：")
-                    if not value:
-                        continue
-                    if config_toml.exists():
-                        set_toml_key(config_toml, key, value)
-                        touched.setdefault(str(config_toml), []).append(key)
-                    elif env_file.exists():
-                        set_env_key(env_file, key, value)
-                        touched.setdefault(str(env_file), []).append(key)
-        elif remaining_keys:
-            print("RepoWayfinder 没有找到适合现在询问小白的高优先级配置；本次先跳过。")
-    for path, keys in touched.items():
-        clean_keys = sorted({key for key in keys if not key.startswith("created_")})
-        ENVIRONMENT_CHANGES.append({
-            "type": "target_config_updated",
-            "path": path,
-            "keys": clean_keys,
-            "reason": "RepoWayfinder created/updated target project local configuration. Secret values are not recorded.",
-        })
+    """Legacy core hook: Agent task files own project configuration."""
+    return
 
 
 def prompt_deploy_override(repo: RepoInfo, repo_path: Path, plan: ExecutionPlan, reason: str) -> ExecutionPlan:
@@ -4863,14 +4757,14 @@ def generate_error_beginner_guide(repo: RepoInfo, report: DeploymentReport) -> d
     if "git clone failed" in lower or "unable to access" in lower or "connection was reset" in lower or "recv failure" in lower:
         tips.append({
             "symptom": "GitHub 仓库下载失败 / git clone failed",
-            "fix": "这通常是 Git 网络连接被重置、代理、证书、DNS、GitHub/codeload 访问或国内网络问题。中国大陆网络建议先打开稳定 VPN / 代理；然后重新运行 点我启动RepoWayfinder.bat。RepoWayfinder 已经会自动重试 clone 并尝试 zip 下载。",
+            "fix": "这通常是 Git 网络连接被重置、代理、证书、DNS、GitHub/codeload 访问或国内网络问题。中国大陆网络建议先打开稳定 VPN / 代理；然后修复后通过 rw_prepare 创建新作业。RepoWayfinder 已经会自动重试 clone 并尝试 zip 下载。",
         })
         tips.append({
             "symptom": "浏览器能打开 GitHub，但 git clone 失败",
             "fix": "浏览器访问和 git 下载不是同一条链路。可以尝试换网络/代理，或在 PowerShell 里运行 git ls-remote https://github.com/owner/repo.git 检查 Git 是否能访问。",
         })
     if "rate limit" in lower:
-        tips.append({"symptom": "GitHub API 限流", "fix": "重新运行 install_reposcout.ps1 配置 GITHUB_TOKEN，或稍后再试。"})
+        tips.append({"symptom": "GitHub API 限流", "fix": "为 Agent 启动进程配置 GITHUB_TOKEN，或稍后再试。"})
     if not tips:
         tips.append({"symptom": "RepoWayfinder 还没进入部署阶段就失败", "fix": "先看 deployment_result.json 的 reason 字段；修复网络、权限或 API 配置后重新运行启动器。"})
     return {
@@ -4881,21 +4775,21 @@ def generate_error_beginner_guide(repo: RepoInfo, report: DeploymentReport) -> d
         "work_expectation": report.work_expectation,
         "progress_phase": "analysis_failed",
         "outcome_level": "failed",
-        "primary_next_action": "先按本页第一条匹配的修复建议处理，然后重新双击 `点我启动RepoWayfinder.bat`。",
+        "primary_next_action": "先按本页第一条匹配的修复建议处理，然后通过 rw_prepare 创建新作业。",
         "start_here": [
             "第一步：确认这不是 Demo 启动失败，而是 RepoWayfinder 在下载/准备仓库阶段失败。",
             "第二步：先看本文件下面的失败原因和修复建议。",
-            "第三步：修复网络、GitHub token、代理或权限后，重新双击 点我启动RepoWayfinder.bat。",
+            "第三步：修复网络、GitHub token、代理或权限后，通过 rw_prepare 创建新作业。",
         ],
-        "how_to_run_again": [f"powershell -ExecutionPolicy Bypass -File \"{PROJECT_DIR / '启动RepoWayfinder.ps1'}\" -Target \"{repo.full_name}\""],
+        "how_to_run_again": [f'rw_prepare(repository="{repo.full_name}")'],
         "success_should_look_like": "成功时，reports/<时间戳>-<仓库名>/ 里通常会出现 beginner_guide.md、deployment_result.json，并且如果检测到可启动 Demo，还会出现 start_demo.bat 和 start_demo.ps1。",
         "entrypoints": {"web_urls": [], "cli_commands": [], "docker_commands": [], "package_scripts": {}},
         "required_config": ["GITHUB_TOKEN", "OPENROUTER_API_KEY 或 DEEPSEEK_API_KEY"],
         "if_it_fails": tips,
         "next_things_to_try": [
-            "重新双击 点我启动RepoWayfinder.bat，然后在提示目标时直接按 Enter 试演示仓库。",
+            "通过 rw_prepare 创建新作业，显式指定仓库与任务命令。",
             "如果仍然 git clone failed，先检查 Git/codeload 是否能访问 GitHub；中国大陆网络优先准备稳定 VPN / 代理，而不是只检查浏览器。",
-            "如果出现 GitHub rate limit，运行 install_reposcout.ps1 配置 GITHUB_TOKEN。",
+            "如果出现 GitHub rate limit，为 Agent 启动进程配置 GITHUB_TOKEN。",
         ],
         "confidence": "high",
         "user_ready": False,
@@ -5123,7 +5017,6 @@ def deploy_repo(repo: RepoInfo, force_refresh: bool = False, update_existing: bo
             report.deployment_success = False
             report.beginner_guide = generate_beginner_guide(repo, checkout, plan, report, summary)
             return report
-        write_project_configuration_launcher(checkout)
         report.security_review = review_repository_security(checkout, plan, report.deployment_mode)
         if report.security_review.get("blocked"):
             codes = ", ".join(str(item) for item in report.security_review.get("blocking_finding_codes", []))
@@ -5749,13 +5642,13 @@ def write_beginner_guide_markdown(report: DeploymentReport) -> None:
         f"- PowerShell 备用启动脚本：`{report.start_script_path or '未生成'}`",
         f"- RepoWayfinder Demo 环境：`{report.demo_venv_path or '未生成'}`",
         f"- JSON 详细报告：`{REPORT_PATH}`",
-        f"- 重新让 RepoWayfinder 分析这个仓库：`powershell -ExecutionPolicy Bypass -File \"{PROJECT_DIR / '启动RepoWayfinder.ps1'}\" -Target \"{report.repo}\"`",
+        f'- 重新准备这个仓库：`rw_prepare(repository="{report.repo}")`',
         "",
         *demo_open_lines,
         "## 下次如何重新让 RepoWayfinder 分析这个仓库",
         "",
         "```powershell",
-        f"powershell -ExecutionPolicy Bypass -File \"{PROJECT_DIR / '启动RepoWayfinder.ps1'}\" -Target \"{report.repo}\"",
+        f'rw_prepare(repository="{report.repo}")',
         "```",
         "",
         manual_run_title,
@@ -6223,161 +6116,11 @@ def has_user_runnable_demo(report: DeploymentReport) -> bool:
     )
 
 
-def write_resume_launcher(report: DeploymentReport) -> None:
-    ps_path = ARTIFACT_DIR / "continue_deployment.ps1"
-    bat_path = ARTIFACT_DIR / "继续部署这个项目.bat"
-    can_resume = bool(report.action == "WAITING_ENVIRONMENT" and report.repo_path and report.plan.get("action") == "DEPLOY" and not report.deployment_success)
-    if not can_resume:
-        # A continuation may be writing this success report while cmd.exe is still
-        # executing the BAT. Keep the stable wrappers until the parent returns;
-        # rerunning them is harmless because completed reports exit immediately.
-        report.resume_script_path = ""
-        report.resume_bat_path = ""
-        return
-    ps_lines = [
-        "# Generated by RepoWayfinder. Resume the saved plan and update this same report.",
-        "$ErrorActionPreference = 'Stop'",
-        "$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path",
-        "$repoScoutRoot = Split-Path -Parent (Split-Path -Parent $scriptDir)",
-        "$helper = Join-Path $repoScoutRoot 'resume_deployment.ps1'",
-        "$report = Join-Path $scriptDir 'deployment_result.json'",
-        "if (-not (Test-Path -LiteralPath $helper -PathType Leaf)) { throw \"RepoWayfinder continuation helper not found: $helper\" }",
-        "& powershell -NoProfile -ExecutionPolicy Bypass -File $helper -ReportPath $report",
-        "exit $LASTEXITCODE",
-    ]
-    ps_path.write_text("\n".join(ps_lines).rstrip() + "\n", encoding="utf-8-sig")
-    bat_lines = [
-        "@echo off",
-        "setlocal",
-        "title RepoWayfinder Continue Deployment",
-        "set \"SCRIPT_DIR=%~dp0\"",
-        "if \"%SCRIPT_DIR:~-1%\"==\"\\\" set \"SCRIPT_DIR=%SCRIPT_DIR:~0,-1%\"",
-        "echo RepoWayfinder will continue the saved plan in this same report.",
-        "echo Environment setup or restart is not treated as a project failure.",
-        "echo.",
-        "\"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -NoProfile -ExecutionPolicy Bypass -File \"%SCRIPT_DIR%\\continue_deployment.ps1\"",
-        "set \"CODE=%ERRORLEVEL%\"",
-        "if not \"%CODE%\"==\"0\" (",
-        "  echo.",
-        "  echo Continuation returned exit code %CODE%.",
-        "  echo Keep this report folder and run.md for diagnostics.",
-        ")",
-        "if \"%CODE%\"==\"0\" echo Continuation finished or is safely waiting for a restart or user setup.",
-        "if not defined REPOSCOUT_NO_PAUSE pause",
-        "exit /b %CODE%",
-    ]
-    bat_path.write_text("\r\n".join(bat_lines).rstrip() + "\r\n", encoding="ascii")
-    report.resume_script_path = str(ps_path)
-    report.resume_bat_path = str(bat_path)
 
 
-def write_update_launcher(report: DeploymentReport, artifact_dir: Optional[Path] = None) -> None:
-    """Write a report-local entry that checks GitHub and updates this repository."""
-    report_dir = artifact_dir or ARTIFACT_DIR
-    bat_path = report_dir / "检查并更新这个项目.bat"
-    report.update_bat_path = ""
-    parsed = parse_repo_target(report.repo)
-    if not parsed or not (PROJECT_DIR / "启动RepoWayfinder.ps1").is_file():
-        bat_path.unlink(missing_ok=True)
-        return
-    repo_name = f"{parsed[0]}/{parsed[1]}"
-    bat_lines = [
-        "@echo off",
-        "setlocal",
-        "title RepoWayfinder Check and Update",
-        "set \"SCRIPT_DIR=%~dp0\"",
-        "if \"%SCRIPT_DIR:~-1%\"==\"\\\" set \"SCRIPT_DIR=%SCRIPT_DIR:~0,-1%\"",
-        "for %%I in (\"%SCRIPT_DIR%\\..\\..\") do set \"REPOSCOUT_ROOT=%%~fI\"",
-        "echo RepoWayfinder will compare this deployment with the current GitHub version.",
-        "echo If an update is found, you can delete or retain the old version after success.",
-        "echo A new report will be created; this historical report will not be rewritten.",
-        "echo.",
-        "if not exist \"%REPOSCOUT_ROOT%\\start_reposcout.ps1\" (",
-        "  echo RepoWayfinder launcher not found: %REPOSCOUT_ROOT%\\start_reposcout.ps1",
-        "  pause",
-        "  exit /b 2",
-        ")",
-        f"\"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -NoProfile -ExecutionPolicy Bypass -File \"%REPOSCOUT_ROOT%\\start_reposcout.ps1\" -Target \"{repo_name}\" -UpdateExisting",
-        "exit /b %ERRORLEVEL%",
-    ]
-    bat_path.write_text("\r\n".join(bat_lines).rstrip() + "\r\n", encoding="ascii")
-    report.update_bat_path = str(bat_path)
 
 
-def backfill_report_update_launchers() -> int:
-    """Add the update entry to older report folders without rewriting their JSON."""
-    if not REPORTS_DIR.is_dir():
-        return 0
-    added = 0
-    for report_path in REPORTS_DIR.glob("*/deployment_result.json"):
-        bat_path = report_path.parent / "检查并更新这个项目.bat"
-        if bat_path.is_file():
-            continue
-        try:
-            data = json.loads(report_path.read_text(encoding="utf-8-sig"))
-            if not isinstance(data, dict):
-                continue
-            report = deployment_report_from_dict(data)
-            write_update_launcher(report, report_path.parent)
-            if bat_path.is_file():
-                added += 1
-        except (OSError, json.JSONDecodeError, TypeError):
-            continue
-    return added
 
-def write_failure_analysis_launcher(report: DeploymentReport) -> None:
-    """Write a per-report failure-analysis launcher.
-
-    The root analyze_failure.ps1 remains the implementation, but every report
-    directory gets its own beginner-facing bat and its own ai_failure_analysis.md
-    output path so logs from different runs do not get mixed.
-    """
-    root_script = PROJECT_DIR / "analyze_failure.ps1"
-    neutral_name = "\u70b9\u6211\u751f\u6210AI\u6392\u67e5\u6750\u6599.bat"
-    failure_name = "\u70b9\u6211\u5206\u6790\u8fd9\u6b21\u5931\u8d25\u539f\u56e0.bat"
-    output_md = ARTIFACT_DIR / "ai_failure_analysis.md"
-    for existing_name in (neutral_name, failure_name):
-        (ARTIFACT_DIR / existing_name).unlink(missing_ok=True)
-    report.failure_analysis_bat_path = ""
-    report.failure_analysis_path = ""
-    if report.deployment_success:
-        output_md.unlink(missing_ok=True)
-        return
-    if not root_script.exists():
-        return
-    if not report.deployment_success and report.action in {"WAITING_ENVIRONMENT", "BLOCKED_SECURITY", "LEARN", "IGNORE", "INTEGRATE"}:
-        return
-    bat_name = failure_name if project_execution_failed(report) else neutral_name
-    bat_path = ARTIFACT_DIR / bat_name
-    bat_lines = [
-        "@echo off",
-        "chcp 65001 >nul",
-        "setlocal",
-        "title RepoWayfinder AI Support Bundle",
-        "set \"SCRIPT_DIR=%~dp0\"",
-        "if \"%SCRIPT_DIR:~-1%\"==\"\\\" set \"SCRIPT_DIR=%SCRIPT_DIR:~0,-1%\"",
-        "echo RepoWayfinder AI support bundle helper",
-        "echo This will create ai_failure_analysis.md in this report folder.",
-        "echo Please review it before sending it to AI. Do not share real API keys.",
-        "echo.",
-        f"powershell -NoProfile -ExecutionPolicy Bypass -File \"{root_script}\" -NoOpen -ReportDir \"%SCRIPT_DIR%\" -OutputPath \"%SCRIPT_DIR%\\ai_failure_analysis.md\"",
-        "set \"CODE=%ERRORLEVEL%\"",
-        "if not \"%CODE%\"==\"0\" (",
-        "  echo.",
-        "  echo Failure analysis generation failed with exit code %CODE%.",
-        "  if not defined REPOSCOUT_NO_PAUSE pause",
-        ")",
-        "if \"%CODE%\"==\"0\" (",
-        "  echo.",
-        "  echo Generated: %SCRIPT_DIR%\\ai_failure_analysis.md",
-        "  echo Send this Markdown file to AI after checking that no secrets remain.",
-        "  if not defined REPOSCOUT_NO_PAUSE pause",
-        ")",
-        "exit /b %CODE%",
-    ]
-    bat_path.write_text("\r\n".join(bat_lines).rstrip() + "\r\n", encoding="utf-8")
-    report.failure_analysis_bat_path = str(bat_path)
-    report.failure_analysis_path = str(output_md)
 
 def write_restore_script(report: DeploymentReport) -> None:
     restorable = [change for change in report.environment_changes if change.get("archived_path") and change.get("path")]
@@ -6467,18 +6210,11 @@ def write_integration_guide(report: DeploymentReport) -> None:
 def write_report(report: DeploymentReport, path: Optional[Path] = None) -> None:
     output_path = path or REPORT_PATH
     repo_path = Path(report.repo_path) if report.repo_path else None
-    if repo_path:
-        write_project_configuration_launcher(repo_path)
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     report.artifact_dir = str(ARTIFACT_DIR)
     report.environment_changes = collect_environment_changes(repo_path)
     if report.environment_changes:
         write_restore_script(report)
-    write_resume_launcher(report)
-    if report.repo_path:
-        write_readable_guide_launcher(output_path)
-    write_update_launcher(report)
-    write_failure_analysis_launcher(report)
     if report.beginner_guide:
         if has_user_runnable_demo(report):
             write_start_script(report)
@@ -6800,30 +6536,6 @@ def choose_weekly_trending() -> Optional[str]:
         log(ui_text("请输入列表中的编号，或回车返回。", "Choose a listed number, or press Enter to return."))
 
 
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="RepoWayfinder V8: autonomous GitHub repo deployment scout with beginner usage guide")
-    parser.add_argument("target", nargs="?", help="GitHub URL, owner/repo, or search keyword")
-    parser.add_argument("--max-candidates", type=int, choices=range(10, 21), default=20, help="Keyword search pool (10-20); show up to five AI-ranked candidates")
-    parser.add_argument("--force-refresh", action="store_true", help="Archive and reclone existing checkout")
-    parser.add_argument("--update-existing", action="store_true", help="Check and update an existing checkout, asking whether to retain the old version")
-    parser.add_argument("--report", default="", help="Optional path for JSON deployment report. By default RepoWayfinder creates reports/<timestamp>-<repo>/deployment_result.json")
-    parser.add_argument("--plan-file", default="", help="Execute an explicitly reviewed local JSON plan pinned to repo and full Git revision; normal security checks still apply")
-    parser.add_argument("--integration-skill", default="", help="For repositories with many Skills, install exactly this Skill name or relative path")
-    parser.add_argument("--install-vsix", action="store_true", help="Install a reviewed VSIX through the VS Code CLI and verify its extension ID")
-    parser.add_argument("--dsh-bundle", default="", help="Extracted RepoWayfinder DSH portable directory to receive Skills in its own data directory")
-    parser.add_argument("--export-report", default="", help="Export a successfully deployed Python project from its saved report")
-    parser.add_argument("--bundle-profile", default="", help="Reviewed local JSON bundle profile with entrypoint, runtime, dependencies and source revision")
-    parser.add_argument("--bundle-output", default="", help="New output ZIP for --export-report (existing files are preserved)")
-    parser.add_argument("--resume-report", default="", help="Resume the saved validated plan in an existing RepoWayfinder report")
-    parser.add_argument("--guide-report", default="", help="Create a separate readable README guide for an existing report")
-    parser.add_argument("--history", action="store_true", help="List previous deployments; optionally select one in an interactive terminal")
-    parser.add_argument("--weekly-trending", action="store_true", help="Show recently created GitHub Top 10; optionally choose a project to deploy")
-    parser.add_argument("--configure-search", action="store_true", help="Configure whether search includes previously deployed projects")
-    parser.add_argument("--allow-send", action="store_true", help="Allow the guide command to send bounded README content to configured AI")
-    parser.add_argument("--deployment-mode", choices=sorted(DEPLOYMENT_MODES), default="", help="Override the saved deployment mode for this fresh run")
-    parser.add_argument("--configure-deployment-mode", action="store_true", help="Choose and save the default deployment mode without deploying a project")
-    parser.add_argument("--acknowledge-compatible-risk", action="store_true", help="Acknowledge compatible-mode risk for explicit non-interactive use")
-    return parser
 
 
 def open_completed_report(report: DeploymentReport, report_path: Optional[Path] = None) -> None:
@@ -6902,173 +6614,9 @@ def show_deployment_result(report: DeploymentReport, report_path: Optional[Path]
 
 
 def main() -> int:
-    parser = build_parser()
-    args = parser.parse_args()
-    if args.dsh_bundle:
-        os.environ["REPOWAYFINDER_DSH_BUNDLE"] = str(Path(args.dsh_bundle).resolve())
-    if args.weekly_trending:
-        if any((args.target, args.history, args.export_report, args.bundle_profile, args.bundle_output,
-                args.resume_report, args.guide_report, args.plan_file, args.configure_search, args.configure_deployment_mode)):
-            parser.error("--weekly-trending cannot be combined with another task")
-        try:
-            args.target = choose_weekly_trending()
-        except Exception:
-            log(ui_text("本周榜单暂时无法读取，请稍后重试：https://github.com/trending?since=weekly", "Weekly Trending unavailable; retry later: https://github.com/trending?since=weekly"))
-            return 2
-        if not args.target:
-            return 0
-    if args.export_report:
-        if not args.bundle_profile or not args.bundle_output:
-            parser.error("--export-report requires --bundle-profile and --bundle-output")
-        if args.target or args.plan_file or args.resume_report or args.guide_report or args.history:
-            parser.error("Bundle export cannot be combined with deployment, history or guide commands")
-        try:
-            from bundle_profile import export_from_profile
-            result = export_from_profile(Path(args.export_report), Path(args.bundle_profile), Path(args.bundle_output))
-            log(ui_text("可分发包已生成：", "Distribution bundle created:"))
-            log(str(result.zip_path))
-            log(ui_text("分享前，请在新目录解压并验证实际任务。", "Before sharing, extract into a new directory and verify a real task."))
-            return 0
-        except (OSError, ValueError, RuntimeError) as exc:
-            log(ui_text("打包未完成：", "Bundle export failed: ") + str(exc))
-            return 2
-    if args.bundle_profile or args.bundle_output:
-        parser.error("--bundle-profile/--bundle-output require --export-report")
-    reviewed_plan = None
-    if args.plan_file:
-        if args.resume_report or args.guide_report or not args.target:
-            parser.error("--plan-file requires a fresh explicit target and cannot be combined with report resume/guide")
-        try:
-            plan_path = Path(args.plan_file)
-            if plan_path.stat().st_size > 131072:
-                raise ValueError("plan file exceeds 128 KiB")
-            reviewed_plan = json.loads(plan_path.read_text(encoding="utf-8-sig"))
-        except (OSError, ValueError) as exc:
-            parser.error(f"Cannot read local reviewed plan: {exc}")
-    global REPORT_PATH, ARTIFACT_DIR
-    if args.configure_search:
-        return configure_search_preferences()
-    if args.history:
-        selected = choose_deployment_history()
-        if not selected:
-            return 0
-        args.target = selected
-    if args.guide_report:
-        try:
-            return create_readable_guide(Path(args.guide_report), args.allow_send)
-        except Exception:
-            log(ui_text("指南未生成，请检查报告路径及项目是否仍存在。原报告已保留。", "Guide not generated. Check the report and project paths. The original report is preserved."))
-            return 2
-    if args.configure_deployment_mode:
-        try:
-            select_deployment_mode(args.deployment_mode, args.acknowledge_compatible_risk, configure=True)
-            return 0
-        except Exception as exc:
-            log(f"RepoWayfinder could not configure a deployment mode: {exc}")
-            return 2
-    added_update_launchers = backfill_report_update_launchers()
-    if added_update_launchers:
-        log(ui_text(f"已为 {added_update_launchers} 份旧报告补上“检查并更新这个项目.bat”。", f"Added Check and Update launchers to {added_update_launchers} older reports."))
-    if args.resume_report:
-        try:
-            return resume_deployment_report(Path(args.resume_report))
-        except Exception as exc:
-            log(f"RepoWayfinder could not resume the saved report: {exc}")
-            return 2
-    try:
-        select_deployment_mode(args.deployment_mode, args.acknowledge_compatible_risk)
-    except Exception as exc:
-        log(f"RepoWayfinder could not select a deployment mode: {exc}")
-        return 2
-    target = args.target or read_visible_input(ui_text("GitHub 仓库 URL / owner/repo / 搜索词：", "GitHub repo URL / owner/repo / keyword:"))
-    explicit_report = bool(args.report)
-    if explicit_report:
-        REPORT_PATH = Path(args.report).resolve()
-        ARTIFACT_DIR = REPORT_PATH.parent
-    try:
-        repo = choose_target(target, max_candidates=args.max_candidates)
-    except Exception as exc:
-        if not explicit_report:
-            ARTIFACT_DIR = create_artifact_dir(f"error-{target}")
-            REPORT_PATH = ARTIFACT_DIR / "deployment_result.json"
-        report = DeploymentReport(repo=target, action="ERROR", success=False, reason=str(exc), ui_language=UI_LANGUAGE)
-        report.finished_at = datetime.now(timezone.utc).isoformat()
-        write_report(report)
-        log(f"RepoWayfinder failed before deployment: {exc}")
-        return 2
-    if repo is None:
-        return 0
-    if not explicit_report:
-        ARTIFACT_DIR = create_artifact_dir(repo.full_name)
-        REPORT_PATH = ARTIFACT_DIR / "deployment_result.json"
-    log(f"Selected repo: {repo.full_name}")
-    log(f"Run artifact dir: {ARTIFACT_DIR}")
-    write_running_status(repo.full_name, "selected repo")
-    report = deploy_repo(repo, force_refresh=args.force_refresh, update_existing=args.update_existing,
-                         reviewed_plan=reviewed_plan, integration_skill=args.integration_skill,
-                         install_vsix=args.install_vsix)
-    report = waiting_environment_handoff(report)
-    show_deployment_result(report)
-    open_completed_report(report)
-    return 0 if report.success else 1
+    print("Use agent.py or mcp_server.py; the beginner launcher is in the separate RepoWayfinder product.", file=sys.stderr)
+    return 2
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

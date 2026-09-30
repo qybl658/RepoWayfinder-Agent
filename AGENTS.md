@@ -65,8 +65,9 @@ host skill installation, or automatic browser/report opening are part of this
 entry point. The protected execution checks are not an OS sandbox.
 
 For development, keep stdout machine-readable and put diagnostics in job logs.
-Preserve waiting, failure and cancellation distinctions. Do not edit the
-original D:/RepoScout checkout or the public staging checkout for this variant.
+Preserve waiting, failure and cancellation distinctions. Keep work in the intended checkout and preserve unrelated local changes.
+The beginner product is maintained separately. The public tree is the Agent
+distribution; do not reintroduce novice menus or global installers.
 
 Before model comparisons, exercise changed execution boundaries locally through
 real stdio and worker processes; do not use model calls to discover basic runtime

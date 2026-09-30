@@ -168,18 +168,14 @@ Agent 的显式命令不再按旧版工具名白名单拒绝：程序统一从�
 
 任务运行配置、SDK 原始事件和紧凑用量摘要保存在输出目录。模型来源写入摘要；没有报告的用量或费用保持未知。接入方式和实际验证范围见下方记录。不要将输出目录或密钥提交 Git。
 
-## 实测与开发
+## 复现实测
 
-见 [Grok、DSH、Codex 接入记录](docs/INTEGRATION_TESTS.md)、[Grok 对照记录](docs/GROK_COMPARISON.md) 和 [DSH 对照及完整时间线](docs/DSH_COMPARISON.md)。比较完成同一目标的时间、模型报告的 token、往返次数和结果质量；成功单次运行与整个测试过程分别记录，不把 token 当作订阅额度百分比，不把一次实验外推成普遍收益。
+课程手册与部署矩阵的固定任务、验收器和脱敏摘要位于 `benchmarks/`。完整统计口径见 [Grok 对照](docs/GROK_COMPARISON.md)、[DSH 对照](docs/DSH_COMPARISON.md) 和 [部署对照](docs/DEPLOYMENT_COMPARISON.md)，历史接入范围见 [客户端验证](docs/CLIENT_VALIDATION.md)。所有结果都是指定环境下的单组样本，保留失败、恢复和弱收益，不能外推为普遍节省。
 
-0.5 的一次正式 DSH 对照中，两组课程手册均通过独立 21 项检查，工具组耗时 133.021 秒、原生 161.159 秒；SDK totalTokens 为 311,773 与 733,537。开发预跑耗时 194.030 秒，说明波动仍然明显；这不是稳定收益或费用比例承诺。完整试次均保留。
+本仓库保留 Agent / MCP 入口、10 类客户端自动接入、执行与恢复核心、有效测试和复现证据。`main.py` 是被 Agent worker 导入的共享执行核心；直接运行会提示使用 Agent 入口。`wsl_status_utils.ps1` 是运行条件检测 helper。虚拟环境归档恢复脚本由核心按需生成，不依赖旧菜单。任务配置由显式 files / edits 和宿主原生工具处理，恢复使用 `rw_replan` / `rw_resume`。
 
-相同任务的 Grok 对照也最终通过 21/21：companion 为 654,870 token / 526.167 秒，原生为 2,857,855 token / 898.876 活跃秒。原生曾被测试器上限中断，随后在原会话续完；表内计入全部续跑消耗，不能当作完全无干扰的净节省估计。见 [Grok 完整记录](docs/GROK_COMPARISON.md)。
-
-本分支继承公开 RepoWayfinder 执行核心（基线 `be3e5a060b178d42178681b854282de5e46b2d87`），AI 入口为 `agent.py`。旧菜单、API 配置、浏览器弹窗和自动安装流程不属于该入口。根目录遗留脚本暂留作核心迁移参考；原小白版本独立保留。
-
-受影响的 Agent 检查：
+原小白菜单、语言/API 配置、安装卸载及双套快捷入口属于独立的 [RepoWayfinder](https://github.com/qybl658/RepoWayfinder) 产品。这里不生成指向这些入口的报告脚本。
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_agent_*.py'
+python -m unittest discover -s tests -p 'test_agent_*.py'
 ```

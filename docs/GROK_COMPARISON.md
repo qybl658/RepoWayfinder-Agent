@@ -39,7 +39,7 @@ Grok 已完成与 DSH 相同的课程手册任务。两组最终均通过独立 
 
 这是单任务、单组正式样本，运行顺序和共享机器缓存仍有影响。它证明本次交付下记录到的差值，不证明跨项目稳定收益，也不用于 Grok 与 DSH 的模型排名。
 
-本机证据根 `D:/CodexWorkspace/RepoWayfinder-Agent-20260927/grok/companion-course/`：
+本机证据根 `本地实验档案/grok/companion-course/`：
 
 - `experiment.json`、`attempt-ledger.jsonl`、`continuation-ledger.jsonl`、`comparison.json`：任务、全部试次、用户调整和分段指标。
 - `dev-tool-01-run/`、`formal-tool-01-run/`、`formal-native-01-run/`：原始 trace、summary、独立检查和命令审计。
@@ -81,7 +81,7 @@ compact 试次完成任务但多走了两处恢复：模糊工具搜索找错工
 
 这次**测到了同等结果下更少 token 和更短耗时**。仍然只有一个项目任务，工具组后运行、机器缓存和服务时延会影响结果；未证明跨项目稳定收益或能力上限提升。这里比较任务运行本身，不包含 Codex 开发、修复、审查、失败探索的总成本；costUSD 不等于订阅额度、账单或实际扣款。
 
-31 项受影响的 Agent 检查通过；Git 选项缩写补充后，5 项运行时检查再次通过。原始证据在本机 `D:/CodexWorkspace/RepoWayfinder-Agent-20260927/`：
+31 项受影响的 Agent 检查通过；Git 选项缩写补充后，5 项运行时检查再次通过。原始证据在本机 `本地实验档案/`：
 
 - `after-compact/comparison/baseline/summary.json`、`independent-verification.json`：新原生对照。
 - `comparison/with-tool/v02/summary.json`、`independent-verification.json`：最终工具组。
@@ -148,7 +148,7 @@ token 合计包含缓存读取；缓存与非缓存不能按相同单价计费�
 
 修复后的执行代码提交：`77720c112c880fd25b46e5bab663d2a8a6ded05f`。后续仅修正 Grok 调度入口终端输出编码并补文档；执行核心未变。Agent 的 MCP、状态/恢复、运行时适配共 26 项聚焦测试通过。静态 2048 另有实际 HTTP 路径验证；该验证不声称业务任务完成。
 
-本机原始证据保存在 `D:/CodexWorkspace/RepoWayfinder-Agent-20260927/comparison/`：
+本机原始证据保存在 `本地实验档案/comparison/`：
 
 - `baseline/summary-final.json`、`grok-trace-final.jsonl`、`independent-verification.json`。
 - `with-tool/final/summary.json`、`trace.jsonl`、`with-tool/independent-verification-final.json`。

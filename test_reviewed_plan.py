@@ -48,17 +48,6 @@ class ReviewedPlanTests(unittest.TestCase):
             (root / "demo.py").write_text("print('changed')", encoding="utf-8")
             self.assertNotEqual(before, main.capture_plan_evidence(root, plan))
 
-    def test_owned_config_launcher_remains_readable_to_security_review(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            (root / ".env.example").write_text("GITHUB_TOKEN=\n", encoding="utf-8")
-            main.write_project_configuration_launcher(root)
-            launcher = (root / "修改项目API Key.bat").read_text(encoding="utf-8")
-            self.assertNotIn("EncodedCommand", launcher)
-            self.assertIn(' -Root "%~dp0."', launcher)
-            plan = main.ExecutionPlan("DEPLOY", [main.CommandStep("exec", "python demo.py", "test", 30)], "test", "reviewed")
-            review = main.review_repository_security(root, plan, "protected")
-            self.assertNotIn("encoded_script", review.get("blocking_finding_codes", []))
 
 
 if __name__ == "__main__":
