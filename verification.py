@@ -385,7 +385,8 @@ def _response(opener, origin, step, deadline, evidence, label, execution):
     (evidence / (label + '.body')).write_bytes(body)
     record = {'kind': 'http', 'step': label, 'method': step.get('method', 'GET'),
               'path': step['path'], 'status': status, 'bytes': len(body),
-              'seconds': round(time.monotonic() - started, 3)}
+              'seconds': round(time.monotonic() - started, 3),
+              'passed': False, 'assertions': {'status': status == step['status']}}
     if execution is not None:
         execution.append(record)
     if status != step['status']:
@@ -395,10 +396,14 @@ def _response(opener, origin, step, deadline, evidence, label, execution):
         try:
             text = body.decode('utf-8-sig')
         except UnicodeError as exc:
+            record['assertions']['utf8'] = False
             raise VerificationFailure('HTTP body is not UTF-8', step=label) from exc
-        if step['contains'] not in text:
+        record['assertions']['utf8'] = True
+        record['assertions']['text_contains'] = step['contains'] in text
+        if not record['assertions']['text_contains']:
             raise VerificationFailure('HTTP text assertion failed', step=label, expected=step['contains'][:200])
     if 'json_pointer' in step:
+        record['assertions']['json_value'] = False
         try:
             actual = artifact_checks.json_pointer(artifact_checks.load_json(body.decode('utf-8-sig')), step['json_pointer'])
         except (ValueError, TypeError, KeyError, IndexError, UnicodeError, RecursionError) as exc:
@@ -406,6 +411,8 @@ def _response(opener, origin, step, deadline, evidence, label, execution):
         # bool and numeric values must not compare equal accidentally.
         if not artifact_checks.equal_values(actual, step['expected']):
             raise VerificationFailure('HTTP JSON assertion failed', step=label, pointer=step['json_pointer'])
+        record['assertions']['json_value'] = True
+    record['passed'] = True
     return record
 
 
@@ -462,8 +469,8 @@ def _service(spec, root, evidence, deadline, execution, effects):
                 raise VerificationFailure('Service launcher exited before readiness', returncode=process.returncode)
             _remaining(deadline)
             try:
-                _response(ready_opener, origin, spec['ready'], deadline, evidence, f'ready-{starts}', None)
-                execution.append({'kind': 'ready', 'number': starts, 'passed': True})
+                ready_result = _response(ready_opener, origin, spec['ready'], deadline, evidence, f'ready-{starts}', None)
+                execution.append({**ready_result, 'kind': 'ready', 'number': starts})
                 return
             except VerificationFailure as exc:
                 if exc.detail.get('body_truncated') or 'redirects outside' in str(exc):
@@ -488,6 +495,55 @@ def _service(spec, root, evidence, deadline, execution, effects):
             _response(opener, origin, step, deadline, evidence, f'request-{index}', execution)
     finally:
         stop()
+
+
+def _http_summary(report):
+    """Bounded delivery evidence: actual outcomes, never headers/bodies/expected values."""
+    verdict = lambda value: 'PASS' if value else 'FAIL'
+    header = ['HTTP verification: ' + verdict(report['passed']),
+              'Scope: submitted HTTP/artifact assertions only; not full task acceptance.',
+              'Response bodies, headers, query values and expectation contents are omitted.']
+    rows = []
+    for item in report['execution']:
+        kind = item['kind']
+        if kind in ('http', 'ready'):
+            endpoint = urlsplit(item['path'])
+            path = json.dumps(endpoint.path, ensure_ascii=False)
+            if len(path) > 160:
+                path = path[:157] + '...'
+            if endpoint.query:
+                path += ' [query omitted]'
+            assertions = ', '.join(f'{name}={verdict(passed)}' for name, passed in item['assertions'].items())
+            prefix = 'READY ' if kind == 'ready' else ''
+            rows.append(f"{prefix}{item['step']} {item['method']} {path} -> HTTP {item['status']}; "
+                        f"bytes={item['bytes']}; assertions: {assertions}; result={verdict(item['passed'])}")
+        elif kind == 'service_start':
+            rows.append(f"START owned service #{item['number']}: recorded")
+        elif kind == 'restart':
+            rows.append(f"RESTART step {item['step']}: {verdict(item['passed'])}")
+    footer = []
+    cleanup_count = 0
+    for item in report['side_effects']:
+        if item['kind'] == 'service_cleanup':
+            cleanup_count += 1
+            footer.append(f"CLEANUP owned service #{cleanup_count}: {verdict(item['stopped'])}")
+    starts = sum(item['kind'] == 'service_start' for item in report['execution'])
+    if cleanup_count < starts:
+        footer.append('CLEANUP: incomplete recorded coverage; inspect result.json before retrying.')
+    footer.append(f"Artifact assertions: {sum(c['passed'] for c in report['checks'])}/{len(report['checks'])} passed.")
+    if report['first_failure']:
+        failure = report['first_failure']
+        reason = json.dumps(str(failure.get('summary_reason', failure.get('reason', 'Verification failed')))[:200], ensure_ascii=False)
+        footer.append('First failure: ' + reason)
+    footer.append('Timed out: ' + str(report['timed_out']).lower())
+    # Reserve the final outcome/cleanup lines even when path-rich batches are large.
+    ending = ('\n'.join(footer) + '\n').encode('utf-8')
+    beginning = ('\n'.join(header + rows) + '\n').encode('utf-8')
+    allowance = 32768 - len(ending) - 100
+    if len(beginning) > allowance:
+        beginning = beginning[:allowance].decode('utf-8', errors='ignore').encode('utf-8')
+        beginning += b'\n[Summary truncated; full structured evidence remains in result.json.]\n'
+    return (beginning + ending).decode('utf-8')
 
 
 def verify(directory, checks=None, run=None, unchanged=None, service=None,
@@ -544,7 +600,8 @@ def verify(directory, checks=None, run=None, unchanged=None, service=None,
     except VerificationFailure as exc:
         failure = exc.detail
     except Exception as exc:
-        failure = {'reason': str(exc)[:500], 'error': type(exc).__name__}
+        failure = {'reason': str(exc)[:500], 'error': type(exc).__name__,
+                   'summary_reason': 'Unexpected execution or evidence error; inspect local result.json.'}
     except BaseException:
         failure = {'reason': 'Verification interrupted; inspect recorded partial effects', 'interrupted': True}
         raise
@@ -558,12 +615,17 @@ def verify(directory, checks=None, run=None, unchanged=None, service=None,
                   'first_failure': failure, 'checks': check_results,
                   'unchanged': unchanged_result, 'execution': execution, 'side_effects': effects}
         write_json(task_file_path(root, relative_evidence), report)
+        if service is not None:
+            summary_path = task_file_path(root, f'{evidence_directory}/{attempt}/summary.txt')
+            summary_path.write_text(_http_summary(report), encoding='utf-8', newline='\n')
     compact = {'ok': report['passed'], 'passed': report['passed'], 'attempt_id': attempt,
                'verification_scope': report['verification_scope'], 'seconds': report['seconds'],
                'timeout_seconds': budget, 'timed_out': report['timed_out'],
                'checks_passed': sum(item['passed'] for item in check_results), 'checks_total': len(checks),
                'first_failure': failure, 'execution_count': len(execution),
                'side_effects': effects, 'evidence_path': str(evidence / 'result.json')}
+    if service is not None:
+        compact['summary_path'] = str(summary_path)
     if run is not None or service is not None:
         compact['interpreter'] = (run or service)['interpreter']
         compact['note'] = 'Explicit execution may have partial effects; no automatic retries or rollback. Only owned service processes are stopped.'

@@ -63,6 +63,16 @@ Keep install output in local job evidence.
 Use native tools for task-specific files, transformations and inspection when
 they are simpler. You need not encode every task stage into service files/checks
 or return native-created artifacts through the service. Batch useful work.
+For local HTTP verification, rw_verify(directory=project_path, service=...) can
+batch explicit start/request assertions/restart/cleanup instead of writing and
+debugging a lifecycle script. Its summary_path is a local report of actual HTTP
+outcomes, assertions and cleanup; copy or quote it when a report is required,
+rather than run a second lifecycle to produce that report. Keep all authored
+verification scripts/logs and its evidence_directory inside the task's allowed
+output directory, including native work. Native checks remain useful when simpler; use bounded
+HTTP readiness requests and owned-process shutdown checks. Do not repeat checks
+that already establish the same requirement unless code/data changed or a real
+uncertainty remains. This does not waive required failure or restart verification.
 If a job is running, rw_status(wait_seconds=30) waits. After failure, rw_replan
 can reuse its checkout/environment with only affected commands. Do not reinstall
 or clone again unnecessarily. A setup success proves setup only; verify the full

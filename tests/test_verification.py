@@ -240,6 +240,17 @@ class VerificationTests(unittest.TestCase):
         self.assertEqual(len(starts),2)
         self.assertTrue(all(e['stopped'] for e in result['side_effects'] if e['kind']=='service_cleanup'))
         self.assert_port_closed(starts[0]['port'])
+        summary_path=Path(result['summary_path'])
+        self.assertEqual(summary_path.parent,Path(result['evidence_path']).parent)
+        summary=summary_path.read_text(encoding='utf-8')
+        self.assertIn('HTTP verification: PASS',summary)
+        self.assertIn('POST "/write" -> HTTP 403',summary)
+        self.assertIn('json_value=PASS',summary)
+        self.assertIn('RESTART step 6: PASS',summary)
+        self.assertIn('CLEANUP owned service #1: PASS',summary)
+        self.assertIn('CLEANUP owned service #2: PASS',summary)
+        self.assertNotIn('Set-Cookie',summary)
+        self.assertNotIn('persisted',summary)
 
     def test_raw_bad_json_and_invalid_utf8_do_not_insert_and_service_continues(self):
         steps=[{'method':'POST','path':'/items','status':400,
@@ -322,12 +333,19 @@ class VerificationTests(unittest.TestCase):
         self.assertFalse((self.root/'.repowayfinder-checks').exists())
 
     def test_wrong_business_status_stops_requests_and_service(self):
-        result=self.verify(service=self.service([{'method':'GET','path':'/missing','status':200},
+        result=self.verify(service=self.service([{'method':'GET','path':'/missing?token=SUMMARY_SECRET','status':200},
                                                  {'method':'POST','path':'/write','status':200,'form':{'value':'never'}}]))
         self.assertFalse(result['passed'])
         self.assertEqual(result['first_failure']['actual'],404)
         self.assertFalse((self.root/'data.json').exists())
         self.assert_port_closed(next(e['port'] for e in result['side_effects'] if e['kind']=='service_start'))
+        summary=Path(result['summary_path']).read_text(encoding='utf-8')
+        self.assertIn('HTTP verification: FAIL',summary)
+        self.assertIn('GET "/missing" [query omitted] -> HTTP 404',summary)
+        self.assertIn('status=FAIL',summary)
+        self.assertIn('CLEANUP owned service #1: PASS',summary)
+        self.assertNotIn('SUMMARY_SECRET',summary)
+        self.assertNotIn('POST "/write"',summary)
 
     def test_external_redirect_is_rejected_not_followed(self):
         result=self.verify(service=self.service([{'method':'GET','path':'/escape','status':302}]))
@@ -351,10 +369,13 @@ class VerificationTests(unittest.TestCase):
         self.assertFalse((self.root/'.repowayfinder-checks').exists())
 
     def test_service_start_failure_records_and_cleanup_does_not_touch_inputs(self):
-        spec=self.service();spec['argv']=[str(self.root/'missing.exe')]
+        spec=self.service();spec['argv']=[str(self.root/'missing-SUMMARY_SECRET.exe')]
         result=self.verify(service=spec)
         self.assertFalse(result['passed'])
         self.assertTrue((self.root/'result.json').exists())
+        summary=Path(result['summary_path']).read_text(encoding='utf-8')
+        self.assertIn('HTTP verification: FAIL',summary)
+        self.assertNotIn('SUMMARY_SECRET',summary)
 
     def test_occupied_port_fails_before_evidence_and_keeps_unrelated_listener(self):
         with socket.socket() as existing:

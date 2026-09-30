@@ -977,5 +977,5 @@ class AgentService:
                                              if item.get('command_success', item.get('returncode') == 0)]
         self.save(folder, {'status': 'completed' if deployed and not failed_checks else 'failed', 'result': result,
                           'reason': 'Execution and requested checks finished' if deployed and not failed_checks else 'Execution or requested result checks failed',
-                          'next_action': 'For native continuation, set cwd to project_path in every call and use result.python_runtime.executable when present. Complete remaining user requirements; result.outcome covers only submitted commands/checks.' if deployed and not failed_checks else
+                          'next_action': 'Continue in project_path using the existing runtime; for Python use result.python_runtime.executable when present. Keep native tools for business code and compact checks. rw_verify can batch local HTTP start/request/restart/cleanup without a lifecycle script; keep its evidence inside the task output boundary. Complete remaining user requirements; result.outcome covers only submitted commands/checks.' if deployed and not failed_checks else
                           'Reuse this job with rw_replan: exact edits, only affected commands, execute=true; do not clone/install again unless necessary'})
