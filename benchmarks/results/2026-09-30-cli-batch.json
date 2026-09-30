@@ -1,0 +1,84 @@
+{
+  "status": "verified",
+  "workflow": "Existing CLI batch conversion: trusted Markdown to complete offline UTF-8 HTML pages",
+  "source": {
+    "repository": "Python-Markdown/markdown",
+    "tag": "3.9.0",
+    "revision": "f39cf84a24124526c1a0efbe52219fa9950774f6",
+    "execution": "python -m markdown from the source checkout; no pip installation of Markdown",
+    "python_runtime_version": "3.11.9"
+  },
+  "production_path": [
+    "example local entry",
+    "agent.py call rw_run --file",
+    "actual asynchronous worker",
+    "rw_status",
+    "rw_replan on the same job"
+  ],
+  "normal": {
+    "documents": 2,
+    "command_executions": 2,
+    "submitted_checks_passed": 6,
+    "independent_business_checks_passed": 14,
+    "reported_execution_phase_seconds": 8.782,
+    "artifacts": [
+      "入门 指南.html",
+      "表格与代码.html"
+    ]
+  },
+  "entry_environment_failure": {
+    "retained": true,
+    "phase": "prepare",
+    "business_execution_started": false,
+    "cause": "Initial entry selected an interpreter without the Agent requests dependency.",
+    "repair": "Reuse configure_clients.choose_python to select the prepared Agent environment; document the existing Agent setup prerequisite.",
+    "job_created": true,
+    "business_command_executions": 0
+  },
+  "same_job_recovery": {
+    "fault": "Explicit command selected one missing task input and returned exit code 1; original outputs were preserved.",
+    "failed_command_executions": 1,
+    "failed_reported_execution_phase_seconds": 1.625,
+    "repair": "rw_replan supplied only the missing synthetic input, ran only that document, and retained six required checks with preserved freshness.",
+    "recovered_command_executions": 1,
+    "recovered_reported_execution_phase_seconds": 1.735,
+    "checks_passed": 10,
+    "preserved_checks": 6,
+    "fresh_checks": 4,
+    "independent_business_checks_passed": 10,
+    "same_checkout": true,
+    "same_python_environment": true,
+    "no_reclone_or_reinstall": true,
+    "prior_outputs_unchanged": true,
+    "artifact_relative_to_project_path": "cli-batch/output/补充 说明.html",
+    "exported_delivery_is_snapshot": true
+  },
+  "verification_tool_correction": {
+    "retained": true,
+    "cause": "One private final assertion compared an unencoded filename with a URL-encoded href.",
+    "repair": "Read-only correction using saved real command result (converted=1 and the exact output filename), plus independent artifact review.",
+    "additional_business_executions": 0
+  },
+  "acceptance_scope": [
+    "Actual CLI-generated complete UTF-8 pages",
+    "Chinese headings and emphasis",
+    "Table values and fenced code, including literal.md",
+    "Space-containing filenames and local links with query/fragment",
+    "Remote .md href unchanged",
+    "Original input bytes preserved; UTF-8 BOM supported",
+    "Real missing-input failure and same-job affected-only recovery"
+  ],
+  "boundaries": {
+    "maximum_input_documents": 31,
+    "files_limit_including_helper": 32,
+    "helper_plus_input_content_limit_bytes": 262144,
+    "complete_request_limit_bytes": 262144,
+    "flat_input_directory_only": true,
+    "trusted_markdown_only": true,
+    "unbundled_resources_not_copied": true
+  },
+  "measurement_scope": "Reported seconds are the core execution phase, not complete user wall time or model performance. Command counts are executions, not retry counts or all subprocesses.",
+  "model_calls": 0,
+  "token_performance_comparison": null,
+  "data_and_side_effects": "Synthetic input only; official GitHub source acquisition; local owned job/output/log directories; no credentials, global installation, persistent service or external posting."
+}
